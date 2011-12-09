@@ -19,6 +19,13 @@ int main(int argc, const char *argv[])
 {
     int ch; /* holds pressed input char */
 
+    puts("Nyancat-Console " VERSION);
+    puts("Copyright 2011 Daniel Carl");
+    puts("Nyancat-Console comes with NO WARRANTY, to the extent permitted by law.");
+    puts("You may redistribute copies of Nyancat-Console under the terms of the GNU");
+    puts("General Public License. For more information about these matters, see");
+    puts("the file named LICENCE.");
+
     initscr();
     init_windows();
 
