@@ -1,0 +1,14 @@
+Coding style
+============
+
+The Code is idented by four spaces. For better readability you should put
+braces of function blocks in their own line like this.
+
+void do_something(const int counter)
+{
+    if (counter > 5) {
+        fprintf(stdout, "Counter higher than 5");
+    } else if {
+        /* other code here */
+    }
+}

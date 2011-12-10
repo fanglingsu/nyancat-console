@@ -1,46 +1,31 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include <locale.h>
-#include <langinfo.h>
-#include <string.h>
-#include <unistd.h>
 #include "main.h"
 #include "config.h"
 
-struct Nyancat {
-   struct {
-        WINDOW *mainwin;
-        WINDOW *world;
-        WINDOW *status;
-   } ui;
-} nc;
-
 int main(int argc, const char *argv[])
 {
-    int ch; /* holds pressed input char */
+    int ch;
 
-    puts("Nyancat-Console " VERSION);
-    puts("Copyright 2011 Daniel Carl");
-    puts("Nyancat-Console comes with NO WARRANTY, to the extent permitted by law.");
-    puts("You may redistribute copies of Nyancat-Console under the terms of the GNU");
-    puts("General Public License. For more information about these matters, see");
-    puts("the file named LICENCE.");
-
-    initscr();
+    print_licence_message();
     init_windows();
-
     show_start_screen();
+
     print_statusline("Press 'q' to exit");
 
     while((ch = getch()) != 'q') {
         switch(ch) {
             case KEY_LEFT:
+                print_statusline("KEY_LEFT pressed");
                 break;
             case KEY_RIGHT:
+                print_statusline("KEY_RIGHT pressed");
                 break;
             case KEY_UP:
+                print_statusline("KEY_UP pressed");
                 break;
             case KEY_DOWN:
+                print_statusline("KEY_DOWN pressed");
                 break;
         }
     }
@@ -52,9 +37,10 @@ int main(int argc, const char *argv[])
 /**
  * Initialize the used windows
  */
-void init_windows()
+void init_windows(void)
 {
-    if ((nc.ui.mainwin = initscr()) == NULL) {
+    nc.ui.mainwin = initscr();
+    if (nc.ui.mainwin == NULL) {
         fprintf(stderr, "Error initialising ncurses.\n");
         exit(EXIT_FAILURE);
     }
@@ -79,10 +65,12 @@ void init_windows()
 /**
  * Show the startscreen with gaming instructions.
  */
-void show_start_screen()
+void show_start_screen(void)
 {
     int ch;
-    waddstr(nc.ui.world, "Press Enter to start nyancat");
+
+    waddstr(nc.ui.world, "Press Enter to start nyancat\n\n");
+    waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
     wrefresh(nc.ui.world);
     while ((ch = getch())) {
         if (10 == ch) {
@@ -101,6 +89,19 @@ void print_statusline(char* str)
     werase(nc.ui.status);
     waddstr(nc.ui.status, str);
     wrefresh(nc.ui.status);
+}
+
+/**
+ * Prints the licence message to stdout.
+ */
+void print_licence_message(void)
+{
+    puts("Nyancat " VERSION);
+    puts("Copyright 2011 Daniel Carl\n");
+    puts("Nyancat comes with NO WARRANTY, to the extent permitted by law.");
+    puts("You may redistribute copies of Nyancat under the terms of the");
+    puts("GNU General Public License. For more information about these");
+    puts("matters, see the file named LICENCE.");
 }
 
 /**

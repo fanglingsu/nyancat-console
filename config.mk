@@ -29,5 +29,3 @@ TARGET = $(REAL_NAME)
 DTARGET=$(TARGET)_debug
 
 MAKE=make --no-print-directory
-
-BUILDDATE=`date +%Y.%m.%d`

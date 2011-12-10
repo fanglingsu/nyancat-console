@@ -1,6 +1,6 @@
-#ifndef _config_h_
-#define _config_h_
+#ifndef CONFIG_H
+#define CONFIG_H
 
 #define VERSION "0.0.1"
 
-#endif
+#endif /* end of include guard: CONFIG_H */

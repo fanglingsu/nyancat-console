@@ -21,7 +21,7 @@ debug: $(DTARGET)
 
 $(DTARGET): $(DOBJ) 
 	@echo "$(CC) $@"
-	@$(CC) $(DFLAGS) $(DOBJ) -o $(DTARGET) 
+	@$(CC) $(DFLAGS) $(DOBJ) -o $(DTARGET) $(LIBS)
 
 clean:
 	@echo Cleaning
