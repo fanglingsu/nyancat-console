@@ -7,7 +7,8 @@ enum mode {
     ModeIntro,
     ModeGame,
     ModePause,
-    ModeScores
+    ModeScores,
+    ModeOver
 };
 
 struct Nyancat {
@@ -16,10 +17,12 @@ struct Nyancat {
         WINDOW *world;
         WINDOW *status;
     } ui;
+    enum mode current_mode;
 } nc;
 
 void init_windows(void);
 void show_start_screen(void);
+void read_input(void);
 void print_statusline(char* str);
 void print_licence_message(void);
 void set_timer(void);

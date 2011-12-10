@@ -8,32 +8,20 @@
 
 int main(int argc, const char *argv[])
 {
-    int ch;
-
     print_licence_message();
     set_timer();
     set_signals();
     init_windows();
-    show_start_screen();
 
+    show_start_screen();
     print_statusline("Press 'q' to exit");
 
-    while((ch = getch()) != 'q') {
-        switch(ch) {
-            case KEY_LEFT:
-                print_statusline("KEY_LEFT pressed");
-                break;
-            case KEY_RIGHT:
-                print_statusline("KEY_RIGHT pressed");
-                break;
-            case KEY_UP:
-                print_statusline("KEY_UP pressed");
-                break;
-            case KEY_DOWN:
-                print_statusline("KEY_DOWN pressed");
-                break;
-        }
-    }
+    /* set initial mode */
+    nc.current_mode = ModeIntro;
+
+    while (true) {
+        read_input();
+    };
 
     cleanup_windows();
     return EXIT_SUCCESS;
@@ -72,18 +60,61 @@ void init_windows(void)
  */
 void show_start_screen(void)
 {
-    int ch;
-
+    werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start nyancat\n\n");
     waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
     wrefresh(nc.ui.world);
-    while ((ch = getch())) {
-        if (10 == ch) {
-            break;
-        }
+}
+
+/**
+ * Reads keyboard input and performs and do actions.
+ */
+void read_input(void)
+{
+    int ch;
+    static enum mode lastmode;
+
+    ch = getch();
+    if ('q' == ch) {
+        nc.current_mode = ModeOver;
     }
-    werase(nc.ui.world);
-    wrefresh(nc.ui.world);
+
+    switch (nc.current_mode) {
+        case ModeGame:
+            /* clear the main window */
+            werase(nc.ui.world);
+            wrefresh(nc.ui.world);
+            switch(ch) {
+                case KEY_LEFT:
+                    print_statusline("KEY_LEFT pressed");
+                    break;
+                case KEY_RIGHT:
+                    print_statusline("KEY_RIGHT pressed");
+                    break;
+                case KEY_UP:
+                    print_statusline("KEY_UP pressed");
+                    break;
+                case KEY_DOWN:
+                    print_statusline("KEY_DOWN pressed");
+                    break;
+            }
+            break;
+        case ModePause:
+        case ModeScores:
+            lastmode = nc.current_mode;
+            break;
+        case ModeOver:
+            cleanup_windows();
+            exit(0);
+            break;
+        case ModeIntro:
+            lastmode = nc.current_mode;
+            /* swtich to game mode on enter */
+            if (10 == ch) {
+                nc.current_mode = ModeGame;
+            }
+            break;
+    }
 }
 
 /**
