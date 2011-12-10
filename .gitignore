@@ -1,0 +1,4 @@
+*.[oa]
+*.do
+src/nyancat
+src/nyancat_debug
