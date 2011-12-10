@@ -9,13 +9,13 @@ $(TARGET): $(OBJ)
 -include $(OBJ:.o=.d)
 -include $(DOBJ:.do=.dd)
 
-%.o: %.c
+%.o: %.c %.h
 	@echo "${CC} $<"
 	@$(CC) $(FLAGS) -c -o $@ $<
 
 debug: $(DTARGET)
 
-%.do: %.c
+%.do: %.c %.h
 	@echo "${CC} $<"
 	@$(CC) $(DFLAGS) -c -o $@ $<
 
