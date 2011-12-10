@@ -1,5 +1,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <time.h>
+#include <sys/time.h>
 #include "main.h"
 #include "config.h"
 
@@ -8,6 +11,8 @@ int main(int argc, const char *argv[])
     int ch;
 
     print_licence_message();
+    set_timer();
+    set_signals();
     init_windows();
     show_start_screen();
 
@@ -82,6 +87,8 @@ void show_start_screen(void)
 }
 
 /**
+ * @str: Message to print out to the status line
+ *
  * Prints out message to status line.
  */
 void print_statusline(char* str)
@@ -102,6 +109,66 @@ void print_licence_message(void)
     puts("You may redistribute copies of Nyancat under the terms of the");
     puts("GNU General Public License. For more information about these");
     puts("matters, see the file named LICENCE.");
+}
+
+/**
+ * Sets up the game timer
+ */
+void set_timer(void)
+{
+    struct itimerval it;
+
+    /* clear itimerval struct members */
+    timerclear(&it.it_interval);
+    timerclear(&it.it_value);
+
+    /* set timer */
+    it.it_interval.tv_usec = TIMESTEP;
+    it.it_value.tv_usec    = TIMESTEP;
+    setitimer(ITIMER_REAL, &it, NULL);
+}
+
+/**
+ * Sets up signal handlers we need.
+ */
+void set_signals(void)
+{
+    struct sigaction sa;
+
+    /* fill in sigaction struct */
+    sa.sa_handler = signal_handler;
+    sa.sa_flags   = 0;
+    sigemptyset(&sa.sa_mask);
+
+    /* set signal handlers */
+    sigaction(SIGTERM, &sa, NULL);
+    sigaction(SIGINT,  &sa, NULL);
+    sigaction(SIGALRM, &sa, NULL);
+
+    /* ignore sigtstp */
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGTSTP, &sa, NULL);
+}
+
+/**
+ * @sig: number of the signal
+ *
+ * Signal handler called if signal is emmitted.
+ */
+void signal_handler(int sig)
+{
+    switch (sig) {
+        case SIGALRM:
+            /* received from the timer */
+            print_statusline("Signal ALRM recieved by timer");
+            return;
+
+        case SIGTERM:
+        case SIGINT:
+            cleanup_windows();
+            puts("Nyancat-console was killed by deadly signal");
+            exit(EXIT_SUCCESS);
+    }
 }
 
 /**
