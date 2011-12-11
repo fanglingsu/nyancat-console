@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include "main.h"
 #include "config.h"
+#include "error.h"
 
 int main(int argc, const char *argv[])
 {
@@ -34,8 +35,7 @@ void init_windows(void)
 {
     nc.ui.mainwin = initscr();
     if (nc.ui.mainwin == NULL) {
-        fprintf(stderr, "Error initialising ncurses.\n");
-        exit(EXIT_FAILURE);
+        fatal_error("Error initialising ncurses.");
     }
     /* don't show a carret */
     curs_set(0);
@@ -190,9 +190,7 @@ void signal_handler(int sig)
 
         case SIGTERM:
         case SIGINT:
-            cleanup_windows();
-            puts("\nNyancat-console was killed by deadly signal");
-            exit(EXIT_SUCCESS);
+            fatal_error("Nyancat-console was killed by deadly signal");
     }
 }
 
@@ -215,7 +213,7 @@ void game_handler(void)
             break;
         case ModeOver:
             cleanup_windows();
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case ModeIntro:
             show_start_screen();
