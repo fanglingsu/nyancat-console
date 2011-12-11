@@ -1,4 +1,4 @@
 *.[oa]
 *.do
-src/nyancat
-src/nyancat_debug
+src/nyancat-console
+src/nyancat-console_debug

@@ -12,7 +12,7 @@ install the header files. For debian bases systems you can install it via
 
 Compile and run the game:
 
-    make; src/nyancat
+    make; src/nyancat-console
 
 ## Help out!
 

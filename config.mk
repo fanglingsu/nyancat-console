@@ -1,4 +1,4 @@
-REAL_NAME = nyancat
+REAL_NAME = nyancat-console
 
 SRCDIR = src
 

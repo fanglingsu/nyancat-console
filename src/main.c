@@ -44,7 +44,7 @@ void init_windows(void)
     box(nc.ui.mainwin, 0, 0);
 
     /* print title */
-    mvwaddstr(nc.ui.mainwin, 0, 3, " nyancat ");
+    mvwaddstr(nc.ui.mainwin, 0, 3, " " REAL_NAME " ");
 
     /* line buffering disabled, pass on everty thing to me */
     cbreak();
@@ -128,10 +128,10 @@ void print_statusline(char* str)
  */
 void print_licence_message(void)
 {
-    puts("Nyancat " VERSION);
+    puts(REAL_NAME " " VERSION);
     puts("Copyright 2011 Daniel Carl\n");
-    puts("Nyancat comes with NO WARRANTY, to the extent permitted by law.");
-    puts("You may redistribute copies of Nyancat under the terms of the");
+    puts(REAL_NAME " comes with NO WARRANTY, to the extent permitted by law.");
+    puts("You may redistribute copies of " REAL_NAME "  under the terms of the");
     puts("GNU General Public License. For more information about these");
     puts("matters, see the file named LICENCE.");
 }
@@ -190,7 +190,7 @@ void signal_handler(int sig)
 
         case SIGTERM:
         case SIGINT:
-            fatal_error("Nyancat-console was killed by deadly signal");
+            fatal_error(REAL_NAME " was killed by deadly signal");
     }
 }
 
