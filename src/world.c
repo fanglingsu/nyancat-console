@@ -3,7 +3,7 @@
 /**
  * Prints the world.
  */
-void print_word(void)
+void print_world(void)
 {
 
 }
