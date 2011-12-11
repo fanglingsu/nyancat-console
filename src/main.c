@@ -56,6 +56,17 @@ void init_windows(void)
 }
 
 /**
+ * Clear all windows.
+ */
+void clear_windows(void)
+{
+    wclear(nc.ui.world);
+    wnoutrefresh(nc.ui.world);
+    wclear(nc.ui.status);
+    wnoutrefresh(nc.ui.status);
+}
+
+/**
  * Show the startscreen with gaming instructions.
  */
 void show_start_screen(void)
@@ -67,49 +78,32 @@ void show_start_screen(void)
 }
 
 /**
- * Reads keyboard input and performs and do actions.
+ * Reads keyboard input and decide when to switch to another mode or to change
+ * position variables.
  */
 void read_input(void)
 {
-    int ch;
-    static enum mode lastmode;
-
-    ch = getch();
+    int ch = getch();
     if ('q' == ch) {
         nc.current_mode = ModeOver;
     }
 
     switch (nc.current_mode) {
         case ModeGame:
-            /* clear the main window */
-            werase(nc.ui.world);
-            wrefresh(nc.ui.world);
-            switch(ch) {
-                case KEY_LEFT:
-                    print_statusline("KEY_LEFT pressed");
-                    break;
-                case KEY_RIGHT:
-                    print_statusline("KEY_RIGHT pressed");
-                    break;
-                case KEY_UP:
-                    print_statusline("KEY_UP pressed");
-                    break;
-                case KEY_DOWN:
-                    print_statusline("KEY_DOWN pressed");
-                    break;
+            if ('p' == ch) {
+                nc.current_mode = ModePause;
             }
             break;
         case ModePause:
+            if ('p' == ch) {
+                nc.current_mode = ModeGame;
+            }
+            break;
         case ModeScores:
-            lastmode = nc.current_mode;
             break;
         case ModeOver:
-            cleanup_windows();
-            exit(0);
             break;
         case ModeIntro:
-            lastmode = nc.current_mode;
-            /* swtich to game mode on enter */
             if (10 == ch) {
                 nc.current_mode = ModeGame;
             }
@@ -191,14 +185,41 @@ void signal_handler(int sig)
     switch (sig) {
         case SIGALRM:
             /* received from the timer */
-            print_statusline("Signal ALRM recieved by timer");
+            game_handler();
             return;
 
         case SIGTERM:
         case SIGINT:
             cleanup_windows();
-            puts("Nyancat-console was killed by deadly signal");
+            puts("\nNyancat-console was killed by deadly signal");
             exit(EXIT_SUCCESS);
+    }
+}
+
+/**
+ * Handlerfunction to perform gaming actions. This function is calles FPS
+ * times a second.
+ */
+void game_handler(void)
+{
+    switch (nc.current_mode) {
+        case ModeGame:
+            print_statusline("Game");
+            /* clear the main window */
+            clear_windows();
+            break;
+        case ModePause:
+            print_statusline("Pause");
+            break;
+        case ModeScores:
+            break;
+        case ModeOver:
+            cleanup_windows();
+            exit(0);
+            break;
+        case ModeIntro:
+            show_start_screen();
+            break;
     }
 }
 
