@@ -1,8 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define TIMESTEP 900000
-
 enum mode {
     ModeIntro,
     ModeGame,

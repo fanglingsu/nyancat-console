@@ -154,8 +154,8 @@ void set_timer(void)
     timerclear(&it.it_value);
 
     /* set timer */
-    it.it_interval.tv_usec = TIMESTEP;
-    it.it_value.tv_usec    = TIMESTEP;
+    it.it_interval.tv_usec = 1000000/FPS;
+    it.it_value.tv_usec    = 1000000/FPS;
     setitimer(ITIMER_REAL, &it, NULL);
 }
 
