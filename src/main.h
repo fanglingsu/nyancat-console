@@ -11,11 +11,18 @@ enum mode {
     ModeOver
 };
 
+struct View {
+    WINDOW  *window;
+    int     cols;
+    int     rows;
+};
+
 struct Nyancat {
     struct {
         WINDOW *mainwin;
         WINDOW *world;
         WINDOW *status;
+        struct View space;
     } ui;
     enum mode current_mode;
 } nc;

@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include "main.h"
 #include "random.h"
+#include "world.h"
 #include "config.h"
 #include "error.h"
 
@@ -106,6 +107,7 @@ void read_input(void)
         case ModeIntro:
             if (10 == ch) {
                 nc.current_mode = ModeGame;
+                init_world();
             }
             break;
     }
@@ -207,6 +209,7 @@ void game_handler(void)
             print_statusline("Game");
             /* clear the main window */
             clear_windows();
+            print_world();
             break;
         case ModePause:
             print_statusline("Pause");
