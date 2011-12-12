@@ -188,8 +188,13 @@ void signal_handler(int sig)
             return;
 
         case SIGTERM:
+            cleanup_windows();
+            fprintf(stderr, "\n%s was killes by signal %s\n", REAL_NAME, "TERM");
+            exit(EXIT_FAILURE);
         case SIGINT:
-            fatal_error(REAL_NAME " was killed by deadly signal");
+            cleanup_windows();
+            fprintf(stderr, "\n%s was killes by signal %s\n", REAL_NAME, "INT");
+            exit(EXIT_FAILURE);
     }
 }
 
