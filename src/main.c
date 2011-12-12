@@ -4,12 +4,14 @@
 #include <time.h>
 #include <sys/time.h>
 #include "main.h"
+#include "random.h"
 #include "config.h"
 #include "error.h"
 
 int main(int argc, const char *argv[])
 {
     print_licence_message();
+    init_random();
     set_timer();
     set_signals();
     init_windows();
