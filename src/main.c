@@ -41,18 +41,17 @@ void init_windows(void)
     curs_set(0);
     keypad(nc.ui.mainwin, TRUE);
     intrflush(nc.ui.mainwin, FALSE);
-    box(nc.ui.mainwin, 0, 0);
-
-    /* print title */
-    mvwaddstr(nc.ui.mainwin, 0, 3, " " REAL_NAME " ");
 
     /* line buffering disabled, pass on everty thing to me */
     cbreak();
     noecho();
 
     /* create sub windows */
-    nc.ui.world  = subwin(nc.ui.mainwin, LINES-4, COLS-2, 1, 1);
-    nc.ui.status = subwin(nc.ui.mainwin, 1, COLS-2, LINES-2, 1);
+    nc.ui.world  = subwin(nc.ui.mainwin, LINES-1, COLS, 0, 0);
+    nc.ui.status = subwin(nc.ui.mainwin, 1, COLS, LINES-1, 0);
+
+    nc.ui.space.cols = COLS;
+    nc.ui.space.rows = LINES-1;
 }
 
 /**
