@@ -72,7 +72,7 @@ void clear_windows(void)
 void show_start_screen(void)
 {
     werase(nc.ui.world);
-    waddstr(nc.ui.world, "Press Enter to start nyancat\n\n");
+    waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
     waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
     wrefresh(nc.ui.world);
 }
