@@ -3,11 +3,12 @@
 Nyancat-console should be a lightweight port of the 'nyancat lost in space'
 flash game that sucks much.
 
-                                  #####
-               ,---/V\
-    ######    ~|__(o.o)
-                UU  UU      #####     #######
+              ,-----, 
+              |    ʌ-ʌ 
+    ######   ~|___(∘.∘) 
+              U U U U        ########    ###########
         ################
+
 
 ## Setup
 
