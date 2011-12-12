@@ -12,17 +12,16 @@ enum mode {
 };
 
 struct View {
-    WINDOW  *window;
+    WINDOW  *win;
     int     cols;
     int     rows;
 };
 
 struct Nyancat {
     struct {
-        WINDOW *mainwin;
-        WINDOW *world;
-        WINDOW *status;
-        struct View space;
+        struct View main;
+        struct View world;
+        struct View status;
     } ui;
     enum mode current_mode;
 } nc;

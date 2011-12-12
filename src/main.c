@@ -35,25 +35,31 @@ int main(int argc, const char *argv[])
  */
 void init_windows(void)
 {
-    nc.ui.mainwin = initscr();
-    if (nc.ui.mainwin == NULL) {
+    nc.ui.main.win = initscr();
+    if (nc.ui.main.win == NULL) {
         fatal_error("Error initialising ncurses.");
     }
+
     /* don't show a carret */
     curs_set(0);
-    keypad(nc.ui.mainwin, TRUE);
-    intrflush(nc.ui.mainwin, FALSE);
+    keypad(nc.ui.main.win, TRUE);
+    intrflush(nc.ui.main.win, FALSE);
 
     /* line buffering disabled, pass on everty thing to me */
     cbreak();
     noecho();
 
     /* create sub windows */
-    nc.ui.world  = subwin(nc.ui.mainwin, LINES-1, COLS, 0, 0);
-    nc.ui.status = subwin(nc.ui.mainwin, 1, COLS, LINES-1, 0);
+    nc.ui.world.win  = subwin(nc.ui.main.win, LINES-1, COLS, 0, 0);
+    nc.ui.status.win = subwin(nc.ui.main.win, 1, COLS, LINES-1, 0);
 
-    nc.ui.space.cols = COLS;
-    nc.ui.space.rows = LINES-1;
+    /* save dimensions of the windows */
+    nc.ui.main.cols = COLS;
+    nc.ui.main.rows = LINES;
+    nc.ui.status.cols = COLS;
+    nc.ui.status.rows = 1;
+    nc.ui.world.cols = COLS;
+    nc.ui.world.rows = LINES-1;
 }
 
 /**
@@ -61,10 +67,10 @@ void init_windows(void)
  */
 void clear_windows(void)
 {
-    wclear(nc.ui.world);
-    wnoutrefresh(nc.ui.world);
-    wclear(nc.ui.status);
-    wnoutrefresh(nc.ui.status);
+    wclear(nc.ui.world.win);
+    wnoutrefresh(nc.ui.world.win);
+    wclear(nc.ui.status.win);
+    wnoutrefresh(nc.ui.status.win);
 }
 
 /**
@@ -72,10 +78,10 @@ void clear_windows(void)
  */
 void show_start_screen(void)
 {
-    werase(nc.ui.world);
-    waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
-    waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
-    wrefresh(nc.ui.world);
+    werase(nc.ui.world.win);
+    waddstr(nc.ui.world.win, "Press Enter to start " REAL_NAME "\n\n");
+    waddstr(nc.ui.world.win, "Use the cursor keys to move the cat.");
+    wrefresh(nc.ui.world.win);
 }
 
 /**
@@ -120,9 +126,9 @@ void read_input(void)
  */
 void print_statusline(char* str)
 {
-    werase(nc.ui.status);
-    waddstr(nc.ui.status, str);
-    wrefresh(nc.ui.status);
+    werase(nc.ui.status.win);
+    waddstr(nc.ui.status.win, str);
+    wrefresh(nc.ui.status.win);
 }
 
 /**
@@ -232,9 +238,9 @@ void game_handler(void)
  */
 void cleanup_windows(void)
 {
-    delwin(nc.ui.status);
-    delwin(nc.ui.world);
-    delwin(nc.ui.mainwin);
+    delwin(nc.ui.status.win);
+    delwin(nc.ui.world.win);
+    delwin(nc.ui.main.win);
     endwin();
     refresh();
 }
