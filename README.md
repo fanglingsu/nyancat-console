@@ -3,6 +3,12 @@
 Nyancat-console should be a lightweight port of the 'nyancat lost in space'
 flash game that sucks much.
 
+                                  #####
+               ,---/V\
+    ######    ~|__(o.o)
+                UU  UU      #####     #######
+        ################
+
 ## Setup
 
 Nyancat-console uses ncurses for the terminal rendering stuff so you have to
