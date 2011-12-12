@@ -10,7 +10,6 @@
 
 int main(int argc, const char *argv[])
 {
-    print_licence_message();
     init_random();
     set_timer();
     set_signals();
@@ -190,12 +189,9 @@ void signal_handler(int sig)
             return;
 
         case SIGTERM:
-            cleanup_windows();
-            fprintf(stderr, "\n%s was killes by signal %s\n", REAL_NAME, "TERM");
-            exit(EXIT_FAILURE);
         case SIGINT:
             cleanup_windows();
-            fprintf(stderr, "\n%s was killes by signal %s\n", REAL_NAME, "INT");
+            print_licence_message();
             exit(EXIT_FAILURE);
     }
 }
@@ -219,6 +215,7 @@ void game_handler(void)
             break;
         case ModeOver:
             cleanup_windows();
+            print_licence_message();
             exit(EXIT_SUCCESS);
             break;
         case ModeIntro:
