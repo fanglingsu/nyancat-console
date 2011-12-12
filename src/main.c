@@ -63,17 +63,6 @@ void init_windows(void)
 }
 
 /**
- * Clear all windows.
- */
-void clear_windows(void)
-{
-    wclear(nc.ui.world.win);
-    wnoutrefresh(nc.ui.world.win);
-    wclear(nc.ui.status.win);
-    wnoutrefresh(nc.ui.status.win);
-}
-
-/**
  * Show the startscreen with gaming instructions.
  */
 void show_start_screen(void)
@@ -213,8 +202,6 @@ void game_handler(void)
     switch (nc.current_mode) {
         case ModeGame:
             print_statusline("Game");
-            /* clear the main window */
-            clear_windows();
             print_world();
             break;
         case ModePause:

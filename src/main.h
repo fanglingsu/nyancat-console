@@ -27,7 +27,6 @@ struct Nyancat {
 } nc;
 
 void init_windows(void);
-void clear_windows(void);
 void show_start_screen(void);
 void read_input(void);
 void print_statusline(char* str);
