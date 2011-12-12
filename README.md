@@ -8,7 +8,7 @@ flash game that sucks much.
 Nyancat-console uses ncurses for the terminal rendering stuff so you have to
 install the header files. For debian bases systems you can install it via
 
-    sudo apt-get install libncursesw5-dev
+    sudo apt-get install libncurses5-dev libncurses5 ncurses-bin ncurses-term
 
 Compile and run the game:
 
