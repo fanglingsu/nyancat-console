@@ -234,9 +234,14 @@ static void game_handler(void)
  */
 void cleanup_windows(void)
 {
+    wrefresh(nc.ui.status);
     delwin(nc.ui.status);
+
+    wrefresh(nc.ui.world);
     delwin(nc.ui.world);
-    delwin(stdscr);
+
     endwin();
-    refresh();
+
+    /* flush open streams */
+    fflush(NULL);
 }
