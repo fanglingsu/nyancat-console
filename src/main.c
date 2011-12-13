@@ -71,42 +71,6 @@ void refresh_world(void)
 }
 
 /**
- * Reads keyboard input and decide when to switch to another mode or to change
- * position variables.
- */
-void read_input(void)
-{
-    int ch = getch();
-    if ('q' == ch) {
-        nc.current_mode = ModeOver;
-    }
-
-    switch (nc.current_mode) {
-        case ModeGame:
-            if ('p' == ch) {
-                nc.current_mode = ModePause;
-            }
-            break;
-        case ModePause:
-            if ('p' == ch) {
-                nc.current_mode = ModeGame;
-            }
-            break;
-        case ModeScores:
-            break;
-        case ModeOver:
-            break;
-        case ModeIntro:
-            if (10 == ch) {
-                nc.current_mode = ModeGame;
-                init_world();
-                init_cat();
-            }
-            break;
-    }
-}
-
-/**
  * @str: Message to print out to the status line
  *
  * Prints out message to status line.
@@ -188,6 +152,42 @@ void signal_handler(int sig)
             cleanup_windows();
             print_licence_message();
             exit(EXIT_FAILURE);
+    }
+}
+
+/**
+ * Reads keyboard input and decide when to switch to another mode or to change
+ * position variables.
+ */
+void read_input(void)
+{
+    int ch = getch();
+    if ('q' == ch) {
+        nc.current_mode = ModeOver;
+    }
+
+    switch (nc.current_mode) {
+        case ModeGame:
+            if ('p' == ch) {
+                nc.current_mode = ModePause;
+            }
+            break;
+        case ModePause:
+            if ('p' == ch) {
+                nc.current_mode = ModeGame;
+            }
+            break;
+        case ModeScores:
+            break;
+        case ModeOver:
+            break;
+        case ModeIntro:
+            if (10 == ch) {
+                nc.current_mode = ModeGame;
+                init_world();
+                init_cat();
+            }
+            break;
     }
 }
 
