@@ -20,6 +20,7 @@ struct Nyancat {
 } nc;
 
 void init_windows(void);
+void refresh_world(void);
 void show_start_screen(void);
 void read_input(void);
 void print_statusline(char* str);

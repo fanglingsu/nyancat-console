@@ -56,6 +56,16 @@ void show_start_screen(void)
     werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
     waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
+    refresh_world();
+}
+
+/**
+ * refresh screen so that modified graphic buffers get visible
+ */
+void refresh_world(void)
+{
+    /* needed to display graphics properly at startup on some terminals */
+    redrawwin(nc.ui.world);
     wrefresh(nc.ui.world);
 }
 
