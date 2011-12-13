@@ -15,6 +15,7 @@ struct Nyancat {
     struct {
         WINDOW *world;
         WINDOW *status;
+        WINDOW *empty;
     } ui;
     enum mode current_mode;
 } nc;

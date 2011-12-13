@@ -12,7 +12,7 @@ void init_world(void)
     world_pad = newpad(SCREENHEIGHT, SPACE_MULTIPLIER * SCREENWIDTH);
     wclear(world_pad);
 
-    for (r = 0; r < SCREENHEIGHT; r += 3) {
+    for (r = 0; r < SCREENHEIGHT; ++r) {
         for (c = 0; c < (SCREENWIDTH * SPACE_MULTIPLIER); ++c) {
             if (c == 0) {
                 mvwaddch(world_pad, r, c, '<');
@@ -20,7 +20,7 @@ void init_world(void)
                 mvwaddch(world_pad, r, c, '|');
             } else if (c == (SCREENWIDTH*2 - 1)) {
                 mvwaddch(world_pad, r, c, '>');
-            } else if ((rand() % 4) == 0) {
+            } else if ((rand() % 20) == 0) {
                 mvwaddch(world_pad, r, c, '#');
             }
         }

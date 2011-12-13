@@ -7,6 +7,7 @@
 #include "random.h"
 #include "world.h"
 #include "config.h"
+#include "cat.h"
 #include "error.h"
 
 int main(int argc, const char *argv[])
@@ -15,9 +16,6 @@ int main(int argc, const char *argv[])
     set_timer();
     set_signals();
     init_windows();
-
-    show_start_screen();
-    print_statusline("Press 'q' to exit");
 
     /* set initial mode */
     nc.current_mode = ModeIntro;
@@ -46,6 +44,9 @@ void init_windows(void)
     /* create sub windows */
     nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
     nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
+
+    nc.ui.empty = newpad(SCREENHEIGHT, SCREENWIDTH);
+    wclear(nc.ui.empty);
 }
 
 /**
@@ -99,6 +100,7 @@ void read_input(void)
             if (10 == ch) {
                 nc.current_mode = ModeGame;
                 init_world();
+                init_cat();
             }
             break;
     }
@@ -199,6 +201,7 @@ void game_handler(void)
         case ModeGame:
             print_statusline("Game");
             print_world();
+            print_cat();
             break;
         case ModePause:
             print_statusline("Pause");

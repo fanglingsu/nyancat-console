@@ -10,13 +10,12 @@ WINDOW *cat;
  */
 void init_cat(void)
 {
-    cat = newpad(4, 10);
+    cat = newpad(4, 11);
     wclear(cat);
-    waddstr(cat, " ,-----,  ");
-    waddstr(cat, " |    ʌ-ʌ ");
-    waddstr(cat, "~|___(∘.∘)");
-    waddstr(cat, "  UU  UU  ");
-    waddstr(cat, " U U U U  ");
+    waddstr(cat, " ,-----,  \n");
+    waddstr(cat, " |   /\\/\\ \n");
+    waddstr(cat, "~|___(o.o)\n");
+    waddstr(cat, "  UU  UU  \n");
 }
 
 /**
@@ -24,5 +23,8 @@ void init_cat(void)
  */
 void print_cat(void)
 {
-    copywin(cat, nc.ui.world, 0, 0, 10, 15, 4, 10, 0);
+    static int x = 14, y = 8;
+
+    copywin(cat, nc.ui.world, 0, 0, y, x, y+5, x+9, 0);
+    pnoutrefresh(cat, 0, 0, y, x, y+5, x+9);
 }
