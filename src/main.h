@@ -21,6 +21,6 @@ struct Nyancat {
 } nc;
 
 void refresh_world(void);
-void cleanup_windows(void);
+void error_exit(const char *format, ...);
 
 #endif /* end of include guard: MAIN_H */

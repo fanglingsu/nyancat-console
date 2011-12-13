@@ -8,7 +8,6 @@
 #include "world.h"
 #include "config.h"
 #include "cat.h"
-#include "error.h"
 
 static void init_windows(void);
 static void show_start_screen(void);
@@ -19,6 +18,7 @@ static void set_signals(void);
 static void signal_handler(int sig);
 static void read_input(void);
 static void game_handler(void);
+static void cleanup_windows(void);
 
 int main(int argc, const char *argv[])
 {
@@ -46,7 +46,7 @@ static void init_windows(void)
     initscr();
 
     cbreak();       /* line buffering disabled, pass on everty thing to me */
-    noecho();
+    noecho();       /* don't print typed chars */
     curs_set(0);    /* don't show a carret */
     keypad(stdscr, TRUE);
     intrflush(stdscr, FALSE);
@@ -230,9 +230,29 @@ static void game_handler(void)
 }
 
 /**
+ * @format: Formatstring like in fprintf.
+ *
+ * Signal a fatal error and quit immediately.
+ */
+void error_exit(const char *format, ...)
+{
+    va_list ap;
+
+    /* clean all ncurses windows */
+    cleanup_windows();
+
+    va_start(ap, format);
+    vfprintf(stderr, format, ap);
+    fputc('\n', stderr);
+    va_end(ap);
+
+    exit(EXIT_FAILURE);
+}
+
+/**
  * Cleanup the environment.
  */
-void cleanup_windows(void)
+static void cleanup_windows(void)
 {
     wrefresh(nc.ui.status);
     delwin(nc.ui.status);
