@@ -37,7 +37,7 @@ void print_world(void)
     if (i > SPACE_MULTIPLIER * SCREENWIDTH - 1) {
         i = 0;
     }
-    copywin(world_pad, nc.ui.world.win, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1, 0);
+    copywin(world_pad, nc.ui.world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1, 0);
     pnoutrefresh(world_pad, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1);
     ++i;
 }

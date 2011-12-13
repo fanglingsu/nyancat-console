@@ -40,20 +40,12 @@ void init_windows(void)
     cbreak();       /* line buffering disabled, pass on everty thing to me */
     noecho();
     curs_set(0);    /* don't show a carret */
+    keypad(stdscr, TRUE);
+    intrflush(stdscr, FALSE);
 
     /* create sub windows */
-    nc.ui.world.win  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
-    nc.ui.status.win = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
-
-    keypad(nc.ui.world.win, TRUE);
-    intrflush(nc.ui.world.win, FALSE);
-
-
-    /* save dimensions of the windows */
-    nc.ui.status.cols = COLS;
-    nc.ui.status.rows = 1;
-    nc.ui.world.cols = COLS;
-    nc.ui.world.rows = LINES-1;
+    nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
+    nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
 }
 
 /**
@@ -61,10 +53,10 @@ void init_windows(void)
  */
 void show_start_screen(void)
 {
-    werase(nc.ui.world.win);
-    waddstr(nc.ui.world.win, "Press Enter to start " REAL_NAME "\n\n");
-    waddstr(nc.ui.world.win, "Use the cursor keys to move the cat.");
-    wrefresh(nc.ui.world.win);
+    werase(nc.ui.world);
+    waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
+    waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
+    wrefresh(nc.ui.world);
 }
 
 /**
@@ -109,9 +101,9 @@ void read_input(void)
  */
 void print_statusline(char* str)
 {
-    werase(nc.ui.status.win);
-    waddstr(nc.ui.status.win, str);
-    wrefresh(nc.ui.status.win);
+    werase(nc.ui.status);
+    waddstr(nc.ui.status, str);
+    wrefresh(nc.ui.status);
 }
 
 /**
@@ -219,8 +211,9 @@ void game_handler(void)
  */
 void cleanup_windows(void)
 {
-    delwin(nc.ui.status.win);
-    delwin(nc.ui.world.win);
+    delwin(nc.ui.status);
+    delwin(nc.ui.status);
+    delwin(nc.ui.world);
     endwin();
     refresh();
 }
