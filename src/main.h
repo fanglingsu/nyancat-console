@@ -20,16 +20,7 @@ struct Nyancat {
     enum mode current_mode;
 } nc;
 
-void init_windows(void);
 void refresh_world(void);
-void show_start_screen(void);
-void print_statusline(char* str);
-void print_licence_message(void);
-void set_timer(void);
-void set_signals(void);
-void signal_handler(int sig);
-void read_input(void);
-void game_handler(void);
 void cleanup_windows(void);
 
 #endif /* end of include guard: MAIN_H */

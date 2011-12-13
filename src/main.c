@@ -10,6 +10,16 @@
 #include "cat.h"
 #include "error.h"
 
+static void init_windows(void);
+static void show_start_screen(void);
+static void print_statusline(char* str);
+static void print_licence_message(void);
+static void set_timer(void);
+static void set_signals(void);
+static void signal_handler(int sig);
+static void read_input(void);
+static void game_handler(void);
+
 int main(int argc, const char *argv[])
 {
     init_random();
@@ -31,7 +41,7 @@ int main(int argc, const char *argv[])
 /**
  * Initialize the used windows
  */
-void init_windows(void)
+static void init_windows(void)
 {
     initscr();
 
@@ -52,7 +62,7 @@ void init_windows(void)
 /**
  * Show the startscreen with gaming instructions.
  */
-void show_start_screen(void)
+static void show_start_screen(void)
 {
     werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
@@ -75,7 +85,7 @@ void refresh_world(void)
  *
  * Prints out message to status line.
  */
-void print_statusline(char* str)
+static void print_statusline(char* str)
 {
     werase(nc.ui.status);
     waddstr(nc.ui.status, str);
@@ -85,7 +95,7 @@ void print_statusline(char* str)
 /**
  * Prints the licence message to stdout.
  */
-void print_licence_message(void)
+static void print_licence_message(void)
 {
     puts(REAL_NAME " " VERSION);
     puts("Copyright 2011 Daniel Carl\n");
@@ -98,7 +108,7 @@ void print_licence_message(void)
 /**
  * Sets up the game timer
  */
-void set_timer(void)
+static void set_timer(void)
 {
     struct itimerval it;
 
@@ -115,7 +125,7 @@ void set_timer(void)
 /**
  * Sets up signal handlers we need.
  */
-void set_signals(void)
+static void set_signals(void)
 {
     struct sigaction sa;
 
@@ -139,7 +149,7 @@ void set_signals(void)
  *
  * Signal handler called if signal is emmitted.
  */
-void signal_handler(int sig)
+static void signal_handler(int sig)
 {
     switch (sig) {
         case SIGALRM:
@@ -159,7 +169,7 @@ void signal_handler(int sig)
  * Reads keyboard input and decide when to switch to another mode or to change
  * position variables.
  */
-void read_input(void)
+static void read_input(void)
 {
     int ch = getch();
     if ('q' == ch) {
@@ -195,7 +205,7 @@ void read_input(void)
  * Handlerfunction to perform gaming actions. This function is calles FPS
  * times a second.
  */
-void game_handler(void)
+static void game_handler(void)
 {
     switch (nc.current_mode) {
         case ModeGame:
