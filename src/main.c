@@ -225,8 +225,8 @@ void game_handler(void)
 void cleanup_windows(void)
 {
     delwin(nc.ui.status);
-    delwin(nc.ui.status);
     delwin(nc.ui.world);
+    delwin(stdscr);
     endwin();
     refresh();
 }
