@@ -19,7 +19,6 @@ struct View {
 
 struct Nyancat {
     struct {
-        struct View main;
         struct View world;
         struct View status;
     } ui;

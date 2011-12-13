@@ -35,27 +35,21 @@ int main(int argc, const char *argv[])
  */
 void init_windows(void)
 {
-    nc.ui.main.win = initscr();
-    if (nc.ui.main.win == NULL) {
-        fatal_error("Error initialising ncurses.");
-    }
+    initscr();
 
-    /* don't show a carret */
-    curs_set(0);
-    keypad(nc.ui.main.win, TRUE);
-    intrflush(nc.ui.main.win, FALSE);
-
-    /* line buffering disabled, pass on everty thing to me */
-    cbreak();
+    cbreak();       /* line buffering disabled, pass on everty thing to me */
     noecho();
+    curs_set(0);    /* don't show a carret */
 
     /* create sub windows */
-    nc.ui.world.win  = subwin(nc.ui.main.win, LINES-1, COLS, 0, 0);
-    nc.ui.status.win = subwin(nc.ui.main.win, 1, COLS, LINES-1, 0);
+    nc.ui.world.win  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
+    nc.ui.status.win = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
+
+    keypad(nc.ui.world.win, TRUE);
+    intrflush(nc.ui.world.win, FALSE);
+
 
     /* save dimensions of the windows */
-    nc.ui.main.cols = COLS;
-    nc.ui.main.rows = LINES;
     nc.ui.status.cols = COLS;
     nc.ui.status.rows = 1;
     nc.ui.world.cols = COLS;
@@ -227,7 +221,6 @@ void cleanup_windows(void)
 {
     delwin(nc.ui.status.win);
     delwin(nc.ui.world.win);
-    delwin(nc.ui.main.win);
     endwin();
     refresh();
 }
