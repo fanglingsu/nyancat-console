@@ -202,6 +202,8 @@ static void read_input(void)
             if ('p' == ch) {
                 nc.current_mode = ModePause;
             }
+            print_world();
+            print_cat();
             break;
         case ModePause:
             if ('p' == ch) {
@@ -232,11 +234,9 @@ static void game_handler(void)
     switch (nc.current_mode) {
         case ModeGame:
             print_statusline("Game");
-            print_world();
-            print_cat();
             break;
         case ModePause:
-            print_statusline("Pause");
+            print_statusline("Paused");
             break;
         case ModeScores:
             break;
