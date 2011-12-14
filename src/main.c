@@ -22,6 +22,8 @@ static void cleanup_windows(void);
 
 int main(int argc, const char *argv[])
 {
+    extern struct Nyancat nc;
+
     init_random();
     set_timer();
     set_signals();
@@ -43,6 +45,8 @@ int main(int argc, const char *argv[])
  */
 static void init_windows(void)
 {
+    extern struct Nyancat nc;
+
     initscr();
 #ifdef USE_COLORS
     if (has_colors() == FALSE) {
@@ -73,6 +77,8 @@ static void init_windows(void)
  */
 static void show_start_screen(void)
 {
+    extern struct Nyancat nc;
+
     werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
     waddstr(nc.ui.status, "Use the cursor keys to move the cat.");
@@ -84,6 +90,8 @@ static void show_start_screen(void)
  */
 void refresh_world(void)
 {
+    extern struct Nyancat nc;
+
     /* needed to display graphics properly at startup on some terminals */
     redrawwin(nc.ui.world);
     wrefresh(nc.ui.world);
@@ -96,6 +104,8 @@ void refresh_world(void)
  */
 static void print_statusline(char* str)
 {
+    extern struct Nyancat nc;
+
     werase(nc.ui.status);
     waddstr(nc.ui.status, str);
     wrefresh(nc.ui.status);
@@ -180,7 +190,9 @@ static void signal_handler(int sig)
  */
 static void read_input(void)
 {
+    extern struct Nyancat nc;
     int ch = getch();
+
     if ('q' == ch) {
         nc.current_mode = ModeOver;
     }
@@ -215,6 +227,8 @@ static void read_input(void)
  */
 static void game_handler(void)
 {
+    extern struct Nyancat nc;
+
     switch (nc.current_mode) {
         case ModeGame:
             print_statusline("Game");
@@ -262,6 +276,8 @@ void error_exit(const char *format, ...)
  */
 static void cleanup_windows(void)
 {
+    extern struct Nyancat nc;
+
     wrefresh(nc.ui.status);
     delwin(nc.ui.status);
 

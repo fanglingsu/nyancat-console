@@ -8,6 +8,7 @@
  */
 void print_cat(void)
 {
+    extern struct Nyancat nc;
     static int x = 14, y = 8, frame = 0;
     struct {
         int x;

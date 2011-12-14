@@ -7,6 +7,7 @@ static WINDOW *world;
 
 void init_world(void)
 {
+    extern WINDOW *world;
     int r, c;
 
     world = newpad(SCREENHEIGHT, SPACE_MULTIPLIER * SCREENWIDTH);
@@ -32,6 +33,7 @@ void init_world(void)
  */
 void print_world(void)
 {
+    extern WINDOW *world;
     static int i = 0;
 
     if (i > SPACE_MULTIPLIER * SCREENWIDTH - 1) {
