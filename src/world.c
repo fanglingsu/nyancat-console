@@ -3,25 +3,25 @@
 #include "config.h"
 #include "main.h"
 
-WINDOW *world_pad;
+static WINDOW *world;
 
 void init_world(void)
 {
     int r, c;
 
-    world_pad = newpad(SCREENHEIGHT, SPACE_MULTIPLIER * SCREENWIDTH);
-    wclear(world_pad);
+    world = newpad(SCREENHEIGHT, SPACE_MULTIPLIER * SCREENWIDTH);
+    wclear(world);
 
     for (r = 0; r < SCREENHEIGHT; ++r) {
         for (c = 0; c < (SCREENWIDTH * SPACE_MULTIPLIER); ++c) {
             if (c == 0) {
-                mvwaddch(world_pad, r, c, '<');
+                mvwaddch(world, r, c, '<');
             } else if (c == SCREENWIDTH) {
-                mvwaddch(world_pad, r, c, '|');
+                mvwaddch(world, r, c, '|');
             } else if (c == (SCREENWIDTH*2 - 1)) {
-                mvwaddch(world_pad, r, c, '>');
+                mvwaddch(world, r, c, '>');
             } else if ((rand() % 20) == 0) {
-                mvwaddch(world_pad, r, c, '#');
+                mvwaddch(world, r, c, '#');
             }
         }
     }
@@ -37,7 +37,7 @@ void print_world(void)
     if (i > SPACE_MULTIPLIER * SCREENWIDTH - 1) {
         i = 0;
     }
-    copywin(world_pad, nc.ui.world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1, 0);
-    pnoutrefresh(world_pad, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1);
+    copywin(world, nc.ui.world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1, 0);
+    pnoutrefresh(world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1);
     ++i;
 }
