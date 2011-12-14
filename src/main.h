@@ -3,12 +3,19 @@
 
 #include <ncurses.h>
 
+#define LENGTH(x) (sizeof(x)/sizeof(x[0]))
+
 enum mode {
     ModeIntro,
     ModeGame,
     ModePause,
     ModeScores,
     ModeOver
+};
+
+enum color {
+    ColorWhite,
+    ColorMagenta
 };
 
 struct Nyancat {

@@ -44,6 +44,15 @@ int main(int argc, const char *argv[])
 static void init_windows(void)
 {
     initscr();
+#ifdef USE_COLORS
+    if (has_colors() == FALSE) {
+        error_exit("Your terminal does not support colors");
+    }
+    start_color();
+#endif
+
+    /* define used color pairs */
+    init_pair(ColorMagenta, COLOR_MAGENTA, COLOR_BLACK);
 
     cbreak();       /* line buffering disabled, pass on everty thing to me */
     noecho();       /* don't print typed chars */
@@ -66,7 +75,7 @@ static void show_start_screen(void)
 {
     werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
-    waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
+    waddstr(nc.ui.status, "Use the cursor keys to move the cat.");
     refresh_world();
 }
 
@@ -195,7 +204,6 @@ static void read_input(void)
             if (10 == ch) {
                 nc.current_mode = ModeGame;
                 init_world();
-                init_cat();
             }
             break;
     }
