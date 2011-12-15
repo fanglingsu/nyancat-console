@@ -11,6 +11,7 @@
 
 static void init_windows(void);
 static void show_start_screen(void);
+static void show_scores(void);
 static void print_statusline(const char *format, ...);
 static void print_licence_message(void);
 static void set_timer(void);
@@ -57,6 +58,7 @@ static void init_windows(void)
     }
     /* define used color pairs */
     init_pair(ColorMagenta, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(ColorRed, COLOR_RED, COLOR_BLACK);
 
     cbreak();       /* line buffering disabled, pass on everty thing to me */
     noecho();       /* don't print typed chars */
@@ -83,6 +85,25 @@ static void show_start_screen(void)
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
     waddstr(nc.ui.world, "Use j, k or the cursor keys to move the cat.");
     wnoutrefresh(nc.ui.world);
+}
+
+/**
+ * Shows the summary scores screen on end of the game.
+ */
+static void show_scores(void)
+{
+    extern struct Nyancat nc;
+
+    werase(nc.ui.world);
+    wattron(nc.ui.world, COLOR_PAIR(ColorRed));
+    mvwprintw(nc.ui.world, 5, SCREENWIDTH/2 - 5, "GAME OVER!");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
+    mvwprintw(nc.ui.world, 7, SCREENWIDTH/2 - 8, "Press q to quit.");
+    wnoutrefresh(nc.ui.world);
+
+    /* remove content from status window */
+    werase(nc.ui.status);
+    wnoutrefresh(nc.ui.status);
 }
 
 /**
@@ -184,19 +205,16 @@ static void read_input(void)
     extern struct Nyancat nc;
     int ch = getch();
 
-    if ('q' == ch) {
-        nc.current_mode = ModeOver;
-    }
-
     switch (nc.current_mode) {
         case ModeGame:
             if ('p' == ch) {
                 nc.current_mode = ModePause;
-            }
-            if ('k' == ch || KEY_UP == ch) {
+            } else if ('k' == ch || KEY_UP == ch) {
                 move_cat_up();
             } else if ('j' == ch || KEY_DOWN == ch) {
                 move_cat_down();
+            } else if ('q' == ch) {
+                nc.current_mode =  ModeScores;
             }
             break;
         case ModePause:
@@ -205,6 +223,10 @@ static void read_input(void)
             }
             break;
         case ModeScores:
+            if ('q' == ch) {
+                nc.current_mode = ModeOver;
+            }
+            show_scores();
             break;
         case ModeOver:
             break;
