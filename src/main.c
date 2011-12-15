@@ -205,13 +205,11 @@ static void read_input(void)
             if ('p' == ch) {
                 nc.current_mode = ModePause;
             }
-            print_world();
             if (KEY_UP == ch) {
                 move_cat_up();
             } else if (KEY_DOWN == ch) {
                 move_cat_down();
             }
-            print_cat();
             break;
         case ModePause:
             if ('p' == ch) {
@@ -242,6 +240,8 @@ static void game_handler(void)
     switch (nc.current_mode) {
         case ModeGame:
             print_statusline("Game");
+            print_world();
+            print_cat();
             break;
         case ModePause:
             print_statusline("Paused");
@@ -257,6 +257,8 @@ static void game_handler(void)
             show_start_screen();
             break;
     }
+    /* print changes from virtual screen to terminal */
+    doupdate();
 }
 
 /**

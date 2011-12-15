@@ -5,7 +5,7 @@
 #define VERSION "0.0.1"
 
 /* number of frames per second - higher values = faster gameing */
-#define FPS 10
+#define FPS 15
 
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
