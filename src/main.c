@@ -81,7 +81,7 @@ static void show_start_screen(void)
 
     werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
-    waddstr(nc.ui.world, "Use the cursor keys to move the cat.");
+    waddstr(nc.ui.world, "Use j, k or the cursor keys to move the cat.");
     wnoutrefresh(nc.ui.world);
 }
 
@@ -190,9 +190,9 @@ static void read_input(void)
             if ('p' == ch) {
                 nc.current_mode = ModePause;
             }
-            if (KEY_UP == ch) {
+            if ('k' == ch || KEY_UP == ch) {
                 move_cat_up();
-            } else if (KEY_DOWN == ch) {
+            } else if ('j' == ch || KEY_DOWN == ch) {
                 move_cat_down();
             }
             break;
