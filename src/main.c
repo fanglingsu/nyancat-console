@@ -11,7 +11,7 @@
 
 static void init_windows(void);
 static void show_start_screen(void);
-static void print_statusline(char* str);
+static void print_statusline(const char *format, ...);
 static void print_licence_message(void);
 static void set_timer(void);
 static void set_signals(void);
@@ -86,16 +86,19 @@ static void show_start_screen(void)
 }
 
 /**
- * @str: Message to print out to the status line
+ * @format: Formatstring like in fprintf
  *
  * Prints out message to status line.
  */
-static void print_statusline(char* str)
+static void print_statusline(const char *format, ...)
 {
     extern struct Nyancat nc;
+    va_list ap;
 
     werase(nc.ui.status);
-    waddstr(nc.ui.status, str);
+    va_start(ap, format);
+    vwprintw(nc.ui.status, format, ap);
+    va_end(ap);
     wrefresh(nc.ui.status);
 }
 
@@ -221,15 +224,17 @@ static void read_input(void)
 static void game_handler(void)
 {
     extern struct Nyancat nc;
+    static unsigned int i = 0;
 
     switch (nc.current_mode) {
         case ModeGame:
-            print_statusline("Game");
+            ++i;
+            print_statusline("Game: % 3d - %d s", i, (i / FPS));
             print_world();
             print_cat();
             break;
         case ModePause:
-            print_statusline("Paused");
+            print_statusline("Paused: % 3d - %d s", i, (i / FPS));
             break;
         case ModeScores:
             break;
