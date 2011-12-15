@@ -15,7 +15,8 @@ enum mode {
 
 enum color {
     ColorWhite,
-    ColorMagenta
+    ColorMagenta,
+    ColorRed
 };
 
 struct Nyancat {
