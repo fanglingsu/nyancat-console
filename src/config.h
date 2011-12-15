@@ -24,6 +24,4 @@
 #define CATHIGHT  4
 #define CATWIDTH 10
 
-#define USE_COLORS
-
 #endif /* end of include guard: CONFIG_H */

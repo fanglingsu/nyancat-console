@@ -48,12 +48,9 @@ static void init_windows(void)
     extern struct Nyancat nc;
 
     initscr();
-#ifdef USE_COLORS
-    if (has_colors() == FALSE) {
-        error_exit("Your terminal does not support colors");
+    if (has_colors() != FALSE) {
+        start_color();
     }
-    start_color();
-#endif
 
     if (can_change_color()) {
         init_color(COLOR_MAGENTA, 1000, 600, 1000);
