@@ -2,29 +2,38 @@
 #include "world.h"
 #include "config.h"
 #include "main.h"
+#include "random.h"
 
 static WINDOW *world;
 
+/**
+ * Generates nyans world one time into a pad window.
+ */
 void init_world(void)
 {
     extern WINDOW *world;
-    int r, c;
+    int column, rand_line, rand_element, mod;
+    const char *elements[8] = {
+        "###########",
+        "#############",
+        "###############",
+        "#################",
+        "#############  ####",
+        "######   ############",
+        "########   ############",
+        "##########   #############",
+    };
 
-    world = newpad(SCREENHEIGHT, SPACE_MULTIPLIER * SCREENWIDTH);
+    world = newpad(SCREENHEIGHT, WORLDWIDTH);
     wclear(world);
-
-    for (r = 0; r < SCREENHEIGHT; ++r) {
-        for (c = 0; c < (SCREENWIDTH * SPACE_MULTIPLIER); ++c) {
-            if (c == 0) {
-                mvwaddch(world, r, c, '<');
-            } else if (c == SCREENWIDTH) {
-                mvwaddch(world, r, c, '|');
-            } else if (c == (SCREENWIDTH*2 - 1)) {
-                mvwaddch(world, r, c, '>');
-            } else if ((rand() % 20) == 0) {
-                mvwaddch(world, r, c, '#');
-            }
-        }
+    for (column = 0; column < WORLDWIDTH; column += 5) {
+        /* number to select element */
+        rand_element = limited_random(5);
+        /* gnerate a number in [1..3] */
+        mod = (rand_element % 3) + 1;
+        /* random select the y position for element */
+        rand_line = limited_random(SCREENHEIGHT * mod) / mod;
+        mvwaddstr(world, rand_line, column, elements[rand_element]);
     }
 }
 
@@ -36,10 +45,13 @@ void print_world(void)
     extern WINDOW *world;
     static int i = 0;
 
-    if (i > SPACE_MULTIPLIER * SCREENWIDTH - 1) {
+    /* end of the world reached */
+    if (i > WORLDWIDTH) {
         i = 0;
     }
-    copywin(world, nc.ui.world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1, 0);
-    pnoutrefresh(world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH-1);
+    /* TODO add possibility to fill screen on end of world with the beginning
+     * of the world - how can we make this beak unvisible for the gamer? */
+    copywin(world, nc.ui.world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1, 0);
+    pnoutrefresh(world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1);
     ++i;
 }

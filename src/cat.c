@@ -6,7 +6,7 @@
 static struct Cat {
     int posY;
     int posX;
-    int speed;
+    int speed;  /* steps per frame */
 } cat = {8, 14, 1};
 
 /**

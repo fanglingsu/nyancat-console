@@ -5,11 +5,12 @@
 #define VERSION "0.0.1"
 
 /* number of frames per second - higher values = faster gameing */
-#define FPS 15
+#define FPS 10
 
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
+#define WORLDWIDTH   90
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  24
@@ -24,7 +25,5 @@
 #define CATWIDTH 10
 
 #define USE_COLORS
-
-#define SPACE_MULTIPLIER 2
 
 #endif /* end of include guard: CONFIG_H */
