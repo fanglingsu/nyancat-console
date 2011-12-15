@@ -26,7 +26,7 @@ void init_world(void)
 
     world = newpad(SCREENHEIGHT, WORLDWIDTH);
     wclear(world);
-    for (column = 0; column < WORLDWIDTH; column += 5) {
+    for (column = 0; column < WORLDWIDTH; column += 9) {
         /* number to select element */
         rand_element = limited_random(5);
         /* gnerate a number in [1..3] */

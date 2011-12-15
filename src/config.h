@@ -10,7 +10,7 @@
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
-#define WORLDWIDTH   90
+#define WORLDWIDTH   900
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  24
