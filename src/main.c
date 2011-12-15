@@ -55,6 +55,9 @@ static void init_windows(void)
     start_color();
 #endif
 
+    if (can_change_color()) {
+        init_color(COLOR_MAGENTA, 1000, 600, 1000);
+    }
     /* define used color pairs */
     init_pair(ColorMagenta, COLOR_MAGENTA, COLOR_BLACK);
 
