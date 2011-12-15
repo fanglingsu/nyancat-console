@@ -69,9 +69,6 @@ static void init_windows(void)
     /* create sub windows */
     nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
     nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
-
-    nc.ui.empty = newpad(SCREENHEIGHT, SCREENWIDTH);
-    wclear(nc.ui.empty);
 }
 
 /**
