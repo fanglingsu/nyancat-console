@@ -27,7 +27,6 @@ struct Nyancat {
     enum mode current_mode;
 } nc;
 
-void refresh_world(void);
 void error_exit(const char *format, ...);
 
 #endif /* end of include guard: MAIN_H */
