@@ -3,14 +3,64 @@
 #include "main.h"
 #include "cat.h"
 
+static struct Cat {
+    int posY;
+    int posX;
+    int speed;
+} cat = {8, 14, 1};
+
+/**
+ * Moves the cat to the position givem with y and x coordinates.
+ */
+static void move_cat(const int posY, const int posX)
+{
+    extern struct Cat cat;
+
+    cat.posY = posY;
+    cat.posX = posX;
+}
+
+/**
+ * Move the cat up by the value of their speed.
+ */
+void move_cat_up(void)
+{
+    extern struct Cat cat;
+
+    if (cat.posY >= 0 + cat.speed) {
+        move_cat(cat.posY - cat.speed, cat.posX);
+    } else {
+        /* no enough room - move to upper-most position */
+        move_cat(0, cat.posX);
+    }
+}
+
+/**
+ * Move the cat down by the value of their speed.
+ */
+void move_cat_down(void)
+{
+    extern struct Cat cat;
+
+    if (cat.posY + CATHIGHT + cat.speed <= WORLDHEIGHT) {
+        move_cat(cat.posY + cat.speed, cat.posX);
+    } else {
+        /* no enough room - move to lowest position */
+        move_cat(WORLDHEIGHT - CATHIGHT, cat.posX);
+    }
+}
+
 /**
  * Print nyan to the world window.
  */
 void print_cat(void)
 {
     extern struct Nyancat nc;
-    static int x = 14, y = 8, frame = 0;
-    struct {
+    extern struct Cat cat;
+    static int frame = 0;
+    int x = cat.posX, y = cat.posY;
+
+    const struct {
         int x;
         char str[8];
     } feets[] = {

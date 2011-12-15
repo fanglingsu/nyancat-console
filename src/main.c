@@ -149,7 +149,7 @@ static void set_signals(void)
     struct sigaction sa;
 
     /* fill in sigaction struct */
-    sa.sa_handler = signal_handler;
+    sa.sa_handler = &signal_handler;
     sa.sa_flags   = 0;
     sigemptyset(&sa.sa_mask);
 
@@ -203,6 +203,11 @@ static void read_input(void)
                 nc.current_mode = ModePause;
             }
             print_world();
+            if (KEY_UP == ch) {
+                move_cat_up();
+            } else if (KEY_DOWN == ch) {
+                move_cat_down();
+            }
             print_cat();
             break;
         case ModePause:
