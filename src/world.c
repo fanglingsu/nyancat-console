@@ -9,7 +9,7 @@ static WINDOW *world;
 /**
  * Generates nyans world one time into a pad window.
  */
-void init_world(void)
+void world_init(void)
 {
     extern WINDOW *world;
     int column, rand_line, rand_element, mod;
@@ -40,7 +40,7 @@ void init_world(void)
 /**
  * Prints the world.
  */
-void print_world(void)
+void world_print(void)
 {
     extern WINDOW *world;
     static int i = 0;

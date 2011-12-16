@@ -1,8 +1,8 @@
 #ifndef CAT_H
 #define CAT_H
 
-void move_cat_up(void);
-void move_cat_down(void);
-void print_cat(void);
+void cat_move_up(void);
+void cat_move_down(void);
+void cat_print(void);
 
 #endif /* end of include guard: CAT_H */
