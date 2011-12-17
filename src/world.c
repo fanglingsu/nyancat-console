@@ -28,11 +28,11 @@ void world_init(void)
     wclear(world);
     for (column = 0; column < WORLDWIDTH; column += 9) {
         /* number to select element */
-        rand_element = limited_random(5);
+        rand_element = random_limited(5);
         /* gnerate a number in [1..3] */
         mod = (rand_element % 3) + 1;
         /* random select the y position for element */
-        rand_line = limited_random(SCREENHEIGHT * mod) / mod;
+        rand_line = random_limited(SCREENHEIGHT * mod) / mod;
         mvwaddstr(world, rand_line, column, elements[rand_element]);
     }
 }

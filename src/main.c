@@ -25,7 +25,7 @@ int main(int argc, const char *argv[])
 {
     extern struct Nyancat nc;
 
-    init_random();
+    random_init();
     set_timer();
     set_signals();
     init_windows();
