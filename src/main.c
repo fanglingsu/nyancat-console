@@ -217,12 +217,14 @@ static void read_input(void)
                 } else if ('j' == ch || KEY_DOWN == ch) {
                     cat_move_down();
                 } else if ('q' == ch) {
-                    nc.current_mode =  ModeScores;
+                    nc.current_mode = ModeScores;
                 }
                 break;
             case ModePause:
                 if ('p' == ch) {
                     nc.current_mode = ModeGame;
+                } else if ('q' == ch) {
+                    nc.current_mode = ModeScores;
                 }
                 break;
             case ModeScores:
