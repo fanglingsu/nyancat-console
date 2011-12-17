@@ -167,8 +167,10 @@ static void set_timer(void)
     timerclear(&it.it_value);
 
     /* set timer */
-    it.it_interval.tv_usec = 1000000/FPS;
-    it.it_value.tv_usec    = 1000000/FPS;
+    it.it_value.tv_usec     = SECOND / FPS;
+    it.it_value.tv_sec      = 0;
+    it.it_interval.tv_usec  = SECOND / FPS;
+    it.it_interval.tv_sec   = 0;
     setitimer(ITIMER_REAL, &it, NULL);
 }
 
