@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
+#include <unistd.h>
 #include <sys/time.h>
 #include "main.h"
 #include "random.h"
@@ -33,9 +34,7 @@ int main(int argc, const char *argv[])
     /* set initial mode */
     nc.current_mode = ModeIntro;
 
-    while (true) {
-        read_input();
-    };
+    read_input();
 
     cleanup_windows();
     return EXIT_SUCCESS;
@@ -200,39 +199,42 @@ static void signal_handler(int sig)
 static void read_input(void)
 {
     extern struct Nyancat nc;
-    int ch = getch();
+    int ch;
 
-    switch (nc.current_mode) {
-        case ModeGame:
-            if ('p' == ch) {
-                nc.current_mode = ModePause;
-            } else if ('k' == ch || KEY_UP == ch) {
-                cat_move_up();
-            } else if ('j' == ch || KEY_DOWN == ch) {
-                cat_move_down();
-            } else if ('q' == ch) {
-                nc.current_mode =  ModeScores;
-            }
-            break;
-        case ModePause:
-            if ('p' == ch) {
-                nc.current_mode = ModeGame;
-            }
-            break;
-        case ModeScores:
-            if ('q' == ch) {
-                nc.current_mode = ModeOver;
-            }
-            show_scores();
-            break;
-        case ModeOver:
-            break;
-        case ModeIntro:
-            if (10 == ch) {
-                nc.current_mode = ModeGame;
-                world_init();
-            }
-            break;
+    while (true) {
+        ch = getch();
+        switch (nc.current_mode) {
+            case ModeGame:
+                if ('p' == ch) {
+                    nc.current_mode = ModePause;
+                } else if ('k' == ch || KEY_UP == ch) {
+                    cat_move_up();
+                } else if ('j' == ch || KEY_DOWN == ch) {
+                    cat_move_down();
+                } else if ('q' == ch) {
+                    nc.current_mode =  ModeScores;
+                }
+                break;
+            case ModePause:
+                if ('p' == ch) {
+                    nc.current_mode = ModeGame;
+                }
+                break;
+            case ModeScores:
+                if ('q' == ch) {
+                    nc.current_mode = ModeOver;
+                }
+                show_scores();
+                break;
+            case ModeOver:
+                break;
+            case ModeIntro:
+                if (10 == ch) {
+                    nc.current_mode = ModeGame;
+                    world_init();
+                }
+                break;
+        }
     }
 }
 
