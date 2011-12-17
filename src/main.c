@@ -64,6 +64,7 @@ static void init_windows(void)
     curs_set(0);    /* don't show a carret */
     keypad(stdscr, TRUE);
     intrflush(stdscr, FALSE);
+    timeout((SECOND/FPS)/PPF);  /* set timeout for the getch() */
 
     /* create sub windows */
     nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);

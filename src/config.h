@@ -4,8 +4,10 @@
 #define REAL_NAME "nyancat-console"
 #define VERSION "0.0.1"
 
-/* number of frames per second - higher values = faster gameing */
-#define FPS 15
+/* speed */
+#define FPS 15  /* number of frames per second - higher values = faster gameing */
+#define PPF 10  /* polls per second - number of times input i read per frame */
+#define SECOND 1000000
 
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
