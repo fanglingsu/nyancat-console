@@ -25,7 +25,7 @@ int main(int argc, const char *argv[])
 {
     extern struct Nyancat nc;
 
-    init_random();
+    random_init();
     set_timer();
     set_signals();
     init_windows();
@@ -207,9 +207,9 @@ static void read_input(void)
             if ('p' == ch) {
                 nc.current_mode = ModePause;
             } else if ('k' == ch || KEY_UP == ch) {
-                move_cat_up();
+                cat_move_up();
             } else if ('j' == ch || KEY_DOWN == ch) {
-                move_cat_down();
+                cat_move_down();
             } else if ('q' == ch) {
                 nc.current_mode =  ModeScores;
             }
@@ -230,7 +230,7 @@ static void read_input(void)
         case ModeIntro:
             if (10 == ch) {
                 nc.current_mode = ModeGame;
-                init_world();
+                world_init();
             }
             break;
     }
@@ -249,8 +249,8 @@ static void game_handler(void)
         case ModeGame:
             ++i;
             print_statusline("Game: % 3d - %d s", i, (i / FPS));
-            print_world();
-            print_cat();
+            world_print();
+            cat_print();
             break;
         case ModePause:
             print_statusline("Paused: % 3d - %d s", i, (i / FPS));

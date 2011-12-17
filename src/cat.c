@@ -12,7 +12,7 @@ static struct Cat {
 /**
  * Moves the cat to the position givem with y and x coordinates.
  */
-static void move_cat(const int posY, const int posX)
+static void cat_move(const int posY, const int posX)
 {
     extern struct Cat cat;
 
@@ -23,37 +23,37 @@ static void move_cat(const int posY, const int posX)
 /**
  * Move the cat up by the value of their speed.
  */
-void move_cat_up(void)
+void cat_move_up(void)
 {
     extern struct Cat cat;
 
     if (cat.posY >= 0 + cat.speed) {
-        move_cat(cat.posY - cat.speed, cat.posX);
+        cat_move(cat.posY - cat.speed, cat.posX);
     } else {
         /* no enough room - move to upper-most position */
-        move_cat(0, cat.posX);
+        cat_move(0, cat.posX);
     }
 }
 
 /**
  * Move the cat down by the value of their speed.
  */
-void move_cat_down(void)
+void cat_move_down(void)
 {
     extern struct Cat cat;
 
     if (cat.posY + CATHIGHT + cat.speed <= WORLDHEIGHT) {
-        move_cat(cat.posY + cat.speed, cat.posX);
+        cat_move(cat.posY + cat.speed, cat.posX);
     } else {
         /* no enough room - move to lowest position */
-        move_cat(WORLDHEIGHT - CATHIGHT, cat.posX);
+        cat_move(WORLDHEIGHT - CATHIGHT, cat.posX);
     }
 }
 
 /**
  * Print nyan to the world window.
  */
-void print_cat(void)
+void cat_print(void)
 {
     extern struct Nyancat nc;
     extern struct Cat cat;
