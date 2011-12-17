@@ -16,7 +16,7 @@ static void show_scores(void);
 static void print_statusline(const char *format, ...);
 static void print_licence_message(void);
 static void set_signals(void);
-static void set_timer(void);
+static void set_timer(const int fps);
 static void signal_handler(int sig);
 static void read_input(void);
 static void game_handler(void);
@@ -28,7 +28,7 @@ int main(int argc, const char *argv[])
 
     random_init();
     set_signals();
-    set_timer();
+    set_timer(FPS);
     init_windows();
 
     /* set initial mode */
@@ -156,9 +156,11 @@ static void set_signals(void)
 }
 
 /**
+ * @fps: Frames per second. Use this to speed the game up.
+ *
  * Sets up the game timer
  */
-static void set_timer(void)
+static void set_timer(const int fps)
 {
     struct itimerval it;
 
@@ -167,9 +169,9 @@ static void set_timer(void)
     timerclear(&it.it_value);
 
     /* set timer */
-    it.it_value.tv_usec     = SECOND / FPS;
+    it.it_value.tv_usec     = SECOND / fps;
     it.it_value.tv_sec      = 0;
-    it.it_interval.tv_usec  = SECOND / FPS;
+    it.it_interval.tv_usec  = SECOND / fps;
     it.it_interval.tv_sec   = 0;
     setitimer(ITIMER_REAL, &it, NULL);
 }
