@@ -32,7 +32,7 @@ int main(int argc, const char *argv[])
     init_windows();
 
     /* set initial mode */
-    nc.current_mode = ModeIntro;
+    nc.mode = ModeIntro;
 
     read_input();
 
@@ -208,28 +208,28 @@ static void read_input(void)
 
     while (true) {
         ch = getch();
-        switch (nc.current_mode) {
+        switch (nc.mode) {
             case ModeGame:
                 if ('p' == ch) {
-                    nc.current_mode = ModePause;
+                    nc.mode = ModePause;
                 } else if ('k' == ch || KEY_UP == ch) {
                     cat_move_up();
                 } else if ('j' == ch || KEY_DOWN == ch) {
                     cat_move_down();
                 } else if ('q' == ch) {
-                    nc.current_mode = ModeScores;
+                    nc.mode = ModeScores;
                 }
                 break;
             case ModePause:
                 if ('p' == ch) {
-                    nc.current_mode = ModeGame;
+                    nc.mode = ModeGame;
                 } else if ('q' == ch) {
-                    nc.current_mode = ModeScores;
+                    nc.mode = ModeScores;
                 }
                 break;
             case ModeScores:
                 if ('q' == ch) {
-                    nc.current_mode = ModeOver;
+                    nc.mode = ModeOver;
                 }
                 show_scores();
                 break;
@@ -237,7 +237,7 @@ static void read_input(void)
                 break;
             case ModeIntro:
                 if (10 == ch) {
-                    nc.current_mode = ModeGame;
+                    nc.mode = ModeGame;
                     world_init();
                 }
                 break;
@@ -254,7 +254,7 @@ static void game_handler(void)
     extern struct Nyancat nc;
     static unsigned int i = 0;
 
-    switch (nc.current_mode) {
+    switch (nc.mode) {
         case ModeGame:
             ++i;
             print_statusline("Game: % 3d - %d s", i, (i / FPS));

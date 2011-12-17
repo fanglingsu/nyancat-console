@@ -24,7 +24,7 @@ struct Nyancat {
         WINDOW *world;
         WINDOW *status;
     } ui;
-    enum mode current_mode;
+    enum mode mode;
 } nc;
 
 void error_exit(const char *format, ...);
