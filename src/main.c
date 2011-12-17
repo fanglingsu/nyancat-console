@@ -15,8 +15,8 @@ static void show_start_screen(void);
 static void show_scores(void);
 static void print_statusline(const char *format, ...);
 static void print_licence_message(void);
-static void set_timer(void);
 static void set_signals(void);
+static void set_timer(void);
 static void signal_handler(int sig);
 static void read_input(void);
 static void game_handler(void);
@@ -27,8 +27,8 @@ int main(int argc, const char *argv[])
     extern struct Nyancat nc;
 
     random_init();
-    set_timer();
     set_signals();
+    set_timer();
     init_windows();
 
     /* set initial mode */
@@ -134,23 +134,6 @@ static void print_licence_message(void)
 }
 
 /**
- * Sets up the game timer
- */
-static void set_timer(void)
-{
-    struct itimerval it;
-
-    /* clear itimerval struct members */
-    timerclear(&it.it_interval);
-    timerclear(&it.it_value);
-
-    /* set timer */
-    it.it_interval.tv_usec = 1000000/FPS;
-    it.it_value.tv_usec    = 1000000/FPS;
-    setitimer(ITIMER_REAL, &it, NULL);
-}
-
-/**
  * Sets up signal handlers we need.
  */
 static void set_signals(void)
@@ -170,6 +153,23 @@ static void set_signals(void)
     /* ignore sigtstp */
     sa.sa_handler = SIG_IGN;
     sigaction(SIGTSTP, &sa, NULL);
+}
+
+/**
+ * Sets up the game timer
+ */
+static void set_timer(void)
+{
+    struct itimerval it;
+
+    /* clear itimerval struct members */
+    timerclear(&it.it_interval);
+    timerclear(&it.it_value);
+
+    /* set timer */
+    it.it_interval.tv_usec = 1000000/FPS;
+    it.it_value.tv_usec    = 1000000/FPS;
+    setitimer(ITIMER_REAL, &it, NULL);
 }
 
 /**
