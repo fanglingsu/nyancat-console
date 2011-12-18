@@ -1,0 +1,29 @@
+CORE
+-   Add event queue to allow several event to be triggered at dedicated time.
+    This will be eminent to remove the current inflexible way to handle
+    movements and key presses FPS times in a second, which leads to cruel code
+    that performs some modulo operation on elapsed frames - what make the
+    movements unnatural and rugged.
+
+    possible event struct:
+    typedef void (*event_callback) (game_time, void *);
+    struct event {
+        struct event *next;       /* holds the next event in queue */
+        game_time  time;          /* time, when the event should happen */
+        event_callback callback;  /* function to call */
+        void *callback_data;      /* argument to pass - is this needed? */
+    };
+
+-   Find a better way to render the world with plateaus and items that allows
+    to determine if nyan walks on earth or is falling down. The world should be
+    created in a way, that nyan can reach a single plateau nearly every time.
+    So we need a kind of definition how to generate the plateau elements so
+    that they aren't to much but that nyan can reach them. The calculation for
+    the world should be fast to not disturb gaming fun.
+
+GAMING
+Modes:
+-   Add the fly mode where nyan can navigate up and down without the
+    constraint that a jump is only allowed twice.
+-   Add a move where nyan appears only sporadically on the screen (ghost mode).
+-   Add the funny crack mode with shaky world and a little higher nyan speed.
