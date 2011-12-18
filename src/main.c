@@ -9,11 +9,11 @@
 #include "world.h"
 #include "config.h"
 #include "cat.h"
+#include "status.h"
 
 static void init_windows(void);
 static void show_start_screen(void);
 static void show_scores(void);
-static void print_statusline(const char *format, ...);
 static void print_licence_message(void);
 static void set_signals(void);
 static void set_timer(const int fps);
@@ -122,23 +122,6 @@ static void show_scores(void)
     /* remove content from status window */
     werase(nc.ui.status);
     wnoutrefresh(nc.ui.status);
-}
-
-/**
- * @format: Formatstring like in fprintf
- *
- * Prints out message to status line.
- */
-static void print_statusline(const char *format, ...)
-{
-    extern struct Nyancat nc;
-    va_list ap;
-
-    werase(nc.ui.status);
-    va_start(ap, format);
-    vwprintw(nc.ui.status, format, ap);
-    va_end(ap);
-    wrefresh(nc.ui.status);
 }
 
 /**
@@ -276,15 +259,20 @@ static void game_handler(void)
     extern struct Nyancat nc;
     static unsigned int i = 0;
 
+    /* set some status valriables */
+    status_set_runtime(i / FPS);
+    status_set_frames(i);
+    status_set_mode(nc.mode);
+
     switch (nc.mode) {
         case ModeGame:
             ++i;
-            print_statusline("Game: % 3d - %d s", i, (i / FPS));
             world_print();
             cat_print();
+            status_print();
             break;
         case ModePause:
-            print_statusline("Paused: % 3d - %d s", i, (i / FPS));
+            status_print();
             break;
         case ModeScores:
             break;

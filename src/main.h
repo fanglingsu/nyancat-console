@@ -6,7 +6,7 @@
 #define LENGTH(x) (sizeof(x)/sizeof(x[0]))
 #define DEBUG_MSG(x) (mvwprintw(stdscr, SCREENHEIGHT + 1, 0, x))
 
-enum mode {
+enum gamemode {
     ModeIntro,
     ModeGame,
     ModePause,
@@ -25,7 +25,7 @@ struct Nyancat {
         WINDOW *world;
         WINDOW *status;
     } ui;
-    enum mode mode;
+    enum gamemode mode;
 } nc;
 
 void error_exit(const char *format, ...);
