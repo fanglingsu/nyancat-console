@@ -134,7 +134,7 @@ static void cat_auto_movement(void)
 {
     extern struct Cat cat;
     /* number of frame until a certain movement is performed */
-    const int up = 6, forward = 12, down = 18;
+    const int up = 6, forward = 10, down = 16;
 
     if (CatModeJump == cat.mode) {
         /* try to jump in a natural way */
@@ -142,8 +142,9 @@ static void cat_auto_movement(void)
             if (1 == (cat.mode_frames % 2)) {
                 cat_move_up();
             }
-        } else if (cat.mode_frames >= up && cat.mode_frames < forward) {
-        } else if (cat.mode_frames >= forward && cat.mode_frames < down) {
+        } else if (cat.mode_frames < forward) {
+            /* nothing to do here - again forward */
+        } else if (cat.mode_frames < down) {
             if (1 == (cat.mode_frames % 2)) {
                 cat_move_down();
             }
