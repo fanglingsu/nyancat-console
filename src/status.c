@@ -60,7 +60,7 @@ void status_print(void)
     extern struct Status status;
 
     printstatusf(
-        "%s: % 3d - %.2lf s %s",
+        "%s: % 3d - %.2lfs %s",
         status.mode == ModePause ? "Paused" : "Game",
         status.frames,
         status.runtime,

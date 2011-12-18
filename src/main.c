@@ -116,9 +116,10 @@ static void show_scores(void)
 
     werase(nc.ui.world);
     wattron(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 5, SCREENWIDTH/2 - 5, "GAME OVER!");
+    mvwprintw(nc.ui.world, 5, 2, "GAME OVER!");
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 7, SCREENWIDTH/2 - 8, "Press q to quit.");
+    mvwprintw(nc.ui.world, 7, 2, "You have nyaned for %.2lfs", clock_get_relative());
+    mvwprintw(nc.ui.world, 9, 2, "Press q to quit.");
     wnoutrefresh(nc.ui.world);
 
     /* remove content from status window */
@@ -218,18 +219,22 @@ static void read_input(void)
             case ModeGame:
                 if ('p' == ch) {
                     nc.mode = ModePause;
+                    clock_freeze();
                 } else if ('k' == ch || KEY_UP == ch) {
                     cat_jump_up();
                 } else if ('j' == ch || KEY_DOWN == ch) {
                     cat_jump_down();
                 } else if ('q' == ch) {
+                    clock_freeze();
                     nc.mode = ModeScores;
                 }
                 break;
             case ModePause:
                 if ('p' == ch) {
                     nc.mode = ModeGame;
+                    clock_thaw();
                 } else if ('q' == ch) {
+                    clock_freeze();
                     nc.mode = ModeScores;
                 }
                 break;
