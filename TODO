@@ -14,6 +14,10 @@ CORE
         void *callback_data;      /* argument to pass - is this needed? */
     };
 
+-   Allow to freeze and thaw the clock for example to implement the pause
+    mode. If we queue events by time we need to freeze the clock to continue
+    at the same state after pause where released.
+
 -   Find a better way to render the world with plateaus and items that allows
     to determine if nyan walks on earth or is falling down. The world should be
     created in a way, that nyan can reach a single plateau nearly every time.
