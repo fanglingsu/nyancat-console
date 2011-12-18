@@ -12,3 +12,13 @@ void do_something(const int counter)
         /* other code here */
     }
 }
+
+Please mark global variables within function as extern.
+
+For now we prefer to write none static function in the first part of file, the
+static function into the second part. For a better overview it's recomended to
+write all function prototypes for functions.
+
+Try to keep the code within function simple and easy to read. If it's required
+to do something fancy fir better performance, the code could be made better to
+understand if it's commented.
