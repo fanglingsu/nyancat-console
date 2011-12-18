@@ -213,9 +213,9 @@ static void read_input(void)
                 if ('p' == ch) {
                     nc.mode = ModePause;
                 } else if ('k' == ch || KEY_UP == ch) {
-                    cat_move_up();
+                    cat_jump_up();
                 } else if ('j' == ch || KEY_DOWN == ch) {
-                    cat_move_down();
+                    cat_jump_down();
                 } else if ('q' == ch) {
                     nc.mode = ModeScores;
                 }
@@ -239,6 +239,7 @@ static void read_input(void)
                 if (10 == ch) {
                     nc.mode = ModeGame;
                     world_init();
+                    cat_init();
                 }
                 break;
         }
