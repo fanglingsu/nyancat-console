@@ -22,6 +22,7 @@ static void read_input(void);
 static void game_handler(void);
 static void cleanup_windows(void);
 
+
 int main(int argc, const char *argv[])
 {
     extern struct Nyancat nc;
@@ -38,6 +39,26 @@ int main(int argc, const char *argv[])
 
     cleanup_windows();
     return EXIT_SUCCESS;
+}
+
+/**
+ * @format: Formatstring like in fprintf.
+ *
+ * Signal a fatal error and quit immediately.
+ */
+void error_exit(const char *format, ...)
+{
+    va_list ap;
+
+    /* clean all ncurses windows */
+    cleanup_windows();
+
+    va_start(ap, format);
+    vfprintf(stderr, format, ap);
+    fputc('\n', stderr);
+    va_end(ap);
+
+    exit(EXIT_FAILURE);
 }
 
 /**
@@ -278,26 +299,6 @@ static void game_handler(void)
     }
     /* print changes from virtual screen to terminal */
     doupdate();
-}
-
-/**
- * @format: Formatstring like in fprintf.
- *
- * Signal a fatal error and quit immediately.
- */
-void error_exit(const char *format, ...)
-{
-    va_list ap;
-
-    /* clean all ncurses windows */
-    cleanup_windows();
-
-    va_start(ap, format);
-    vfprintf(stderr, format, ap);
-    fputc('\n', stderr);
-    va_end(ap);
-
-    exit(EXIT_FAILURE);
 }
 
 /**
