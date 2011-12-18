@@ -1,5 +1,5 @@
 #include <sys/time.h>
-#include <time.h>
+#include <stddef.h>
 #include "clock.h"
 
 /* holds current base time that where set in clock_init */
