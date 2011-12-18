@@ -10,6 +10,7 @@
 #include "config.h"
 #include "cat.h"
 #include "status.h"
+#include "clock.h"
 
 static void init_windows(void);
 static void show_start_screen(void);
@@ -27,6 +28,7 @@ int main(int argc, const char *argv[])
 {
     extern struct Nyancat nc;
 
+    clock_init();
     random_init();
     set_signals();
     set_timer(FPS);
@@ -260,7 +262,7 @@ static void game_handler(void)
     static unsigned int i = 0;
 
     /* set some status valriables */
-    status_set_runtime(i / FPS);
+    status_set_runtime(clock_get_relative());
     status_set_frames(i);
     status_set_mode(nc.mode);
 

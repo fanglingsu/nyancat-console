@@ -9,10 +9,10 @@ enum item {
 
 static struct Status {
     enum gamemode mode;
-    int runtime;
+    game_time runtime;
     int frames;
     char debug[90];
-} status = {ModeIntro, 0, 0, ""};
+} status = {ModeIntro, 0.0, 0, ""};
 
 static void printstatusf(const char *format, ...);
 
@@ -33,7 +33,7 @@ void status_set_mode(const enum gamemode mode)
  *
  * Set the runtime in seconds to the status.
  */
-void status_set_runtime(const int runtime)
+void status_set_runtime(const game_time runtime)
 {
     extern struct Status status;
 
@@ -60,7 +60,7 @@ void status_print(void)
     extern struct Status status;
 
     printstatusf(
-        "%s: % 3d - %d s %s",
+        "%s: % 3d - %.2lf s %s",
         status.mode == ModePause ? "Paused" : "Game",
         status.frames,
         status.runtime,
