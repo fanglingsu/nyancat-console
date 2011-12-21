@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include "mode.h"
+#include "queue.h"
 
 #define LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
@@ -20,6 +21,7 @@
 #   define debug(...)
 #endif
 
+/* game modes */
 Mode *mode_intro;
 Mode *mode_game;
 Mode *mode_pause;

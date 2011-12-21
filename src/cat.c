@@ -2,6 +2,8 @@
 #include "config.h"
 #include "main.h"
 #include "cat.h"
+#include "queue.h"
+#include "clock.h"
 
 enum catmode {
     CatModeRun,
@@ -12,17 +14,11 @@ static struct Cat {
     int posY;
     int posX;
     enum catmode mode;
-    /* count the frame nyan is in the current mode this is useful to auto
-     * abort a certain mode and to change into another without any user
-     * request */
-    int mode_frames;
 } cat;
 
 static void cat_move_up(void);
 static void cat_move_down(void);
-static void cat_auto_movement(void);
 static int  cat_switch_mode(enum catmode mode);
-
 
 /**
  * Initializes the cat with their default properties.
@@ -34,7 +30,6 @@ void cat_init(void)
     cat.posX    = 8;
     cat.posY    = 14;
     cat.mode    = CatModeRun;
-    cat.mode_frames = 0;
 }
 
 /**
@@ -44,14 +39,17 @@ void cat_init(void)
  *
  * Movement will be done in cat_auto_movement() function instead.
  */
-void cat_jump_up(void)
+void cat_jump_up(game_time time)
 {
     extern struct Cat cat;
 
     /* don't allow to jump if already jumped */
     if (!cat_switch_mode(CatModeJump)) {
         cat_switch_mode(CatModeRun);
+        return;
     }
+    /* make entry for the jump handler to perform further steps of the jump */
+    queue_add_event(time + TICK(1), cat_jump_handler, NULL);
 }
 
 /**
@@ -62,6 +60,15 @@ void cat_jump_down(void)
     /* Not implemented yet. Jump down will make sense if the fly mode will be
      * implemented that allows nyan to fly up and down nearly without any
      * constraints. */
+}
+
+/**
+ * Eventcallback to perform a nice jump.
+ */
+void cat_jump_handler(game_time time, void *data)
+{
+    cat_move_up();
+    queue_add_event(time+1, cat_jump_handler, NULL);
 }
 
 /**
@@ -83,7 +90,6 @@ void cat_print(void)
     };
 
     /* handle movements */
-    cat_auto_movement();
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
     mvwprintw(nc.ui.world, cat.posY,     cat.posX + 1, ",-----,");
@@ -127,48 +133,9 @@ static void cat_move_down(void)
 }
 
 /**
- * Handles movement of nyan. For example performe moves according to a
- * previous user requested jump.
- */
-static void cat_auto_movement(void)
-{
-    extern struct Cat cat;
-    /* number of frame until a certain movement is performed */
-    const int up = 6, forward = 10, down = 16;
-
-    if (CatModeJump == cat.mode) {
-        /* try to jump in a natural way */
-        if (cat.mode_frames < up) {
-            if (1 == (cat.mode_frames % 2)) {
-                cat_move_up();
-            }
-        } else if (cat.mode_frames < forward) {
-            /* nothing to do here - again forward */
-        } else if (cat.mode_frames < down) {
-            if (1 == (cat.mode_frames % 2)) {
-                cat_move_down();
-            }
-        } else {
-            cat_switch_mode(CatModeRun);
-        }
-    } else if (CatModeRun == cat.mode) {
-        /* TODO check if nyan has eath under the feets, else fall down until
-         * the ground or a plateau is reached */
-
-        /* dont fall to fast */
-        if (0 == (cat.mode_frames % 2)) {
-            cat_move_down();
-        }
-    }
-    ++cat.mode_frames;
-}
-
-/**
  * @mode: mode to switch nyan into.
  *
- * Switches nyan in given mode and resets the mode frames set.
- *
- * @return  int 1 if mode could be switched
+ * Switches nyan in given mode. Returns 1 if mode could be switched.
  */
 static int cat_switch_mode(enum catmode mode)
 {
@@ -190,7 +157,6 @@ static int cat_switch_mode(enum catmode mode)
 
     /* change mode if not previous returned */
     cat.mode = mode;
-    cat.mode_frames = 0;
 
     return 1;
 }

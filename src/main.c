@@ -13,8 +13,7 @@
 #include "clock.h"
 #include "mode.h"
 #include "modes.h"
-
-#include <unistd.h>
+#include "io.h"
 
 static void init_windows(void);
 static void init_modes(void);
@@ -23,7 +22,6 @@ static void set_signals(void);
 static void signal_handler(int sig);
 static void loop(void);
 static void cleanup_windows(void);
-
 
 int main(int argc, const char *argv[])
 {
@@ -84,7 +82,6 @@ static void init_windows(void)
     curs_set(0);    /* don't show a carret */
     keypad(stdscr, TRUE);
     intrflush(stdscr, FALSE);
-    nodelay(stdscr, TRUE);
 
     /* create sub windows */
     nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
@@ -164,20 +161,37 @@ static void signal_handler(int sig)
 static void loop(void)
 {
     extern struct Nyancat nc;
-    int ch;
+    game_time time;
+    int key_ready = 0, ch;
 
     /* switch to intro mode */
     mode_enter(mode_intro);
-    doupdate();
+    mode_draw();
+
     while (mode_valid()) {
-        usleep((SECOND/FPS));
         /* collect data for status bar but draw callback decide if to write to
          * window or not */
         status_set_mode(mode_get_name());
         status_set_runtime(clock_get_relative());
-        ch = getch();
-        mode_key(ch);
-        mode_draw();
+
+        /* look for the first to run event */
+        time = queue_get_first_time();
+        if (time) {
+            /* wait for time to run the first event form queue or the first
+             * keypress, wichever comes first. */
+            key_ready = io_wait_for_key(time);
+        } else {
+            /* no event queue item found */
+            io_wait_for_key(0);
+            key_ready = 1;
+        }
+        if (key_ready > 0) {
+            ch = getch();
+            mode_key(ch);
+            mode_draw();
+        } else {
+            queue_run_until(time);
+        }
         doupdate();
     }
 }
@@ -194,6 +208,7 @@ static void cleanup_windows(void)
     free(mode_pause);
     free(mode_scores);
     free(mode_over);
+    queue_free();
 
     wrefresh(nc.ui.status);
     delwin(nc.ui.status);

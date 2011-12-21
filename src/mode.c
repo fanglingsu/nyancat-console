@@ -2,6 +2,7 @@
 #include "main.h"
 #include "clock.h"
 #include "mode.h"
+#include "queue.h"
 
 /* hide implementation of struct */
 struct _mode {
@@ -64,6 +65,7 @@ void mode_enter(const Mode *mode)
     }
     current = mode;
     if (current->enter) {
+        queue_free();
         current->enter();
     }
 }
@@ -75,7 +77,6 @@ void mode_draw(void)
 {
     if (current && current->draw) {
         current->draw();
-        /*doupdate();*/
     }
 }
 

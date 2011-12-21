@@ -8,7 +8,7 @@
 #include "clock.h"
 #include "world.h"
 #include "cat.h"
-    
+
 /**
  * Print the introduction message on the screen.
  */
@@ -47,6 +47,7 @@ void game_enter(void)
     if (!initialized) {
         world_init();
         cat_init();
+        world_start_scrolling();
         initialized = 1;
     }
 }
@@ -68,7 +69,7 @@ void game_key_handler(game_time time, const int key)
 {
     switch (key) {
         case KEY_UP:
-            cat_jump_up();
+            cat_jump_up(time);
             break;
 
         case KEY_DOWN:

@@ -3,15 +3,21 @@
 #include "config.h"
 #include "main.h"
 #include "random.h"
+#include "queue.h"
 
-static WINDOW *world;
+struct _world {
+    WINDOW *win;
+    int y;
+    int x;
+};
+
+static struct _world world;
 
 /**
  * Generates nyans world one time into a pad window.
  */
 void world_init(void)
 {
-    extern WINDOW *world;
     int column, rand_line, rand_element, mod;
     const char *elements[8] = {
         "###########",
@@ -24,8 +30,12 @@ void world_init(void)
         "##########   #############",
     };
 
-    world = newpad(SCREENHEIGHT, WORLDWIDTH);
-    wclear(world);
+    /* set the defaults in struct */
+    world.win = newpad(SCREENHEIGHT, WORLDWIDTH);
+    world.y = 0;
+    world.x = 0;
+
+    wclear(world.win);
     for (column = 0; column < WORLDWIDTH; column += 9) {
         /* number to select element */
         rand_element = random_limited(5);
@@ -33,8 +43,25 @@ void world_init(void)
         mod = (rand_element % 3) + 1;
         /* random select the y position for element */
         rand_line = random_limited(SCREENHEIGHT * mod) / mod;
-        mvwaddstr(world, rand_line, column, elements[rand_element]);
+        mvwaddstr(world.win, rand_line, column, elements[rand_element]);
     }
+}
+
+void world_scroll_handler(game_time time, void *data)
+{
+    world.x++;
+
+    /* end of the world reached */
+    if (world.x > WORLDWIDTH) {
+        world.x = 0;
+    }
+    queue_add_event(time + TICK(1), world_scroll_handler, NULL);
+    mode_draw();
+}
+
+void world_start_scrolling(void)
+{
+    queue_add_event(clock_get_relative() + TICK(1), world_scroll_handler, NULL);
 }
 
 /**
@@ -42,16 +69,8 @@ void world_init(void)
  */
 void world_print(void)
 {
-    extern WINDOW *world;
-    static int i = 0;
-
-    /* end of the world reached */
-    if (i > WORLDWIDTH) {
-        i = 0;
-    }
     /* TODO add possibility to fill screen on end of world with the beginning
      * of the world - how can we make this beak unvisible for the gamer? */
-    copywin(world, nc.ui.world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1, 0);
-    pnoutrefresh(world, 0, i, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1);
-    ++i;
+    copywin(world.win, nc.ui.world, 0, world.x, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1, 0);
+    pnoutrefresh(world.win, 0, world.x, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1);
 }
