@@ -11,33 +11,30 @@
 #include "cat.h"
 #include "status.h"
 #include "clock.h"
+#include "mode.h"
+#include "modes.h"
+
+#include <unistd.h>
 
 static void init_windows(void);
-static void show_start_screen(void);
-static void show_scores(void);
+static void init_modes(void);
 static void print_licence_message(void);
 static void set_signals(void);
-static void set_timer(const int fps);
 static void signal_handler(int sig);
-static void read_input(void);
-static void game_handler(void);
+static void loop(void);
 static void cleanup_windows(void);
 
 
 int main(int argc, const char *argv[])
 {
-    extern struct Nyancat nc;
-
     clock_init();
     random_init();
     set_signals();
-    set_timer(FPS);
     init_windows();
+    clear_windows();
+    init_modes();
 
-    /* set initial mode */
-    nc.mode = ModeIntro;
-
-    read_input();
+    loop();
 
     cleanup_windows();
     return EXIT_SUCCESS;
@@ -87,44 +84,32 @@ static void init_windows(void)
     curs_set(0);    /* don't show a carret */
     keypad(stdscr, TRUE);
     intrflush(stdscr, FALSE);
-    timeout((SECOND/FPS)/PPF);  /* set timeout for the getch() */
+    nodelay(stdscr, TRUE);
 
     /* create sub windows */
     nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
     nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
 }
 
-/**
- * Show the startscreen with gaming instructions.
- */
-static void show_start_screen(void)
+void clear_windows(void)
 {
-    extern struct Nyancat nc;
-
-    werase(nc.ui.world);
-    waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
-    waddstr(nc.ui.world, "Use j, k or the cursor keys to move the cat.");
+    wclear(nc.ui.world);
     wnoutrefresh(nc.ui.world);
+    wclear(nc.ui.status);
+    wnoutrefresh(nc.ui.status);
 }
 
 /**
- * Shows the summary scores screen on end of the game.
+ * Initializes the game modes.
  */
-static void show_scores(void)
+static void init_modes(void)
 {
-    extern struct Nyancat nc;
+    extern Mode *mode_intro, *mode_game, *mode_pause, *mode_scores;
 
-    werase(nc.ui.world);
-    wattron(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 5, 2, "GAME OVER!");
-    wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 7, 2, "You have nyaned for %.2lfs", clock_get_relative());
-    mvwprintw(nc.ui.world, 9, 2, "Press q to quit.");
-    wnoutrefresh(nc.ui.world);
-
-    /* remove content from status window */
-    werase(nc.ui.status);
-    wnoutrefresh(nc.ui.status);
+    mode_intro = mode_create("Intro", NULL, NULL, intro_draw, intro_key_handler);
+    mode_scores = mode_create("Scores", scores_draw, NULL, NULL, scores_key_handler);
+    mode_game = mode_create("Game", game_enter, NULL, game_draw, game_key_handler);
+    mode_pause = mode_create("Pause", pause_enter, pause_leave, NULL, pause_key_handler);
 }
 
 /**
@@ -155,32 +140,10 @@ static void set_signals(void)
     /* set signal handlers */
     sigaction(SIGTERM, &sa, NULL);
     sigaction(SIGINT,  &sa, NULL);
-    sigaction(SIGALRM, &sa, NULL);
 
     /* ignore sigtstp */
     sa.sa_handler = SIG_IGN;
     sigaction(SIGTSTP, &sa, NULL);
-}
-
-/**
- * @fps: Frames per second. Use this to speed the game up.
- *
- * Sets up the game timer
- */
-static void set_timer(const int fps)
-{
-    struct itimerval it;
-
-    /* clear itimerval struct members */
-    timerclear(&it.it_interval);
-    timerclear(&it.it_value);
-
-    /* set timer */
-    it.it_value.tv_usec     = SECOND / fps;
-    it.it_value.tv_sec      = 0;
-    it.it_interval.tv_usec  = SECOND / fps;
-    it.it_interval.tv_sec   = 0;
-    setitimer(ITIMER_REAL, &it, NULL);
 }
 
 /**
@@ -190,110 +153,33 @@ static void set_timer(const int fps)
  */
 static void signal_handler(int sig)
 {
-    switch (sig) {
-        case SIGALRM:
-            /* received from the timer */
-            game_handler();
-            return;
-
-        case SIGTERM:
-        case SIGINT:
-            cleanup_windows();
-            print_licence_message();
-            exit(EXIT_FAILURE);
-    }
+    cleanup_windows();
+    print_licence_message();
+    exit(EXIT_FAILURE);
 }
 
 /**
- * Reads keyboard input and decide when to switch to another mode or to change
- * position variables.
+ * Main game loop.
  */
-static void read_input(void)
+static void loop(void)
 {
     extern struct Nyancat nc;
     int ch;
 
-    while (true) {
-        ch = getch();
-        switch (nc.mode) {
-            case ModeGame:
-                if ('p' == ch) {
-                    nc.mode = ModePause;
-                    clock_freeze();
-                } else if ('k' == ch || KEY_UP == ch) {
-                    cat_jump_up();
-                } else if ('j' == ch || KEY_DOWN == ch) {
-                    cat_jump_down();
-                } else if ('q' == ch) {
-                    clock_freeze();
-                    nc.mode = ModeScores;
-                }
-                break;
-            case ModePause:
-                if ('p' == ch) {
-                    nc.mode = ModeGame;
-                    clock_thaw();
-                } else if ('q' == ch) {
-                    clock_freeze();
-                    nc.mode = ModeScores;
-                }
-                break;
-            case ModeScores:
-                if ('q' == ch) {
-                    nc.mode = ModeOver;
-                }
-                show_scores();
-                break;
-            case ModeOver:
-                break;
-            case ModeIntro:
-                if (10 == ch) {
-                    nc.mode = ModeGame;
-                    world_init();
-                    cat_init();
-                }
-                break;
-        }
-    }
-}
-
-/**
- * Handlerfunction to perform gaming actions. This function is calles FPS
- * times a second.
- */
-static void game_handler(void)
-{
-    extern struct Nyancat nc;
-    static unsigned int i = 0;
-
-    /* set some status valriables */
-    status_set_runtime(clock_get_relative());
-    status_set_frames(i);
-    status_set_mode(nc.mode);
-
-    switch (nc.mode) {
-        case ModeGame:
-            ++i;
-            world_print();
-            cat_print();
-            status_print();
-            break;
-        case ModePause:
-            status_print();
-            break;
-        case ModeScores:
-            break;
-        case ModeOver:
-            cleanup_windows();
-            print_licence_message();
-            exit(EXIT_SUCCESS);
-            break;
-        case ModeIntro:
-            show_start_screen();
-            break;
-    }
-    /* print changes from virtual screen to terminal */
+    /* switch to intro mode */
+    mode_enter(mode_intro);
     doupdate();
+    while (mode_valid()) {
+        usleep((SECOND/FPS));
+        /* collect data for status bar but draw callback decide if to write to
+         * window or not */
+        status_set_mode(mode_get_name());
+        status_set_runtime(clock_get_relative());
+        ch = getch();
+        mode_key(ch);
+        mode_draw();
+        doupdate();
+    }
 }
 
 /**
@@ -302,6 +188,12 @@ static void game_handler(void)
 static void cleanup_windows(void)
 {
     extern struct Nyancat nc;
+    extern Mode *mode_intro, *mode_game, *mode_pause, *mode_scores, *mode_over;
+    free(mode_intro);
+    free(mode_game);
+    free(mode_pause);
+    free(mode_scores);
+    free(mode_over);
 
     wrefresh(nc.ui.status);
     delwin(nc.ui.status);

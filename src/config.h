@@ -6,7 +6,6 @@
 
 /* speed */
 #define FPS 15  /* number of frames per second - higher values = faster gameing */
-#define PPF 10  /* polls per second - number of times input i read per frame */
 #define SECOND 1000000
 
 /* dimension for the viewport of the game */

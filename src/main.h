@@ -3,8 +3,9 @@
 
 #include <ncurses.h>
 #include <stdio.h>
+#include "mode.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define LENGTH(x) (sizeof(x)/sizeof(x[0]))
 
@@ -21,13 +22,12 @@
 #   define debug(...)
 #endif
 
-enum gamemode {
-    ModeIntro,
-    ModeGame,
-    ModePause,
-    ModeScores,
-    ModeOver
-};
+Mode *mode_intro;
+Mode *mode_game;
+Mode *mode_pause;
+Mode *mode_scores;
+/* not a real mode, shoudl always be NULL @see mode_valid() */
+Mode *mode_over;
 
 enum color {
     ColorWhite,
@@ -40,9 +40,9 @@ struct Nyancat {
         WINDOW *world;
         WINDOW *status;
     } ui;
-    enum gamemode mode;
 } nc;
 
+void clear_windows(void);
 void error_exit(const char *format, ...);
 
 #endif /* end of include guard: MAIN_H */
