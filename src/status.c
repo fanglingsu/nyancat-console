@@ -8,20 +8,18 @@ enum item {
 };
 
 static struct Status {
-    enum gamemode mode;
+    const char *mode;
     game_time runtime;
-    int frames;
-    char debug[90];
-} status = {ModeIntro, 0.0, 0, ""};
+} status = {NULL, 0.0};
 
 static void printstatusf(const char *format, ...);
 
 /**
- * @mode: current mode of game
+ * @mode: current mode name
  *
- * Set the game mode to the status.
+ * Set the game mode name to the status.
  */
-void status_set_mode(const enum gamemode mode)
+void status_set_mode(const char *mode)
 {
     extern struct Status status;
 
@@ -41,18 +39,6 @@ void status_set_runtime(const game_time runtime)
 }
 
 /**
- * @frames: number of frames used since starting the game.
- *
- * Set the used frame numbers.
- */
-void status_set_frames(const int frames)
-{
-    extern struct Status status;
-
-    status.frames = frames;
-}
-
-/**
  * Print out contens of the status to the status window.
  */
 void status_print(void)
@@ -60,11 +46,9 @@ void status_print(void)
     extern struct Status status;
 
     printstatusf(
-        "%s: % 3d - %.2lfs %s",
-        status.mode == ModePause ? "Paused" : "Game",
-        status.frames,
-        status.runtime,
-        status.debug
+        "%s: %.2lfs",
+        status.mode,
+        status.runtime
     );
 }
 
