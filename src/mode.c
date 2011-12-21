@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "main.h"
+#include "clock.h"
 #include "mode.h"
 
 /* hide implementation of struct */
@@ -8,7 +9,7 @@ struct _mode {
     void (*enter) (void);
     void (*leave) (void);
     void (*draw) (void);
-    void (*key) (const int);
+    void (*key) (game_time, const int);
 };
 
 static const Mode *current;
@@ -86,7 +87,7 @@ void mode_draw(void)
 void mode_key(const int key)
 {
     if (current && current->key) {
-        current->key(key);
+        current->key(clock_get_relative(), key);
     }
 }
 

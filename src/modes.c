@@ -28,7 +28,7 @@ void intro_draw(void)
  *
  * Handles key presses from user.
  */
-void intro_key_handler(const int key)
+void intro_key_handler(game_time time, const int key)
 {
     if (10 == key) {
         mode_enter(mode_game);
@@ -64,7 +64,7 @@ void game_draw(void)
 /**
  * Handle keypresses for game mode.
  */
-void game_key_handler(const int key)
+void game_key_handler(game_time time, const int key)
 {
     switch (key) {
         case KEY_UP:
@@ -109,7 +109,7 @@ void pause_leave(void)
  *
  * Handles the keypresses within the pause mode.
  */
-void pause_key_handler(const int key)
+void pause_key_handler(game_time time, const int key)
 {
     switch (key) {
         case 'p':
@@ -146,7 +146,7 @@ void scores_draw(void)
  *
  * Handles key presses from user.
  */
-void scores_key_handler(const int key)
+void scores_key_handler(game_time time, const int key)
 {
     if ('q' == key) {
         mode_exit();
