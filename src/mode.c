@@ -3,6 +3,7 @@
 #include "clock.h"
 #include "mode.h"
 #include "queue.h"
+#include "status.h"
 
 /* hide implementation of struct */
 struct _mode {
@@ -64,6 +65,9 @@ void mode_enter(const Mode *mode)
         current->leave();
     }
     current = mode;
+    /* collect data for status bar but draw callback decide if to write to
+     * window or not */
+    status_set_mode(mode->name);
     if (current->enter) {
         queue_free();
         current->enter();

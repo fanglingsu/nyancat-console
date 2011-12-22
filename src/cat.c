@@ -16,9 +16,24 @@ static struct Cat {
     enum catmode mode;
 } cat;
 
-static void cat_move_up(void);
-static void cat_move_down(void);
-static int  cat_switch_mode(enum catmode mode);
+struct _action {
+    enum catmode mode;
+    int posY;
+    int posX;
+    game_time delta;
+};
+
+static struct _action jump_action[] = {
+    {CatModeJump, -1, 0, TICK(2.5)},
+    {CatModeJump, -1, 0, TICK(5)},
+    {CatModeJump,  1, 0, TICK(5)},
+    {CatModeJump,  1, 0, TICK(2.5)},
+    {CatModeRun,   0, 0, 0}
+};
+
+static struct _action *current_action = NULL;
+
+static void cat_move_by(const int y);
 
 /**
  * Initializes the cat with their default properties.
@@ -41,15 +56,12 @@ void cat_init(void)
  */
 void cat_jump_up(game_time time)
 {
-    extern struct Cat cat;
-
-    /* don't allow to jump if already jumped */
-    if (!cat_switch_mode(CatModeJump)) {
-        cat_switch_mode(CatModeRun);
-        return;
+    /* do not allow to jump multiple times */
+    if (cat.mode == CatModeJump) {
+        cat.mode = CatModeRun;
     }
-    /* make entry for the jump handler to perform further steps of the jump */
-    queue_add_event(time + TICK(1), cat_jump_handler, NULL);
+    queue_remove_event(cat_jump_handler);
+    cat_jump_handler(time, jump_action);
 }
 
 /**
@@ -67,8 +79,15 @@ void cat_jump_down(void)
  */
 void cat_jump_handler(game_time time, void *data)
 {
-    cat_move_up();
-    queue_add_event(time+1, cat_jump_handler, NULL);
+    current_action = data;
+
+    if (current_action->mode != CatModeJump) {
+        cat.mode = CatModeRun;
+        return;
+    }
+    cat_move_by(current_action->posY);
+
+    queue_add_event(time + current_action->delta, cat_jump_handler, current_action + 1);
 }
 
 /**
@@ -109,54 +128,28 @@ void cat_print(void)
 }
 
 /**
- * Move the cat up.
+ * Moves the cat by applying given vertical offset. Applying negative values
+ * moves nyan to the top.
  */
-static void cat_move_up(void)
+static void cat_move_by(const int y)
 {
     extern struct Cat cat;
 
-    if (cat.posY > 0) {
-        cat.posY--;
+    if (y > 0) {
+        /* move down */
+        if (cat.posY + CATHIGHT + y <= WORLDHEIGHT) {
+            cat.posY += y;
+        } else {
+            /* go to lowest position */
+            cat.posY = WORLDHEIGHT - CATHIGHT;
+        }
+    } else if (y < 0) {
+        /* move up */
+        if (cat.posY + y >= 0) {
+            cat.posY += y;
+        } else {
+            /* go to upper most position */
+            cat.posY = 0;
+        }
     }
-}
-
-/**
- * Move the cat down.
- */
-static void cat_move_down(void)
-{
-    extern struct Cat cat;
-
-    if (cat.posY + CATHIGHT < WORLDHEIGHT) {
-        cat.posY++;
-    }
-}
-
-/**
- * @mode: mode to switch nyan into.
- *
- * Switches nyan in given mode. Returns 1 if mode could be switched.
- */
-static int cat_switch_mode(enum catmode mode)
-{
-    extern struct Cat cat;
-    static int jump_count = 0;
-
-    switch (mode) {
-        case CatModeJump:
-            /* only allow to jump twice */
-            if (CatModeJump == cat.mode && 2 <= ++jump_count) {
-                jump_count = 0;
-                return 0;
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    /* change mode if not previous returned */
-    cat.mode = mode;
-
-    return 1;
 }

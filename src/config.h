@@ -6,12 +6,9 @@
 
 #define DEBUG 0
 
-/* speed */
-#define FPS 15  /* number of frames per second - higher values = faster gameing */
 #define SECOND 1000000
-
 #define SPEED 1.0
-#define TICK(x) ((x)*0.08/(SPEED))
+#define TICK(x) ((x)*0.06/(SPEED))
 
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24

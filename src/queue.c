@@ -41,6 +41,27 @@ void queue_add_event(game_time time, eventhandler callback, void *data)
 }
 
 /**
+ * @callback: function that calling event should be removed.
+ *
+ * Remove all events that would call given callback.
+ */
+void queue_remove_event(eventhandler callback)
+{
+    struct _event **eqp;
+
+    eqp = &queue;
+    while (*eqp) {
+        struct _event *eq = *eqp;
+        if (eq->callback == callback) {
+            *eqp = (*eqp)->next;
+            free(eq);
+        } else {
+            eqp = &((*eqp)->next);
+        }
+    }
+}
+
+/**
  * @time: game time until that all event queue entries should be called.
  *
  * Runs all callbacks from event queue that should start until given time.

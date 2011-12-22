@@ -5,13 +5,11 @@
 #include "random.h"
 #include "queue.h"
 
-struct _world {
+static struct _world {
     WINDOW *win;
     int y;
     int x;
-};
-
-static struct _world world;
+} world;
 
 /**
  * Generates nyans world one time into a pad window.

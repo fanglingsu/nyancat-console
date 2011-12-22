@@ -6,6 +6,7 @@
 typedef void (*eventhandler) (game_time, void *);
 
 void queue_add_event(game_time time, eventhandler callback, void *data);
+void queue_remove_event(eventhandler callback);
 void queue_run_until(game_time time);
 game_time queue_get_first_time(void);
 void queue_free(void);

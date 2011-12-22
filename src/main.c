@@ -169,11 +169,6 @@ static void loop(void)
     mode_draw();
 
     while (mode_valid()) {
-        /* collect data for status bar but draw callback decide if to write to
-         * window or not */
-        status_set_mode(mode_get_name());
-        status_set_runtime(clock_get_relative());
-
         /* look for the first to run event */
         time = queue_get_first_time();
         if (time) {
@@ -190,6 +185,9 @@ static void loop(void)
             mode_key(ch);
             mode_draw();
         } else {
+            /* TODO this causes a high cpu usage, if I can't find a better
+             * solution a usleep(1000); will prevent us form this behaviour */
+            usleep(1000);
             queue_run_until(time);
         }
         doupdate();

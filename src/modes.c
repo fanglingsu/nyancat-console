@@ -47,9 +47,9 @@ void game_enter(void)
     if (!initialized) {
         world_init();
         cat_init();
-        world_start_scrolling();
         initialized = 1;
     }
+    world_start_scrolling();
 }
 
 /**
@@ -59,6 +59,8 @@ void game_draw(void)
 {
     world_print();
     cat_print();
+    status_set_mode(mode_get_name());
+    status_set_runtime(clock_get_relative());
     status_print();
 }
 
@@ -95,6 +97,9 @@ void game_key_handler(game_time time, const int key)
 void pause_enter(void)
 {
     clock_freeze();
+    status_set_mode(mode_get_name());
+    status_set_runtime(clock_get_relative());
+    status_print();
 }
 
 /**
