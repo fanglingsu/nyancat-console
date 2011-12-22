@@ -106,7 +106,7 @@ clear_windows(void)
 static void
 init_modes(void)
 {
-    extern Mode *mode_intro, *mode_game, *mode_pause, *mode_scores;
+    extern gamemode_t *mode_intro, *mode_game, *mode_pause, *mode_scores;
 
     mode_intro = mode_create("Intro", NULL, NULL, intro_draw, intro_key_handler);
     mode_scores = mode_create("Scores", scores_draw, NULL, NULL, scores_key_handler);
@@ -170,7 +170,7 @@ static void
 loop(void)
 {
     extern struct Nyancat nc;
-    game_time time;
+    gametime_t time;
     int key_ready = 0, ch;
 
     /* switch to intro mode */

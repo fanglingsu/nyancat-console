@@ -22,12 +22,12 @@
 #endif
 
 /* game modes */
-Mode *mode_intro;
-Mode *mode_game;
-Mode *mode_pause;
-Mode *mode_scores;
+gamemode_t *mode_intro;
+gamemode_t *mode_game;
+gamemode_t *mode_pause;
+gamemode_t *mode_scores;
 /* not a real mode, shoudl always be NULL @see mode_valid() */
-Mode *mode_over;
+gamemode_t *mode_over;
 
 enum color {
     ColorWhite,

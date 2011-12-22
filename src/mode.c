@@ -11,10 +11,10 @@ struct _mode {
     void (*enter) (void);
     void (*leave) (void);
     void (*draw) (void);
-    void (*key) (game_time, const int);
+    void (*key) (gametime_t, const int);
 };
 
-static const Mode *current;
+static const gamemode_t *current;
 
 /* Flag to handle none existing concept for exit modes. For now it makes no
  * sense to saveon each mode if it's an exitmode or to use the last added mode
@@ -30,12 +30,12 @@ static int exit_flag = 0;
  *
  * Creates a mode with given callbacks.
  */
-Mode *
+gamemode_t *
 mode_create(const char *name, callback enter, callback leave, callback draw,
             keyhandler key)
 {
 
-    Mode *mode = (Mode *) malloc(sizeof(Mode));
+    gamemode_t *mode = (gamemode_t *) malloc(sizeof(gamemode_t));
     if (NULL == mode) {
         error_exit("Could not allocate memory");
     }
@@ -63,7 +63,7 @@ mode_exit(void)
  * Switch into given mode. Call leave for previous mode and enter on new mode.
  */
 void
-mode_enter(const Mode * mode)
+mode_enter(const gamemode_t * mode)
 {
     if (current && current->leave) {
         current->leave();

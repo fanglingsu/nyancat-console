@@ -47,7 +47,7 @@ world_init(void)
 }
 
 void
-world_scroll_handler(game_time time, void *data)
+world_scroll_handler(gametime_t time, void *data)
 {
     world.x++;
 

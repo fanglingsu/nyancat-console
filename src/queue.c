@@ -5,8 +5,8 @@
 
 struct _event {
     struct _event *next;
-    game_time time;
-    eventhandler callback;
+    gametime_t time;
+    eventhandler_fn callback;
     void *data;
 };
 
@@ -20,7 +20,7 @@ static struct _event *queue = NULL;
  * Adds a new event to the event queue.
  */
 void
-queue_add_event(game_time time, eventhandler callback, void *data)
+queue_add_event(gametime_t time, eventhandler_fn callback, void *data)
 {
     struct _event **eqp, *eq;
 
@@ -47,7 +47,7 @@ queue_add_event(game_time time, eventhandler callback, void *data)
  * Remove all events that would call given callback.
  */
 void
-queue_remove_event(eventhandler callback)
+queue_remove_event(eventhandler_fn callback)
 {
     struct _event **eqp;
 
@@ -69,7 +69,7 @@ queue_remove_event(eventhandler callback)
  * Runs all callbacks from event queue that should start until given time.
  */
 void
-queue_run_until(game_time time)
+queue_run_until(gametime_t time)
 {
     while (queue && queue->time <= clock_get_relative()) {
         struct _event *eq = queue;
@@ -81,9 +81,9 @@ queue_run_until(game_time time)
 }
 
 /**
- * Retreives the game_time of the firt queue entry.
+ * Retreives the gametime_t of the firt queue entry.
  */
-game_time
+gametime_t
 queue_get_first_time(void)
 {
     if (NULL == queue) {

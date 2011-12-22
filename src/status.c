@@ -9,7 +9,7 @@ enum item {
 
 static struct Status {
     const char *mode;
-    game_time runtime;
+    gametime_t runtime;
 } status = {NULL, 0.0};
 
 static void printstatusf(const char *format, ...);
@@ -33,7 +33,7 @@ status_set_mode(const char *mode)
  * Set the runtime in seconds to the status.
  */
 void
-status_set_runtime(const game_time runtime)
+status_set_runtime(const gametime_t runtime)
 {
     extern struct Status status;
 

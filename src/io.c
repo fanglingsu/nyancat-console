@@ -17,12 +17,12 @@ static int io_select(struct timeval *timeout);
  * this function returned because of a pressed key.
  */
 int
-io_wait_for_key(game_time time)
+io_wait_for_key(gametime_t time)
 {
     if (0 == time) {
         return io_select(NULL);
     }
-    game_time delta;
+    gametime_t delta;
     struct timeval timeout;
 
     delta = time - clock_get_relative();

@@ -20,7 +20,7 @@ struct _action {
     enum catmode mode;
     int posY;
     int posX;
-    game_time delta;
+    gametime_t delta;
 };
 
 static struct _action jump_action[] = {
@@ -56,7 +56,7 @@ cat_init(void)
  * Movement will be done in cat_auto_movement() function instead.
  */
 void
-cat_jump_up(game_time time)
+cat_jump_up(gametime_t time)
 {
     /* do not allow to jump multiple times */
     if (cat.mode == CatModeJump) {
@@ -81,7 +81,7 @@ cat_jump_down(void)
  * Eventcallback to perform a nice jump.
  */
 void
-cat_jump_handler(game_time time, void *data)
+cat_jump_handler(gametime_t time, void *data)
 {
     current_action = data;
 
