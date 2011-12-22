@@ -1,9 +1,7 @@
-#include <stdlib.h>
 #include "world.h"
 #include "config.h"
 #include "main.h"
 #include "random.h"
-#include "queue.h"
 
 static struct _world {
     WINDOW *win;

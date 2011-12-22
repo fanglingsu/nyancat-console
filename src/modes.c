@@ -1,11 +1,9 @@
 /**
  * This file contains callback functions used in the modes.
  */
-#include "main.h"
 #include "status.h"
 #include "modes.h"
 #include "config.h"
-#include "clock.h"
 #include "world.h"
 #include "cat.h"
 

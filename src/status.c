@@ -1,5 +1,4 @@
 #include "status.h"
-#include "main.h"
 
 enum item {
     StatusRuntime,

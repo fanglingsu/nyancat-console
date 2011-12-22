@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "main.h"
 #include "queue.h"
-#include "clock.h"
 
 struct event {
     struct event *next;

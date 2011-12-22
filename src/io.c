@@ -1,11 +1,6 @@
-#include <unistd.h>
 #include <sys/types.h>
-#include <sys/time.h>
-#include <sys/select.h>
 #include "io.h"
-#include "main.h"
 #include "config.h"
-#include "clock.h"
 
 static int io_select(struct timeval *timeout);
 

@@ -1,8 +1,5 @@
 #include <stdlib.h>
-#include "main.h"
-#include "clock.h"
 #include "mode.h"
-#include "queue.h"
 #include "status.h"
 
 /* hide implementation of struct */

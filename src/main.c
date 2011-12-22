@@ -1,17 +1,9 @@
-#include <ncurses.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <time.h>
 #include <unistd.h>
-#include <sys/time.h>
 #include "main.h"
 #include "random.h"
-#include "world.h"
 #include "config.h"
-#include "cat.h"
-#include "status.h"
-#include "clock.h"
-#include "mode.h"
 #include "modes.h"
 #include "io.h"
 

@@ -1,9 +1,6 @@
-#include <ncurses.h>
-#include "config.h"
 #include "main.h"
+#include "config.h"
 #include "cat.h"
-#include "queue.h"
-#include "clock.h"
 
 enum catmode {
     CatModeRun,
