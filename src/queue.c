@@ -19,7 +19,8 @@ static struct _event *queue = NULL;
  *
  * Adds a new event to the event queue.
  */
-void queue_add_event(game_time time, eventhandler callback, void *data)
+void
+queue_add_event(game_time time, eventhandler callback, void *data)
 {
     struct _event **eqp, *eq;
 
@@ -45,7 +46,8 @@ void queue_add_event(game_time time, eventhandler callback, void *data)
  *
  * Remove all events that would call given callback.
  */
-void queue_remove_event(eventhandler callback)
+void
+queue_remove_event(eventhandler callback)
 {
     struct _event **eqp;
 
@@ -66,7 +68,8 @@ void queue_remove_event(eventhandler callback)
  *
  * Runs all callbacks from event queue that should start until given time.
  */
-void queue_run_until(game_time time)
+void
+queue_run_until(game_time time)
 {
     while (queue && queue->time <= clock_get_relative()) {
         struct _event *eq = queue;
@@ -80,7 +83,8 @@ void queue_run_until(game_time time)
 /**
  * Retreives the game_time of the firt queue entry.
  */
-game_time queue_get_first_time(void)
+game_time
+queue_get_first_time(void)
 {
     if (NULL == queue) {
         return 0;
@@ -91,7 +95,8 @@ game_time queue_get_first_time(void)
 /**
  * Free all items of the event queue.
  */
-void queue_free(void)
+void
+queue_free(void)
 {
     if (NULL == queue) {
         return;
@@ -105,4 +110,3 @@ void queue_free(void)
         free(old);
     }
 }
-

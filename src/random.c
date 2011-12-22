@@ -6,7 +6,8 @@
 /**
  * Initializes the random number generator with time based seed.
  */
-void random_init(void)
+void
+random_init(void)
 {
     srand(time(0));
 }
@@ -16,9 +17,9 @@ void random_init(void)
  *
  * Retreives a random number in range 0 to limit.
  */
-int random_limited(unsigned limit)
+int
+random_limited(unsigned limit)
 {
     assert(limit > 1);
     return (int)((double)limit * rand() / (RAND_MAX + 1.0));
 }
-

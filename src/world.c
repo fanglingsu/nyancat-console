@@ -14,7 +14,8 @@ static struct _world {
 /**
  * Generates nyans world one time into a pad window.
  */
-void world_init(void)
+void
+world_init(void)
 {
     int column, rand_line, rand_element, mod;
     const char *elements[8] = {
@@ -45,7 +46,8 @@ void world_init(void)
     }
 }
 
-void world_scroll_handler(game_time time, void *data)
+void
+world_scroll_handler(game_time time, void *data)
 {
     world.x++;
 
@@ -57,7 +59,8 @@ void world_scroll_handler(game_time time, void *data)
     mode_draw();
 }
 
-void world_start_scrolling(void)
+void
+world_start_scrolling(void)
 {
     queue_add_event(clock_get_relative() + TICK(1), world_scroll_handler, NULL);
 }
@@ -65,7 +68,8 @@ void world_start_scrolling(void)
 /**
  * Prints the world.
  */
-void world_print(void)
+void
+world_print(void)
 {
     /* TODO add possibility to fill screen on end of world with the beginning
      * of the world - how can we make this beak unvisible for the gamer? */

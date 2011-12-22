@@ -38,13 +38,14 @@ static void cat_move_by(const int y);
 /**
  * Initializes the cat with their default properties.
  */
-void cat_init(void)
+void
+cat_init(void)
 {
     extern struct Cat cat;
 
-    cat.posX    = 8;
-    cat.posY    = 14;
-    cat.mode    = CatModeRun;
+    cat.posX = 8;
+    cat.posY = 14;
+    cat.mode = CatModeRun;
 }
 
 /**
@@ -54,7 +55,8 @@ void cat_init(void)
  *
  * Movement will be done in cat_auto_movement() function instead.
  */
-void cat_jump_up(game_time time)
+void
+cat_jump_up(game_time time)
 {
     /* do not allow to jump multiple times */
     if (cat.mode == CatModeJump) {
@@ -67,7 +69,8 @@ void cat_jump_up(game_time time)
 /**
  * Move the cat down.
  */
-void cat_jump_down(void)
+void
+cat_jump_down(void)
 {
     /* Not implemented yet. Jump down will make sense if the fly mode will be
      * implemented that allows nyan to fly up and down nearly without any
@@ -77,7 +80,8 @@ void cat_jump_down(void)
 /**
  * Eventcallback to perform a nice jump.
  */
-void cat_jump_handler(game_time time, void *data)
+void
+cat_jump_handler(game_time time, void *data)
 {
     current_action = data;
 
@@ -87,13 +91,15 @@ void cat_jump_handler(game_time time, void *data)
     }
     cat_move_by(current_action->posY);
 
-    queue_add_event(time + current_action->delta, cat_jump_handler, current_action + 1);
+    queue_add_event(time + current_action->delta, cat_jump_handler,
+                    current_action + 1);
 }
 
 /**
  * Print nyan to the world window after all movements where done.
  */
-void cat_print(void)
+void
+cat_print(void)
 {
     extern struct Nyancat nc;
     extern struct Cat cat;
@@ -131,7 +137,8 @@ void cat_print(void)
  * Moves the cat by applying given vertical offset. Applying negative values
  * moves nyan to the top.
  */
-static void cat_move_by(const int y)
+static void
+cat_move_by(const int y)
 {
     extern struct Cat cat;
 

@@ -14,7 +14,8 @@ static double clock_get_base(void);
 /**
  * Initializes the clock by setting base_time to now.
  */
-void clock_init(void)
+void
+clock_init(void)
 {
     extern game_time base_time;
     base_time = clock_get_base();
@@ -23,7 +24,8 @@ void clock_init(void)
 /**
  * Freezes the clock.
  */
-void clock_freeze(void)
+void
+clock_freeze(void)
 {
     extern game_time frozen_time;
 
@@ -36,7 +38,8 @@ void clock_freeze(void)
 /**
  * Thaws the frozen clock.
  */
-void clock_thaw(void)
+void
+clock_thaw(void)
 {
     extern game_time frozen_time;
 
@@ -50,7 +53,8 @@ void clock_thaw(void)
 /**
  * Retrieves the current relative game time.
  */
-game_time clock_get_relative(void)
+game_time
+clock_get_relative(void)
 {
     extern game_time frozen_time;
     extern game_time base_time;
@@ -65,7 +69,8 @@ game_time clock_get_relative(void)
 /**
  * Retrieves the current real time.
  */
-static game_time clock_get_base(void)
+static game_time
+clock_get_base(void)
 {
     struct timeval t;
 

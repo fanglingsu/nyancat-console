@@ -12,7 +12,8 @@
 /**
  * Print the introduction message on the screen.
  */
-void intro_draw(void)
+void
+intro_draw(void)
 {
     extern struct Nyancat nc;
 
@@ -28,7 +29,8 @@ void intro_draw(void)
  *
  * Handles key presses from user.
  */
-void intro_key_handler(game_time time, const int key)
+void
+intro_key_handler(game_time time, const int key)
 {
     if (10 == key) {
         mode_enter(mode_game);
@@ -39,7 +41,8 @@ void intro_key_handler(game_time time, const int key)
  * Enter game mode. If first time called the required game objects are
  * initialized.
  */
-void game_enter(void)
+void
+game_enter(void)
 {
     static int initialized = 0;
 
@@ -55,7 +58,8 @@ void game_enter(void)
 /**
  * Draw the next frame of the game.
  */
-void game_draw(void)
+void
+game_draw(void)
 {
     world_print();
     cat_print();
@@ -67,7 +71,8 @@ void game_draw(void)
 /**
  * Handle keypresses for game mode.
  */
-void game_key_handler(game_time time, const int key)
+void
+game_key_handler(game_time time, const int key)
 {
     switch (key) {
         case KEY_UP:
@@ -94,7 +99,8 @@ void game_key_handler(game_time time, const int key)
 /**
  * Freeze the clock if paus mode is entered.
  */
-void pause_enter(void)
+void
+pause_enter(void)
 {
     clock_freeze();
     status_set_mode(mode_get_name());
@@ -105,7 +111,8 @@ void pause_enter(void)
 /**
  * Thaw the clock on leaving the pause mode.
  */
-void pause_leave(void)
+void
+pause_leave(void)
 {
     clock_thaw();
 }
@@ -115,7 +122,8 @@ void pause_leave(void)
  *
  * Handles the keypresses within the pause mode.
  */
-void pause_key_handler(game_time time, const int key)
+void
+pause_key_handler(game_time time, const int key)
 {
     switch (key) {
         case 'p':
@@ -130,7 +138,8 @@ void pause_key_handler(game_time time, const int key)
 /**
  * Drow the scores page on the end of the game.
  */
-void scores_draw(void)
+void
+scores_draw(void)
 {
     extern struct Nyancat nc;
 
@@ -152,7 +161,8 @@ void scores_draw(void)
  *
  * Handles key presses from user.
  */
-void scores_key_handler(game_time time, const int key)
+void
+scores_key_handler(game_time time, const int key)
 {
     if ('q' == key) {
         mode_exit();

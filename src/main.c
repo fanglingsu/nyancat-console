@@ -23,7 +23,8 @@ static void signal_handler(int sig);
 static void loop(void);
 static void cleanup_windows(void);
 
-int main(int argc, const char *argv[])
+int
+main(int argc, const char *argv[])
 {
     clock_init();
     random_init();
@@ -43,7 +44,8 @@ int main(int argc, const char *argv[])
  *
  * Signal a fatal error and quit immediately.
  */
-void error_exit(const char *format, ...)
+void
+error_exit(const char *format, ...)
 {
     va_list ap;
 
@@ -61,7 +63,8 @@ void error_exit(const char *format, ...)
 /**
  * Initialize the used windows
  */
-static void init_windows(void)
+static void
+init_windows(void)
 {
     extern struct Nyancat nc;
 
@@ -84,11 +87,12 @@ static void init_windows(void)
     intrflush(stdscr, FALSE);
 
     /* create sub windows */
-    nc.ui.world  = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
+    nc.ui.world = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
     nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
 }
 
-void clear_windows(void)
+void
+clear_windows(void)
 {
     wclear(nc.ui.world);
     wnoutrefresh(nc.ui.world);
@@ -99,7 +103,8 @@ void clear_windows(void)
 /**
  * Initializes the game modes.
  */
-static void init_modes(void)
+static void
+init_modes(void)
 {
     extern Mode *mode_intro, *mode_game, *mode_pause, *mode_scores;
 
@@ -112,7 +117,8 @@ static void init_modes(void)
 /**
  * Prints the licence message to stdout.
  */
-static void print_licence_message(void)
+static void
+print_licence_message(void)
 {
     puts(REAL_NAME " " VERSION);
     puts("Copyright 2011 Daniel Carl\n");
@@ -125,18 +131,19 @@ static void print_licence_message(void)
 /**
  * Sets up signal handlers we need.
  */
-static void set_signals(void)
+static void
+set_signals(void)
 {
     struct sigaction sa;
 
     /* fill in sigaction struct */
     sa.sa_handler = &signal_handler;
-    sa.sa_flags   = 0;
+    sa.sa_flags = 0;
     sigemptyset(&sa.sa_mask);
 
     /* set signal handlers */
     sigaction(SIGTERM, &sa, NULL);
-    sigaction(SIGINT,  &sa, NULL);
+    sigaction(SIGINT, &sa, NULL);
 
     /* ignore sigtstp */
     sa.sa_handler = SIG_IGN;
@@ -148,7 +155,8 @@ static void set_signals(void)
  *
  * Signal handler called if signal is emmitted.
  */
-static void signal_handler(int sig)
+static void
+signal_handler(int sig)
 {
     cleanup_windows();
     print_licence_message();
@@ -158,7 +166,8 @@ static void signal_handler(int sig)
 /**
  * Main game loop.
  */
-static void loop(void)
+static void
+loop(void)
 {
     extern struct Nyancat nc;
     game_time time;
@@ -197,7 +206,8 @@ static void loop(void)
 /**
  * Cleanup the environment.
  */
-static void cleanup_windows(void)
+static void
+cleanup_windows(void)
 {
     extern struct Nyancat nc;
 

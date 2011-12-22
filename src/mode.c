@@ -30,10 +30,12 @@ static int exit_flag = 0;
  *
  * Creates a mode with given callbacks.
  */
-Mode* mode_create(const char *name, callback enter, callback leave, callback draw, keyhandler key)
+Mode *
+mode_create(const char *name, callback enter, callback leave, callback draw,
+            keyhandler key)
 {
 
-    Mode *mode  = (Mode *)malloc(sizeof(Mode));
+    Mode *mode = (Mode *) malloc(sizeof(Mode));
     if (NULL == mode) {
         error_exit("Could not allocate memory");
     }
@@ -51,7 +53,8 @@ Mode* mode_create(const char *name, callback enter, callback leave, callback dra
  * Set the exit mode flag to show in mode_valid that no more mode is
  * avaialable.
  */
-void mode_exit(void)
+void
+mode_exit(void)
 {
     exit_flag = 1;
 }
@@ -59,7 +62,8 @@ void mode_exit(void)
 /**
  * Switch into given mode. Call leave for previous mode and enter on new mode.
  */
-void mode_enter(const Mode *mode)
+void
+mode_enter(const Mode * mode)
 {
     if (current && current->leave) {
         current->leave();
@@ -77,7 +81,8 @@ void mode_enter(const Mode *mode)
 /**
  * Calls the drawing callback for current mode.
  */
-void mode_draw(void)
+void
+mode_draw(void)
 {
     if (current && current->draw) {
         current->draw();
@@ -89,7 +94,8 @@ void mode_draw(void)
  *
  * Handles key presses on current modes keyhandler callback.
  */
-void mode_key(const int key)
+void
+mode_key(const int key)
 {
     if (current && current->key) {
         current->key(clock_get_relative(), key);
@@ -101,7 +107,8 @@ void mode_key(const int key)
  *
  * If no mode is set return 0 else 1.
  */
-int mode_valid(void)
+int
+mode_valid(void)
 {
     return !exit_flag;
 }
@@ -109,7 +116,8 @@ int mode_valid(void)
 /**
  * Retrieves the name of given mode.
  */
-const char* mode_get_name(void)
+const char *
+mode_get_name(void)
 {
     if (current && current->name) {
         return current->name;
