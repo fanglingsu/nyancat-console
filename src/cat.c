@@ -46,11 +46,7 @@ cat_init(void)
 }
 
 /**
- * Move the cat up. In general all none static movement function calls don't
- * move nyan. Their concern is to decide if a requested mode could captured an
- * switch nyan to that mode.
- *
- * Movement will be done in cat_auto_movement() function instead.
+ * Move the cat up.
  */
 void
 cat_jump_up(gametime_t time)
@@ -105,21 +101,21 @@ cat_print(void)
         int offset;
         char str[8];
     } feets[] = {
-        {1, "U U U U"},
+        {0, "U U U U"},
+        {0, "UU  UU"},
+        {1, "U   U"},
         {1, "UU  UU"},
-        {2, "U   U"},
-        {2, "UU  UU"},
     };
 
     /* handle movements */
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
-    mvwprintw(nc.ui.world, cat.posY,     cat.posX + 1, ",-----,");
-    mvwprintw(nc.ui.world, cat.posY + 1, cat.posX + 1, "|:::/\\/\\");
-    mvwprintw(nc.ui.world, cat.posY + 2, cat.posX,    "~|___(o.o)");
+    mvwprintw(nc.ui.world, cat.posY - 3, cat.posX,      ",-----,");
+    mvwprintw(nc.ui.world, cat.posY - 2, cat.posX,      "|:::/\\/\\");
+    mvwprintw(nc.ui.world, cat.posY - 1, cat.posX - 1, "~|___(o.o)");
 
     if (frame < LENGTH(feets)) {
-        mvwprintw(nc.ui.world, cat.posY + 3, cat.posX + feets[frame].offset, feets[frame].str);
+        mvwprintw(nc.ui.world, cat.posY, cat.posX + feets[frame].offset, feets[frame].str);
         if (frame == LENGTH(feets) - 1) {
             frame = 0;
         } else {
@@ -141,19 +137,19 @@ cat_move_by(const int y)
 
     if (y > 0) {
         /* move down */
-        if (cat.posY + CATHIGHT + y <= WORLDHEIGHT) {
+        if (cat.posY + y < WORLDHEIGHT) {
             cat.posY += y;
         } else {
             /* go to lowest position */
-            cat.posY = WORLDHEIGHT - CATHIGHT;
+            cat.posY = WORLDHEIGHT - 1;
         }
     } else if (y < 0) {
         /* move up */
-        if (cat.posY + y >= 0) {
+        if (cat.posY + y + CATHIGHT >= 0) {
             cat.posY += y;
         } else {
             /* go to upper most position */
-            cat.posY = 0;
+            cat.posY = CATHIGHT;
         }
     }
 }
