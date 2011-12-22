@@ -200,13 +200,6 @@ static void loop(void)
 static void cleanup_windows(void)
 {
     extern struct Nyancat nc;
-    extern Mode *mode_intro, *mode_game, *mode_pause, *mode_scores, *mode_over;
-    free(mode_intro);
-    free(mode_game);
-    free(mode_pause);
-    free(mode_scores);
-    free(mode_over);
-    queue_free();
 
     wrefresh(nc.ui.status);
     delwin(nc.ui.status);
