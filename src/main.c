@@ -66,7 +66,7 @@ error_exit(const char *format, ...)
 static void
 init_windows(void)
 {
-    extern struct Nyancat nc;
+    extern struct nyancat nc;
 
     initscr();
     if (has_colors() != FALSE) {
@@ -169,7 +169,7 @@ signal_handler(int sig)
 static void
 loop(void)
 {
-    extern struct Nyancat nc;
+    extern struct nyancat nc;
     gametime_t time;
     int key_ready = 0, ch;
 
@@ -209,7 +209,7 @@ loop(void)
 static void
 cleanup_windows(void)
 {
-    extern struct Nyancat nc;
+    extern struct nyancat nc;
 
     wrefresh(nc.ui.status);
     delwin(nc.ui.status);

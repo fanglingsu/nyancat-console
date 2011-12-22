@@ -3,14 +3,14 @@
 #include "queue.h"
 #include "clock.h"
 
-struct _event {
-    struct _event *next;
+struct event {
+    struct event *next;
     gametime_t time;
     eventhandler_fn callback;
     void *data;
 };
 
-static struct _event *queue = NULL;
+static struct event *queue = NULL;
 
 /**
  * @time: time whene to start the event.
@@ -22,9 +22,9 @@ static struct _event *queue = NULL;
 void
 queue_add_event(gametime_t time, eventhandler_fn callback, void *data)
 {
-    struct _event **eqp, *eq;
+    struct event **eqp, *eq;
 
-    eq = (struct _event *)malloc(sizeof(struct _event));
+    eq = (struct event *)malloc(sizeof(struct event));
     if (NULL == eq) {
         error_exit("Could not allocate memory");
     }
@@ -49,11 +49,11 @@ queue_add_event(gametime_t time, eventhandler_fn callback, void *data)
 void
 queue_remove_event(eventhandler_fn callback)
 {
-    struct _event **eqp;
+    struct event **eqp;
 
     eqp = &queue;
     while (*eqp) {
-        struct _event *eq = *eqp;
+        struct event *eq = *eqp;
         if (eq->callback == callback) {
             *eqp = (*eqp)->next;
             free(eq);
@@ -72,7 +72,7 @@ void
 queue_run_until(gametime_t time)
 {
     while (queue && queue->time <= clock_get_relative()) {
-        struct _event *eq = queue;
+        struct event *eq = queue;
         queue = queue->next;
 
         eq->callback(eq->time, eq->data);
@@ -102,10 +102,10 @@ queue_free(void)
         return;
     }
 
-    struct _event *eq = queue;
+    struct event *eq = queue;
     queue = NULL;
     while (eq) {
-        struct _event *old = eq;
+        struct event *old = eq;
         eq = old->next;
         free(old);
     }

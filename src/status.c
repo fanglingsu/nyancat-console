@@ -7,7 +7,7 @@ enum item {
     StatusDebug
 };
 
-static struct Status {
+static struct status {
     const char *mode;
     gametime_t runtime;
 } status = {NULL, 0.0};
@@ -22,7 +22,7 @@ static void printstatusf(const char *format, ...);
 void
 status_set_mode(const char *mode)
 {
-    extern struct Status status;
+    extern struct status status;
 
     status.mode = mode;
 }
@@ -35,7 +35,7 @@ status_set_mode(const char *mode)
 void
 status_set_runtime(const gametime_t runtime)
 {
-    extern struct Status status;
+    extern struct status status;
 
     status.runtime = runtime;
 }
@@ -46,7 +46,7 @@ status_set_runtime(const gametime_t runtime)
 void
 status_print(void)
 {
-    extern struct Status status;
+    extern struct status status;
 
     printstatusf("%s: %.2lfs", status.mode, status.runtime);
 }
@@ -59,7 +59,7 @@ status_print(void)
 static void
 printstatusf(const char *format, ...)
 {
-    extern struct Nyancat nc;
+    extern struct nyancat nc;
     va_list ap;
 
     werase(nc.ui.status);

@@ -10,20 +10,20 @@ enum catmode {
     CatModeJump
 };
 
-static struct Cat {
+static struct cat {
     int posY;
     int posX;
     enum catmode mode;
 } cat;
 
-struct _action {
+struct action {
     enum catmode mode;
     int posY;
     int posX;
     gametime_t delta;
 };
 
-static struct _action jump_action[] = {
+static struct action jump_action[] = {
     {CatModeJump, -1, 0, TICK(2.5)},
     {CatModeJump, -1, 0, TICK(5)},
     {CatModeJump,  1, 0, TICK(5)},
@@ -31,7 +31,7 @@ static struct _action jump_action[] = {
     {CatModeRun,   0, 0, 0}
 };
 
-static struct _action *current_action = NULL;
+static struct action *current_action = NULL;
 
 static void cat_move_by(const int y);
 
@@ -41,7 +41,7 @@ static void cat_move_by(const int y);
 void
 cat_init(void)
 {
-    extern struct Cat cat;
+    extern struct cat cat;
 
     cat.posX = 8;
     cat.posY = 14;
@@ -101,8 +101,8 @@ cat_jump_handler(gametime_t time, void *data)
 void
 cat_print(void)
 {
-    extern struct Nyancat nc;
-    extern struct Cat cat;
+    extern struct nyancat nc;
+    extern struct cat cat;
     static int frame = 0;
     const struct feets {
         int offset;
@@ -140,7 +140,7 @@ cat_print(void)
 static void
 cat_move_by(const int y)
 {
-    extern struct Cat cat;
+    extern struct cat cat;
 
     if (y > 0) {
         /* move down */

@@ -35,7 +35,7 @@ enum color {
     ColorRed
 };
 
-struct Nyancat {
+struct nyancat {
     struct {
         WINDOW *world;
         WINDOW *status;
