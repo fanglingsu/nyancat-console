@@ -1,46 +1,33 @@
+#include <stdlib.h>
 #include "world.h"
 #include "config.h"
 #include "main.h"
 #include "random.h"
 
-static struct _world {
-    WINDOW *win;
+static struct {
     int y;
     int x;
-} world;
+} world = {0, 0};
+
+struct object {
+    enum object_type type;
+    int y;
+    int x;
+    int size;
+};
+
+static struct object elements[MAX_PLATFORMS];
+
+static struct object world_create_random_platform(const int xstart, const int xrange);
 
 /**
- * Generates nyans world one time into a pad window.
+ * Generates platform of nyans world.
  */
 void
 world_init(void)
 {
-    int column, rand_line, rand_element, mod;
-    const char *elements[8] = {
-        "###########",
-        "#############",
-        "###############",
-        "#################",
-        "#############  ####",
-        "######   ############",
-        "########   ############",
-        "##########   #############",
-    };
-
-    /* set the defaults in struct */
-    world.win = newpad(SCREENHEIGHT, WORLDWIDTH);
-    world.y = 0;
-    world.x = 0;
-
-    wclear(world.win);
-    for (column = 0; column < WORLDWIDTH; column += 9) {
-        /* number to select element */
-        rand_element = random_limited(5);
-        /* gnerate a number in [1..3] */
-        mod = (rand_element % 3) + 1;
-        /* random select the y position for element */
-        rand_line = random_limited(SCREENHEIGHT * mod) / mod;
-        mvwaddstr(world.win, rand_line, column, elements[rand_element]);
+    for (int i = 0; i < MAX_PLATFORMS; ++i) {
+        elements[i] = world_create_random_platform(0, SCREENWIDTH);
     }
 }
 
@@ -69,8 +56,61 @@ world_start_scrolling(void)
 void
 world_print(void)
 {
-    /* TODO add possibility to fill screen on end of world with the beginning
-     * of the world - how can we make this beak unvisible for the gamer? */
-    copywin(world.win, nc.ui.world, 0, world.x, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1, 0);
-    pnoutrefresh(world.win, 0, world.x, 0, 0, SCREENHEIGHT, SCREENWIDTH - 1);
+    extern struct nyancat nc;
+
+    wclear(nc.ui.world);
+    for (int i = 0; i < MAX_PLATFORMS; ++i) {
+        int x = elements[i].x - world.x + elements[i].size;
+        /* create new platform for i that is out of scope but in the first
+         * half of the new imginary screen */
+        if (x < 0) {
+            elements[i] = world_create_random_platform(world.x + SCREENWIDTH, SCREENWIDTH / 2);
+            continue;
+        }
+        for (int k = 0; k < elements[i].size; ++k) {
+            mvwaddch(nc.ui.world, world.y + elements[i].y, elements[i].x - world.x + k, '#');
+        }
+    }
+    wnoutrefresh(nc.ui.world);
+}
+
+/**
+ * Inidcates if under givem coordinates is an platform element.
+ */
+int
+world_has_element_at(enum object_type type, const int y, const int x)
+{
+    switch (type) {
+        case ObjectPlatform:
+            for (int i = 0; i < MAX_PLATFORMS; ++i) {
+                if (elements[i].y != y) {
+                    continue;
+                }
+                /* e.x <= x < e.x + e.size */
+                if (elements[i].x <= x || x < (elements[i].x + elements[i].size)) {
+                    return 1;
+                }
+            }
+            break;
+    }
+
+    return 0;
+}
+
+/**
+ * Builds a random places platform struct. Platforms are placed in the x range
+ * between xstart and the next range chars.
+ */
+static struct object
+world_create_random_platform(const int xstart, const int xrange)
+{
+    struct object obj;
+
+    obj.x = random_range_step(xstart, xstart + xrange, 4);
+    /* padding top 4 and padding bottom 2 */
+    obj.y = random_range(4, SCREENHEIGHT - 2);
+    /* make platforms size between [12..28]*/
+    obj.size = random_range_step(16, 28, 4);
+
+    return obj;
 }
