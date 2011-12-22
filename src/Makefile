@@ -9,7 +9,7 @@ $(TARGET): $(OBJ)
 -include $(OBJ:.o=.d)
 -include $(DOBJ:.do=.dd)
 
-%.o: %.c %.h config.h
+%.o: %.c %.h
 	@echo "${CC} $<"
 	@$(CC) $(FLAGS) -c -o $@ $<
 
