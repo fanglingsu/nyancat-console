@@ -13,7 +13,7 @@ static void print_licence_message(void);
 static void set_signals(void);
 static void signal_handler(int sig);
 static void loop(void);
-static void cleanup_windows(void);
+static void prepare_for_exit(void);
 
 int
 main(int argc, const char *argv[])
@@ -27,7 +27,7 @@ main(int argc, const char *argv[])
 
     loop();
 
-    cleanup_windows();
+    prepare_for_exit();
     return EXIT_SUCCESS;
 }
 
@@ -42,7 +42,7 @@ error_exit(const char *format, ...)
     va_list ap;
 
     /* clean all ncurses windows */
-    cleanup_windows();
+    prepare_for_exit();
 
     va_start(ap, format);
     vfprintf(stderr, format, ap);
@@ -150,7 +150,7 @@ set_signals(void)
 static void
 signal_handler(int sig)
 {
-    cleanup_windows();
+    prepare_for_exit();
     print_licence_message();
     exit(EXIT_FAILURE);
 }
@@ -199,7 +199,7 @@ loop(void)
  * Cleanup the environment.
  */
 static void
-cleanup_windows(void)
+prepare_for_exit(void)
 {
     extern struct nyancat nc;
 
