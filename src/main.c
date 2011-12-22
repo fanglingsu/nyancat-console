@@ -186,9 +186,9 @@ loop(void)
             mode_key(ch);
             mode_draw();
         } else {
-            /* TODO this causes a high cpu usage, if I can't find a better
-             * solution a usleep(1000); will prevent us form this behaviour */
-            usleep(1000);
+            /* TODO find a better way for prevening hight cpu usage here. But
+             * for now insert a sleep for the minimum ticks used in game */
+            usleep(SECOND * TICK(0.1));
             queue_run_until(time);
         }
         doupdate();
