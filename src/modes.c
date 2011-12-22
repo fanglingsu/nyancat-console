@@ -75,10 +75,12 @@ void
 game_key_handler(gametime_t time, const int key)
 {
     switch (key) {
+        case 'k':
         case KEY_UP:
             cat_jump_up(time);
             break;
 
+        case 'j':
         case KEY_DOWN:
             cat_jump_down();
             break;
