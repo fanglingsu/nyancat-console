@@ -58,7 +58,7 @@ world_print(void)
 {
     extern struct nyancat nc;
 
-    wclear(nc.ui.world);
+    werase(nc.ui.world);
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         int x = elements[i].x - world.x + elements[i].size;
         /* create new platform for i that is out of scope but in the first
