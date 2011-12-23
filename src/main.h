@@ -10,9 +10,11 @@
 
 #define err_msg(...) \
 {                   \
-    fprintf(stderr, "%s:%5d %s()", __FILE__, __LINE__, __FUNCTION__); \
-    fprintf(stderr, ": ");          \
-    fprintf(stderr, __VA_ARGS__);   \
+    werase(stdscr); \
+    mvprintw(SCREENHEIGHT + 1, 0, "%s:%5d %s()", __FILE__, __LINE__, __FUNCTION__); \
+    mvprintw(SCREENHEIGHT + 2, 4, __VA_ARGS__); \
+    wnoutrefresh(stdscr); \
+    doupdate(); \
 }
 
 #if DEBUG
