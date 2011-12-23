@@ -18,7 +18,6 @@ static void prepare_for_exit(void);
 int
 main(int argc, const char *argv[])
 {
-    clock_init();
     random_init();
     set_signals();
     init_windows();

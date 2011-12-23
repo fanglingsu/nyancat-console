@@ -4,7 +4,7 @@
 #define REAL_NAME "nyancat-console"
 #define VERSION "0.0.1"
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define SECOND 1000000
 #define SPEED 1.0

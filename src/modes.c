@@ -7,6 +7,8 @@
 #include "world.h"
 #include "cat.h"
 
+static int game_initialized = 0;
+
 /**
  * Print the introduction message on the screen.
  */
@@ -42,13 +44,12 @@ intro_key_handler(gametime_t time, const int key)
 void
 game_enter(void)
 {
-    static int initialized = 0;
-
     /* prevent from reinitialisation after pause mode */
-    if (!initialized) {
+    if (!game_initialized) {
+        clock_init();
         world_init();
         cat_init();
-        initialized = 1;
+        game_initialized = 1;
     }
     world_start_scrolling();
 }
@@ -148,7 +149,7 @@ scores_draw(void)
     mvwprintw(nc.ui.world, 5, 2, "GAME OVER!");
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
     mvwprintw(nc.ui.world, 7, 2, "You have nyaned for %.2lfs", clock_get_relative());
-    mvwprintw(nc.ui.world, 9, 2, "Press q to quit.");
+    mvwprintw(nc.ui.world, 9, 2, "Press 'r' run again or 'q' to quit.");
     wnoutrefresh(nc.ui.world);
 
     /* remove content from status window */
@@ -164,7 +165,11 @@ scores_draw(void)
 void
 scores_key_handler(gametime_t time, const int key)
 {
-    if ('q' == key) {
+    if ('r' == key) {
+        /* uninitialize to previous game */
+        game_initialized = 0;
+        mode_enter(mode_game);
+    } else if ('q' == key) {
         mode_exit();
     }
 }
