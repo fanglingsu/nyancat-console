@@ -135,21 +135,17 @@ cat_move_by(const int y)
 {
     extern struct cat cat;
 
-    if (y > 0) {
-        /* move down */
+    if (y > 0) { /* move down */
         if (cat.posY + y < WORLDHEIGHT) {
             cat.posY += y;
-        } else {
-            /* go to lowest position */
+        } else { /* go to lowest position */
             cat.posY = WORLDHEIGHT - 1;
         }
-    } else if (y < 0) {
-        /* move up */
-        if (cat.posY + y + CATHIGHT >= 0) {
+    } else if (y < 0) { /* move up */
+        if (cat.posY + y - CATHIGHT > 0) {
             cat.posY += y;
-        } else {
-            /* go to upper most position */
-            cat.posY = CATHIGHT;
+        } else { /* go to upper most position */
+            cat.posY = CATHIGHT - 1;
         }
     }
 }
