@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "main.h"
 #include "queue.h"
+#include "util.h"
 
 struct event {
     struct event *next;
@@ -23,10 +24,7 @@ queue_add_event(gametime_t time, eventhandler_fn callback, void *data)
 {
     struct event **eqp, *eq;
 
-    eq = (struct event *)malloc(sizeof(struct event));
-    if (NULL == eq) {
-        error_exit("Could not allocate memory");
-    }
+    eq = (struct event *)xmalloc(sizeof(struct event));
     eqp = &queue;
     while (*eqp && (*eqp)->time <= time) {
         eqp = &((*eqp)->next);

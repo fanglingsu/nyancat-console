@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "mode.h"
 #include "status.h"
+#include "util.h"
 
 /* hide implementation of struct */
 struct _mode {
@@ -32,10 +33,7 @@ mode_create(const char *name, callback enter, callback leave, callback draw,
             keyhandler key)
 {
 
-    gamemode_t *mode = (gamemode_t *) malloc(sizeof(gamemode_t));
-    if (NULL == mode) {
-        error_exit("Could not allocate memory");
-    }
+    gamemode_t *mode = (gamemode_t *)xmalloc(sizeof(gamemode_t));
 
     mode->name  = name;
     mode->enter = enter ? enter : NULL;
