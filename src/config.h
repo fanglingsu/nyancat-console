@@ -13,7 +13,6 @@
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
-#define WORLDWIDTH   900
 #define MAX_PLATFORMS 7     /* plattforms placed on to screen widths */
 
 /* height of the world for nyan should be >= SCREENHEIGHT */

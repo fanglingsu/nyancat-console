@@ -36,9 +36,14 @@ world_scroll_handler(gametime_t time, void *data)
 {
     world.x++;
 
-    /* end of the world reached */
-    if (world.x > WORLDWIDTH) {
-        world.x = 0;
+    for (int i = 0; i < MAX_PLATFORMS; ++i) {
+        int x = elements[i].x - world.x + elements[i].size;
+        /* create new platform for i that is out of scope but in the first
+         * half of the new imginary screen */
+        if (x < 0) {
+            elements[i] = world_create_random_platform(world.x + SCREENWIDTH, SCREENWIDTH / 2);
+            continue;
+        }
     }
     queue_add_event(time + TICK(1), world_scroll_handler, NULL);
     mode_draw();
@@ -60,13 +65,6 @@ world_print(void)
 
     werase(nc.ui.world);
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        int x = elements[i].x - world.x + elements[i].size;
-        /* create new platform for i that is out of scope but in the first
-         * half of the new imginary screen */
-        if (x < 0) {
-            elements[i] = world_create_random_platform(world.x + SCREENWIDTH, SCREENWIDTH / 2);
-            continue;
-        }
         for (int k = 0; k < elements[i].size; ++k) {
             mvwaddch(nc.ui.world, world.y + elements[i].y, elements[i].x - world.x + k, '#');
         }
