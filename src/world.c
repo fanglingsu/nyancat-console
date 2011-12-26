@@ -73,7 +73,8 @@ world_print(void)
 }
 
 /**
- * Inidcates if under givem coordinates is an platform element.
+ * Inidcates if under givem coordinates is an platform element. The given
+ * coordinates are calculatet relative to the visible screen.
  */
 int
 world_has_element_at(enum object_type type, const int y, const int x)
@@ -85,7 +86,7 @@ world_has_element_at(enum object_type type, const int y, const int x)
                     continue;
                 }
                 /* e.x <= x < e.x + e.size */
-                if (elements[i].x <= x || x < (elements[i].x + elements[i].size)) {
+                if ((elements[i].x - world.x) <= x && x < (elements[i].x - world.x + elements[i].size)) {
                     return 1;
                 }
             }

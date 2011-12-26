@@ -1,6 +1,7 @@
 #include "main.h"
 #include "config.h"
 #include "cat.h"
+#include "world.h"
 
 enum catmode {
     CatModeRun,
@@ -43,6 +44,7 @@ cat_init(void)
     cat.posX = 8;
     cat.posY = 14;
     cat.mode = CatModeRun;
+    queue_add_event(clock_get_relative() + TICK(2), cat_run_handler, NULL);
 }
 
 /**
@@ -56,6 +58,7 @@ cat_jump_up(gametime_t time)
         cat.mode = CatModeRun;
     }
     queue_remove_event(cat_jump_handler);
+    queue_remove_event(cat_run_handler);
     cat_jump_handler(time, jump_action);
 }
 
@@ -70,6 +73,20 @@ cat_jump_down(void)
      * constraints. */
 }
 
+void
+cat_run_handler(gametime_t time, void *data)
+{
+    if (cat.mode == CatModeRun) {
+        /* move down if neighert first feet or last feet is upon a platform */
+        if (!world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX + 6) 
+            && !world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX)
+        ) {
+            cat_move_by(1);
+        }
+    }
+    queue_add_event(time + TICK(5), cat_run_handler, NULL);
+}
+
 /**
  * Eventcallback to perform a nice jump.
  */
@@ -80,6 +97,7 @@ cat_jump_handler(gametime_t time, void *data)
 
     if (current_action->mode != CatModeJump) {
         cat.mode = CatModeRun;
+        queue_add_event(time + TICK(2), cat_run_handler, NULL);
         return;
     }
     cat_move_by(current_action->posY);
