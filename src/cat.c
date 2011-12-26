@@ -24,8 +24,7 @@ struct action {
 static struct action jump_action[] = {
     {CatModeJump, -1, 0, TICK(2.5)},
     {CatModeJump, -1, 0, TICK(5)},
-    {CatModeJump,  1, 0, TICK(5)},
-    {CatModeJump,  1, 0, TICK(2.5)},
+    {CatModeJump,  0, 0, TICK(2)},
     {CatModeRun,   0, 0, 0}
 };
 
@@ -42,7 +41,7 @@ cat_init(void)
     extern struct cat cat;
 
     cat.posX = 8;
-    cat.posY = 14;
+    cat.posY = 10;
     cat.mode = CatModeRun;
     queue_add_event(clock_get_relative() + TICK(2), cat_run_handler, NULL);
 }
@@ -78,13 +77,13 @@ cat_run_handler(gametime_t time, void *data)
 {
     if (cat.mode == CatModeRun) {
         /* move down if neighert first feet or last feet is upon a platform */
-        if (!world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX + 6) 
+        if (!world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX + 6)
             && !world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX)
         ) {
             cat_move_by(1);
         }
     }
-    queue_add_event(time + TICK(5), cat_run_handler, NULL);
+    queue_add_event(time + TICK(4), cat_run_handler, NULL);
 }
 
 /**
