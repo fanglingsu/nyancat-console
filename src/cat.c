@@ -12,6 +12,7 @@ static struct cat {
     int posY;
     int posX;
     enum catmode mode;
+    int modeframes;     /* number of frames in a certain mode */
 } cat;
 
 struct action {
@@ -43,6 +44,7 @@ cat_init(void)
     cat.posX = 8;
     cat.posY = 10;
     cat.mode = CatModeRun;
+    cat.modeframes = 0;
     queue_add_event(clock_get_relative() + TICK(2), cat_run_handler, NULL);
 }
 
@@ -52,10 +54,13 @@ cat_init(void)
 void
 cat_jump_up(gametime_t time)
 {
+    extern struct cat cat;
+
     /* do not allow to jump multiple times */
     if (cat.mode == CatModeJump) {
         cat.mode = CatModeRun;
     }
+    cat.modeframes = 0;
     queue_remove_event(cat_jump_handler);
     queue_remove_event(cat_run_handler);
     cat_jump_handler(time, jump_action);
@@ -75,15 +80,26 @@ cat_jump_down(void)
 void
 cat_run_handler(gametime_t time, void *data)
 {
+    extern struct cat cat;
     if (cat.mode == CatModeRun) {
-        /* move down if neighert first feet or last feet is upon a platform */
-        if (!world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX + 6)
-            && !world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX)
+        if (world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX + 6)
+            || world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX)
         ) {
+            cat.modeframes = 0;
+        } else {
+            /* move down if neighert first feet or last feet is upon a platform */
             cat_move_by(1);
+            cat.modeframes++;
         }
     }
-    queue_add_event(time + TICK(4), cat_run_handler, NULL);
+    /* faster recall after more frames to simulate ground acceleration */
+    if (cat.modeframes > 15) {
+        queue_add_event(time + TICK(1), cat_run_handler, NULL);
+    } else if (cat.modeframes > 5) {
+        queue_add_event(time + TICK(2), cat_run_handler, NULL);
+    } else {
+        queue_add_event(time + TICK(3.5), cat_run_handler, NULL);
+    }
 }
 
 /**
@@ -123,8 +139,6 @@ cat_print(void)
         {1, "U   U"},
         {1, "UU  UU"},
     };
-
-    /* handle movements */
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
     mvwprintw(nc.ui.world, cat.posY - 3, cat.posX,      ",-----,");
