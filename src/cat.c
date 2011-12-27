@@ -15,22 +15,6 @@ static struct cat {
     int modeframes;     /* number of frames in a certain mode */
 } cat;
 
-struct action {
-    enum catmode mode;
-    int posY;
-    int posX;
-    gametime_t delta;
-};
-
-static struct action jump_action[] = {
-    {CatModeJump, -1, 0, TICK(2.5)},
-    {CatModeJump, -1, 0, TICK(5)},
-    {CatModeJump,  0, 0, TICK(2)},
-    {CatModeRun,   0, 0, 0}
-};
-
-static struct action *current_action = NULL;
-
 static void cat_move_by(const int y);
 
 /**
@@ -63,7 +47,7 @@ cat_jump_up(gametime_t time)
     cat.modeframes = 0;
     queue_remove_event(cat_jump_handler);
     queue_remove_event(cat_run_handler);
-    cat_jump_handler(time, jump_action);
+    cat_jump_handler(time, NULL);
 }
 
 /**
@@ -108,17 +92,17 @@ cat_run_handler(gametime_t time, void *data)
 void
 cat_jump_handler(gametime_t time, void *data)
 {
-    current_action = data;
-
-    if (current_action->mode != CatModeJump) {
+    extern struct cat cat;
+    if (cat.modeframes > 2) {
         cat.mode = CatModeRun;
         queue_add_event(time + TICK(2), cat_run_handler, NULL);
-        return;
+    } else if (cat.modeframes >= 2) {
+        queue_add_event(time + TICK(3.5), cat_jump_handler, NULL);
+    } else {
+        cat_move_by(-1);
+        queue_add_event(time + TICK(3.5), cat_jump_handler, NULL);
     }
-    cat_move_by(current_action->posY);
-
-    queue_add_event(time + current_action->delta, cat_jump_handler,
-                    current_action + 1);
+    cat.modeframes++;
 }
 
 /**
