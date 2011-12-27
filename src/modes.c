@@ -49,9 +49,9 @@ game_enter(void)
         clock_init();
         world_init();
         cat_init();
-        cat_run_handler(clock_get_relative(), NULL);
         game_initialized = 1;
     }
+    cat_run_handler(clock_get_relative(), NULL);
     world_start_scrolling();
 }
 
