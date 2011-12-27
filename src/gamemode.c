@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "mode.h"
+#include "gamemode.h"
 #include "status.h"
 #include "util.h"
 
@@ -45,7 +45,7 @@ mode_create(const char *name, callback enter, callback leave, callback draw,
 }
 
 /**
- * Set the exit mode flag to show in mode_valid that no more mode is
+ * Set the exit mode flag to show in gamemode_valid that no more mode is
  * avaialable.
  */
 void
@@ -58,7 +58,7 @@ mode_exit(void)
  * Switch into given mode. Call leave for previous mode and enter on new mode.
  */
 void
-mode_enter(const gamemode_t * mode)
+gamemode_enter(const gamemode_t * mode)
 {
     if (current && current->leave) {
         current->leave();
@@ -77,7 +77,7 @@ mode_enter(const gamemode_t * mode)
  * Calls the drawing callback for current mode.
  */
 void
-mode_draw(void)
+gamemode_draw(void)
 {
     if (current && current->draw) {
         current->draw();
@@ -90,7 +90,7 @@ mode_draw(void)
  * Handles key presses on current modes keyhandler callback.
  */
 void
-mode_key(const int key)
+gamemode_key(const int key)
 {
     if (current && current->key) {
         current->key(clock_get_relative(), key);
@@ -103,7 +103,7 @@ mode_key(const int key)
  * If no mode is set return 0 else 1.
  */
 int
-mode_valid(void)
+gamemode_valid(void)
 {
     return !exit_flag;
 }

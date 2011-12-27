@@ -165,10 +165,10 @@ loop(void)
     int key_ready = 0, ch;
 
     /* switch to intro mode */
-    mode_enter(mode_intro);
-    mode_draw();
+    gamemode_enter(mode_intro);
+    gamemode_draw();
 
-    while (mode_valid()) {
+    while (gamemode_valid()) {
         /* look for the first to run event */
         time = queue_get_first_time();
         if (time) {
@@ -182,8 +182,8 @@ loop(void)
         }
         if (key_ready > 0) {
             ch = getch();
-            mode_key(ch);
-            mode_draw();
+            gamemode_key(ch);
+            gamemode_draw();
         } else {
             /* TODO find a better way for prevening hight cpu usage here. But
              * for now insert a sleep for the minimum ticks used in game */

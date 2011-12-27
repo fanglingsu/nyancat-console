@@ -33,7 +33,7 @@ void
 intro_key_handler(gametime_t time, const int key)
 {
     if (10 == key) {
-        mode_enter(mode_game);
+        gamemode_enter(mode_game);
     }
 }
 
@@ -86,11 +86,11 @@ game_key_handler(gametime_t time, const int key)
             break;
 
         case 'p':
-            mode_enter(mode_pause);
+            gamemode_enter(mode_pause);
             break;
 
         case 'q':
-            mode_enter(mode_scores);
+            gamemode_enter(mode_scores);
             break;
 
         default:
@@ -129,11 +129,11 @@ pause_key_handler(gametime_t time, const int key)
 {
     switch (key) {
         case 'p':
-            mode_enter(mode_game);
+            gamemode_enter(mode_game);
             break;
 
         case 'q':
-            mode_enter(mode_scores);
+            gamemode_enter(mode_scores);
     }
 }
 
@@ -169,7 +169,7 @@ scores_key_handler(gametime_t time, const int key)
     if ('r' == key) {
         /* uninitialize to previous game */
         game_initialized = 0;
-        mode_enter(mode_game);
+        gamemode_enter(mode_game);
     } else if ('q' == key) {
         mode_exit();
     }

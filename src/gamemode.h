@@ -1,5 +1,5 @@
-#ifndef MODE_H
-#define MODE_H
+#ifndef GAMEMODE_H
+#define GAMEMODE_H
 
 #include "clock.h"
 
@@ -9,10 +9,10 @@ typedef void (*keyhandler) (gametime_t, const int);
 
 gamemode_t* mode_create(const char *name, callback enter, callback leave, callback redraw, keyhandler key);
 void mode_exit(void);
-void mode_enter(const gamemode_t *mode);
-void mode_draw(void);
-void mode_key(const int key);
-int mode_valid(void);
+void gamemode_enter(const gamemode_t *mode);
+void gamemode_draw(void);
+void gamemode_key(const int key);
+int gamemode_valid(void);
 const char* mode_get_name(void);
 
-#endif /* end of include guard: MODE_H */
+#endif /* end of include guard: GAMEMODE_H */

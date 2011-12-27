@@ -46,7 +46,7 @@ world_scroll_handler(gametime_t time, void *data)
         }
     }
     queue_add_event(time + TICK(1), world_scroll_handler, NULL);
-    mode_draw();
+    gamemode_draw();
 }
 
 void
