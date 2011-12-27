@@ -109,6 +109,7 @@ cat_jump_handler(gametime_t time, void *data)
 {
     extern struct cat cat;
     if (cat.modeframes > 2) {
+        /* enter run mode */
         cat.mode = CatModeRun;
         queue_add_event(time + TICK(2), cat_run_handler, NULL);
     } else if (cat.modeframes >= 2) {

@@ -4,10 +4,10 @@
 #include "main.h"
 #include "random.h"
 
-static struct {
+static struct world {
     int y;
     int x;
-} world = {0, 0};
+} world;
 
 struct object {
     enum object_type type;
@@ -26,6 +26,10 @@ static struct object world_create_random_platform(const int xstart, const int xr
 void
 world_init(void)
 {
+    extern struct world world;
+    world.x = 0;
+    world.y = 0;
+
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         elements[i] = world_create_random_platform(0, SCREENWIDTH);
     }
