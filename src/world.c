@@ -23,10 +23,27 @@ world_init(void)
 {
     extern struct nyancat nc;
     nc.ui.screen.x = 0;
-    nc.ui.screen.y = 0;
+    nc.ui.screen.y = WORLDHEIGHT / 2;
 
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         elements[i] = world_create_random_platform(0, SCREENWIDTH);
+    }
+}
+
+/**
+ * Moves the upper left corner of visible screen to given coordinates.
+ */
+void
+world_move_screen_to(const int y, const int x)
+{
+    extern struct nyancat nc;
+
+    nc.ui.screen.y = y;
+    nc.ui.screen.x = x;
+    if (nc.ui.screen.y < 0) {
+        nc.ui.screen.y = 0;
+    } else if (nc.ui.screen.y > WORLDHEIGHT - SCREENHEIGHT) {
+        nc.ui.screen.y = WORLDHEIGHT - SCREENHEIGHT;
     }
 }
 
@@ -34,7 +51,9 @@ void
 world_scroll_handler(gametime_t time, void *data)
 {
     extern struct nyancat nc;
-    nc.ui.screen.x++;
+
+    /* move scrren one step by along the x */
+    /*world_move_screen_to(nc.ui.screen.y, nc.ui.screen.x + 1);*/
 
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         int x = elements[i].x - nc.ui.screen.x + elements[i].size;
@@ -60,15 +79,14 @@ world_print(void)
     werase(nc.ui.world);
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         for (int k = 0; k < elements[i].size; ++k) {
-            mvwaddch(nc.ui.world, nc.ui.screen.y + elements[i].y, elements[i].x - nc.ui.screen.x + k, '#');
+            mvwaddch(nc.ui.world, elements[i].y - nc.ui.screen.y, elements[i].x - nc.ui.screen.x + k, '#');
         }
     }
     wnoutrefresh(nc.ui.world);
 }
 
 /**
- * Inidcates if under givem coordinates is an platform element. The given
- * coordinates are calculatet relative to the visible screen.
+ * Inidcates if under givem coordinates is an platform element.
  */
 int
 world_has_element_at(enum object_type type, const int y, const int x)
@@ -80,7 +98,7 @@ world_has_element_at(enum object_type type, const int y, const int x)
                     continue;
                 }
                 /* e.x <= x < e.x + e.size */
-                if ((elements[i].x - nc.ui.screen.x) <= x && x < (elements[i].x - nc.ui.screen.x + elements[i].size)) {
+                if (elements[i].x <= x && x < (elements[i].x + elements[i].size)) {
                     return 1;
                 }
             }
