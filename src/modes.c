@@ -6,6 +6,7 @@
 #include "config.h"
 #include "world.h"
 #include "cat.h"
+#include "game.h"
 
 static int game_initialized = 0;
 
@@ -52,9 +53,9 @@ game_enter(void)
         cat_init();
         game_initialized = 1;
     }
-    cat_run_handler(clock_get_relative(), NULL);
-    cat_scroll_handler(clock_get_relative(), NULL);
-    world_scroll_handler(clock_get_relative(), NULL);
+    /* register games scroll handler that moves the cat and screen */
+    game_scroll_handler(clock_get_relative(), NULL);
+    queue_add_event(clock_get_relative(), cat_run_handler, NULL);
 }
 
 void

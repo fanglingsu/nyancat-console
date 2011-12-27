@@ -31,6 +31,17 @@ world_init(void)
 }
 
 /**
+ * Moves the visible screen given step to the right.
+ */
+void
+world_move_screen_right(const int steps)
+{
+    extern struct nyancat nc;
+
+    world_move_screen_to(nc.ui.screen.y, nc.ui.screen.x + steps);
+}
+
+/**
  * Moves the upper left corner of visible screen to given coordinates.
  */
 void
@@ -45,16 +56,6 @@ world_move_screen_to(const int y, const int x)
     } else if (nc.ui.screen.y > WORLDHEIGHT - SCREENHEIGHT) {
         nc.ui.screen.y = WORLDHEIGHT - SCREENHEIGHT;
     }
-}
-
-void
-world_scroll_handler(gametime_t time, void *data)
-{
-    extern struct nyancat nc;
-
-    /* move scrren one step by along the x */
-    /*world_move_screen_to(nc.ui.screen.y, nc.ui.screen.x + 1);*/
-
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         int x = elements[i].x - nc.ui.screen.x + elements[i].size;
         /* create new platform for i that is out of scope but in the first
@@ -64,8 +65,6 @@ world_scroll_handler(gametime_t time, void *data)
             continue;
         }
     }
-    queue_add_event(time + TICK(1), world_scroll_handler, NULL);
-    gamemode_draw();
 }
 
 /**

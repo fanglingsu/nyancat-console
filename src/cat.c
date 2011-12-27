@@ -75,18 +75,14 @@ cat_jump_down(void)
      * constraints. */
 }
 
-/**
- * Move the cat every tick one step forward.
- * TODO how to keep this syncron with the world_scroll_handler?
- */
 void
-cat_scroll_handler(gametime_t time, void *data)
+cat_move_right(const int steps)
 {
     extern struct cat cat;
 
-    cat.posX++;
+    cat.posX += steps;
+
     world_move_screen_to(cat.posY - SCREENHEIGHT / 2, cat.posX - CAT_XOFFSET);
-    queue_add_event(time + TICK(1), cat_scroll_handler, NULL);
 }
 
 void
