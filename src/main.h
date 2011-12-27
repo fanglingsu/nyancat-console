@@ -39,6 +39,11 @@ enum color {
     ColorRed
 };
 
+typedef struct {
+    int x;
+    int y;
+} coordinate_t;
+
 struct nyancat {
     struct {
         WINDOW *world;
@@ -46,6 +51,7 @@ struct nyancat {
 #if DEBUG
         WINDOW *debug;
 #endif
+        coordinate_t screen;
     } ui;
 } nc;
 

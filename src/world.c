@@ -4,11 +4,6 @@
 #include "main.h"
 #include "random.h"
 
-static struct world {
-    int y;
-    int x;
-} world;
-
 struct object {
     enum object_type type;
     int y;
@@ -26,9 +21,9 @@ static struct object world_create_random_platform(const int xstart, const int xr
 void
 world_init(void)
 {
-    extern struct world world;
-    world.x = 0;
-    world.y = 0;
+    extern struct nyancat nc;
+    nc.ui.screen.x = 0;
+    nc.ui.screen.y = 0;
 
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         elements[i] = world_create_random_platform(0, SCREENWIDTH);
@@ -38,14 +33,15 @@ world_init(void)
 void
 world_scroll_handler(gametime_t time, void *data)
 {
-    world.x++;
+    extern struct nyancat nc;
+    nc.ui.screen.x++;
 
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        int x = elements[i].x - world.x + elements[i].size;
+        int x = elements[i].x - nc.ui.screen.x + elements[i].size;
         /* create new platform for i that is out of scope but in the first
          * half of the new imginary screen */
         if (x < 0) {
-            elements[i] = world_create_random_platform(world.x + SCREENWIDTH, SCREENWIDTH / 2);
+            elements[i] = world_create_random_platform(nc.ui.screen.x + SCREENWIDTH, SCREENWIDTH / 2);
             continue;
         }
     }
@@ -64,7 +60,7 @@ world_print(void)
     werase(nc.ui.world);
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         for (int k = 0; k < elements[i].size; ++k) {
-            mvwaddch(nc.ui.world, world.y + elements[i].y, elements[i].x - world.x + k, '#');
+            mvwaddch(nc.ui.world, nc.ui.screen.y + elements[i].y, elements[i].x - nc.ui.screen.x + k, '#');
         }
     }
     wnoutrefresh(nc.ui.world);
@@ -84,7 +80,7 @@ world_has_element_at(enum object_type type, const int y, const int x)
                     continue;
                 }
                 /* e.x <= x < e.x + e.size */
-                if ((elements[i].x - world.x) <= x && x < (elements[i].x - world.x + elements[i].size)) {
+                if ((elements[i].x - nc.ui.screen.x) <= x && x < (elements[i].x - nc.ui.screen.x + elements[i].size)) {
                     return 1;
                 }
             }
