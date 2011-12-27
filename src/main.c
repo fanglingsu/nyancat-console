@@ -21,7 +21,6 @@ main(int argc, const char *argv[])
     random_init();
     set_signals();
     init_windows();
-    clear_windows();
     init_modes();
 
     loop();
@@ -80,15 +79,6 @@ init_windows(void)
     /* create sub windows */
     nc.ui.world = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
     nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
-}
-
-void
-clear_windows(void)
-{
-    wclear(nc.ui.world);
-    wnoutrefresh(nc.ui.world);
-    wclear(nc.ui.status);
-    wnoutrefresh(nc.ui.status);
 }
 
 /**

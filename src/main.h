@@ -44,7 +44,6 @@ struct nyancat {
     } ui;
 } nc;
 
-void clear_windows(void);
 void error_exit(const char *format, ...);
 
 #endif /* end of include guard: MAIN_H */
