@@ -16,6 +16,7 @@ static struct cat {
     int actioncount;    /* number of times a action was called this
                          * is used to not allow to jump twice without
                          * hitting the ground before */
+    int hasground;      /* indicates if nyan has ground under her feets */
 } cat;
 
 static void cat_move_vertical(const int y);
@@ -33,6 +34,7 @@ cat_init(void)
     cat.mode = CatModeRun;
     cat.modeframes = 0;
     cat.actioncount = 0;
+    cat.hasground = 0;
 }
 
 /**
@@ -95,6 +97,15 @@ cat_move_right(const int steps)
     cat.posX += steps;
 
     world_move_screen_to(cat.posY - SCREENHEIGHT / 2, cat.posX - CAT_XOFFSET);
+
+    /* check if nyan has ground under her feets */
+    if (world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX + CATWIDTH - 2)
+        || world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX)
+    ) {
+        cat.hasground = 1;
+    } else {
+        cat.hasground = 0;
+    }
 }
 
 void
@@ -103,9 +114,7 @@ cat_run_handler(gametime_t time, void *data)
     extern struct cat cat;
 
     if (cat.mode == CatModeRun) {
-        if (world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX + CATWIDTH - 2)
-            || world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX)
-        ) {
+        if (cat.hasground) {
             cat.modeframes = 0;
             cat.actioncount = 0;
         } else {
@@ -155,6 +164,7 @@ cat_print(void)
     static int frame = 0;
     const int yoffset = cat.posY - nc.ui.screen.y;
     const int xoffset = cat.posX - nc.ui.screen.x;
+    const char eye = cat.hasground ? 'o' : '+';
     const struct feets {
         int offset;
         char str[8];
@@ -168,7 +178,7 @@ cat_print(void)
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
     mvwprintw(nc.ui.world, yoffset,     xoffset,      ",-----,");
     mvwprintw(nc.ui.world, yoffset + 1, xoffset,      "|%3d/\\/\\", cat_get_height() * 100 / WORLDHEIGHT);
-    mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, "~|___(o.o)");
+    mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, "~|___(%c.%c)", eye, eye);
 
     if (frame < LENGTH(feets)) {
         mvwprintw(nc.ui.world, yoffset + 3, xoffset + feets[frame].offset, feets[frame].str);
