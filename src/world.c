@@ -53,12 +53,6 @@ world_scroll_handler(gametime_t time, void *data)
     gamemode_draw();
 }
 
-void
-world_start_scrolling(void)
-{
-    queue_add_event(clock_get_relative() + TICK(1), world_scroll_handler, NULL);
-}
-
 /**
  * Prints the world.
  */

@@ -52,7 +52,7 @@ game_enter(void)
         game_initialized = 1;
     }
     cat_run_handler(clock_get_relative(), NULL);
-    world_start_scrolling();
+    world_scroll_handler(clock_get_relative(), NULL);
 }
 
 /**
