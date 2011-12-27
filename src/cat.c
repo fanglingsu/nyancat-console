@@ -79,8 +79,8 @@ cat_run_handler(gametime_t time, void *data)
 {
     extern struct cat cat;
     if (cat.mode == CatModeRun) {
-        if (world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX + 6)
-            || world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX)
+        if (world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX + 6)
+            || world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX)
         ) {
             cat.modeframes = 0;
             cat.actioncount = 0;
@@ -140,12 +140,12 @@ cat_print(void)
     };
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
-    mvwprintw(nc.ui.world, cat.posY - 3, cat.posX,      ",-----,");
-    mvwprintw(nc.ui.world, cat.posY - 2, cat.posX,      "|:::/\\/\\");
-    mvwprintw(nc.ui.world, cat.posY - 1, cat.posX - 1, "~|___(o.o)");
+    mvwprintw(nc.ui.world, cat.posY - nc.ui.screen.y, cat.posX,      ",-----,");
+    mvwprintw(nc.ui.world, cat.posY - nc.ui.screen.y + 1, cat.posX,      "|:::/\\/\\");
+    mvwprintw(nc.ui.world, cat.posY - nc.ui.screen.y + 2, cat.posX - 1, "~|___(o.o)");
 
     if (frame < LENGTH(feets)) {
-        mvwprintw(nc.ui.world, cat.posY, cat.posX + feets[frame].offset, feets[frame].str);
+        mvwprintw(nc.ui.world, cat.posY - nc.ui.screen.y + 3, cat.posX + feets[frame].offset, feets[frame].str);
         if (frame == LENGTH(feets) - 1) {
             frame = 0;
         } else {
@@ -166,16 +166,16 @@ cat_move_by(const int y)
     extern struct cat cat;
 
     if (y > 0) { /* move down */
-        if (cat.posY + y < WORLDHEIGHT) {
+        if (cat.posY + y < WORLDHEIGHT - CATHIGHT) {
             cat.posY += y;
         } else { /* go to lowest position */
-            cat.posY = WORLDHEIGHT - 1;
+            cat.posY = WORLDHEIGHT - CATHIGHT;
         }
     } else if (y < 0) { /* move up */
-        if (cat.posY + y - CATHIGHT > 0) {
+        if (cat.posY + y > 0) {
             cat.posY += y;
         } else { /* go to upper most position */
-            cat.posY = CATHIGHT - 1;
+            cat.posY = 0;
         }
     }
 }

@@ -101,7 +101,7 @@ world_create_random_platform(const int xstart, const int xrange)
 
     obj.x = random_range_step(xstart, xstart + xrange, 4);
     /* padding top 4 and padding bottom 2 */
-    obj.y = random_range(4, SCREENHEIGHT - 2);
+    obj.y = random_range(4, WORLDHEIGHT - 2);
     /* make platforms size between [12..28]*/
     obj.size = random_range_step(16, 28, 4);
 
