@@ -13,6 +13,9 @@ static struct cat {
     int posX;
     enum catmode mode;
     int modeframes;     /* number of frames in a certain mode */
+    int actioncount;    /* number of times a action was called this
+                         * is used to not allow to jump twice without
+                         * hitting the ground before */
 } cat;
 
 static void cat_move_by(const int y);
@@ -29,6 +32,7 @@ cat_init(void)
     cat.posY = 10;
     cat.mode = CatModeRun;
     cat.modeframes = 0;
+    cat.actioncount = 0;
     queue_add_event(clock_get_relative() + TICK(2), cat_run_handler, NULL);
 }
 
@@ -39,14 +43,24 @@ void
 cat_jump_up(gametime_t time)
 {
     extern struct cat cat;
+    static const int max_jumps = 2;
 
-    /* do not allow to jump multiple times */
-    if (cat.mode == CatModeJump) {
-        cat.mode = CatModeRun;
+    /* remove previous run events */
+    if (cat.mode == CatModeRun) {
+        queue_remove_event(cat_run_handler);
     }
+
+    cat.actioncount++;
     cat.modeframes = 0;
-    queue_remove_event(cat_jump_handler);
-    queue_remove_event(cat_run_handler);
+    /* already jumped twice */
+    if (max_jumps < cat.actioncount) {
+        /* init run mode */
+        cat.mode = CatModeRun;
+        cat.modeframes = 0;
+        cat.actioncount = 0;
+        cat_run_handler(time, NULL);
+        return;
+    }
     cat_jump_handler(time, NULL);
 }
 
@@ -70,6 +84,7 @@ cat_run_handler(gametime_t time, void *data)
             || world_has_element_at(ObjectPlatform, cat.posY + 1, cat.posX)
         ) {
             cat.modeframes = 0;
+            cat.actioncount = 0;
         } else {
             /* move down if neighert first feet or last feet is upon a platform */
             cat_move_by(1);
