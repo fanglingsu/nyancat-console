@@ -79,6 +79,9 @@ init_windows(void)
     /* create sub windows */
     nc.ui.world = newwin(SCREENHEIGHT, SCREENWIDTH, 0, 0);
     nc.ui.status = newwin(1, SCREENWIDTH, SCREENHEIGHT, 0);
+#if DEBUG
+    nc.ui.debug = newwin(5, SCREENWIDTH, SCREENHEIGHT + 1, 0);
+#endif
 }
 
 /**

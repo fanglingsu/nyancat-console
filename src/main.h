@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 #include <stdio.h>
+#include "config.h"
 #include "gamemode.h"
 #include "queue.h"
 
@@ -10,15 +11,16 @@
 
 #define err_msg(...) \
 {                   \
-    werase(stdscr); \
-    mvprintw(SCREENHEIGHT + 1, 0, "%s:%5d %s()", __FILE__, __LINE__, __FUNCTION__); \
-    mvprintw(SCREENHEIGHT + 2, 4, __VA_ARGS__); \
-    wnoutrefresh(stdscr); \
+    werase(nc.ui.debug); \
+    wprintw(nc.ui.debug, __VA_ARGS__); \
+    wnoutrefresh(nc.ui.debug); \
     doupdate(); \
 }
 
-#if DEBUG
-#   define debug(...) err_msg(__VA_ARGS__)
+#ifdef DEBUG
+#   define DEBUG_FORMAT "%10s:%20s() %03d: "
+#   define DEBUG_ARGS __FILE__, __func__, __LINE__
+#   define debug(format, ...) err_msg(DEBUG_FORMAT format, DEBUG_ARGS, __VA_ARGS__)
 #else
 #   define debug(...)
 #endif
@@ -41,6 +43,9 @@ struct nyancat {
     struct {
         WINDOW *world;
         WINDOW *status;
+#if DEBUG
+        WINDOW *debug;
+#endif
     } ui;
 } nc;
 

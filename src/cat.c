@@ -1,5 +1,4 @@
 #include "main.h"
-#include "config.h"
 #include "cat.h"
 #include "world.h"
 
