@@ -1,6 +1,7 @@
 #include "main.h"
 #include "cat.h"
 #include "world.h"
+#include "util.h"
 
 enum catmode {
     CatModeRun,
@@ -73,6 +74,17 @@ cat_jump_down(void)
     /* Not implemented yet. Jump down will make sense if the fly mode will be
      * implemented that allows nyan to fly up and down nearly without any
      * constraints. */
+}
+
+/**
+ * Retreives the height of the cat in the world.
+ */
+int
+cat_get_height(void)
+{
+    extern struct cat cat;
+
+    return WORLDHEIGHT - cat.posY;
 }
 
 void
@@ -155,7 +167,7 @@ cat_print(void)
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
     mvwprintw(nc.ui.world, yoffset,     xoffset,      ",-----,");
-    mvwprintw(nc.ui.world, yoffset + 1, xoffset,      "|:::/\\/\\");
+    mvwprintw(nc.ui.world, yoffset + 1, xoffset,      "|%3d/\\/\\", cat_get_height() * 100 / WORLDHEIGHT);
     mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, "~|___(o.o)");
 
     if (frame < LENGTH(feets)) {

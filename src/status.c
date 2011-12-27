@@ -47,7 +47,11 @@ status_print(void)
 {
     extern struct status status;
 
-    printstatusf("%s: %.2lfs", status.mode, status.runtime);
+    printstatusf(
+        "%s: %.2lfs",
+        status.mode,
+        status.runtime
+    );
 }
 
 /**

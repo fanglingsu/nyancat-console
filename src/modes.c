@@ -72,9 +72,6 @@ game_draw(void)
 {
     world_print();
     cat_print();
-    status_set_mode(mode_get_name());
-    status_set_runtime(clock_get_relative());
-    status_print();
 }
 
 /**
