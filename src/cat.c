@@ -47,6 +47,8 @@ cat_jump_up(gametime_t time)
     if (cat.mode == CatModeRun) {
         queue_remove_event(cat_run_handler);
     }
+    /* remove previous jump events */
+    queue_remove_event(cat_jump_handler);
 
     cat.actioncount++;
     cat.modeframes = 0;

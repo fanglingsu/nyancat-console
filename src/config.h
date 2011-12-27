@@ -14,7 +14,7 @@
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
 #define CAT_XOFFSET  8      /* distance of cat from left border */
-#define MAX_PLATFORMS 15    /* plattforms placed on to screen widths */
+#define MAX_PLATFORMS 25    /* plattforms placed on to screen widths */
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  48
