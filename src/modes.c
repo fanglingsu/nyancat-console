@@ -44,6 +44,7 @@ intro_key_handler(gametime_t time, const int key)
 void
 game_enter(void)
 {
+    clock_thaw();
     /* prevent from reinitialisation after pause mode */
     if (!game_initialized) {
         clock_init();
@@ -52,7 +53,14 @@ game_enter(void)
         game_initialized = 1;
     }
     cat_run_handler(clock_get_relative(), NULL);
+    cat_scroll_handler(clock_get_relative(), NULL);
     world_scroll_handler(clock_get_relative(), NULL);
+}
+
+void
+game_leave(void)
+{
+    clock_freeze();
 }
 
 /**
@@ -104,19 +112,9 @@ game_key_handler(gametime_t time, const int key)
 void
 pause_enter(void)
 {
-    clock_freeze();
     status_set_mode(mode_get_name());
     status_set_runtime(clock_get_relative());
     status_print();
-}
-
-/**
- * Thaw the clock on leaving the pause mode.
- */
-void
-pause_leave(void)
-{
-    clock_thaw();
 }
 
 /**

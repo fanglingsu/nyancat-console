@@ -32,8 +32,6 @@ cat_init(void)
     cat.mode = CatModeRun;
     cat.modeframes = 0;
     cat.actioncount = 0;
-    queue_add_event(clock_get_relative() + TICK(1), cat_scroll_handler, NULL);
-    queue_add_event(clock_get_relative() + TICK(2), cat_run_handler, NULL);
 }
 
 /**
@@ -189,5 +187,7 @@ cat_move_vertical(const int y)
         cat.posY = 0;
     } else if (cat.posY >= WORLDHEIGHT) {
         cat.posY = WORLDHEIGHT;
+        /* cat is out of view - game over */
+        gamemode_enter(mode_scores);
     }
 }
