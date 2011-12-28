@@ -9,7 +9,7 @@ enum item {
     StatusDebug
 };
 
-static void printstatusf(const char *format, ...);
+static void printstatusf(const char *, ...);
 
 /**
  * Print out contens of the status to the status window.

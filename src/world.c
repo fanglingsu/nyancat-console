@@ -13,7 +13,7 @@ typedef struct {
 
 static object_t elements[MAX_PLATFORMS];
 
-static object_t world_create_random_platform(const int xstart, const int xrange);
+static object_t world_create_random_platform(const int, const int);
 
 /**
  * Generates platform of nyans world.

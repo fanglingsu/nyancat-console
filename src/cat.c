@@ -56,7 +56,7 @@ static movement_t move_jump[] = {
     {TICK(4.7),    0, CatStateGlide,   move_fall}
 };
 
-static void cat_move_vertical(const int y);
+static void cat_move_vertical(const int);
 
 /**
  * Initializes the cat with their default properties.

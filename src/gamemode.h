@@ -7,11 +7,11 @@ typedef struct gamemode gamemode_t;
 typedef void (*callback) (void);
 typedef void (*keyhandler) (gametime_t, const int);
 
-gamemode_t* mode_create(const char *name, callback enter, callback leave, callback redraw, keyhandler key);
+gamemode_t* mode_create(const char *, callback, callback, callback, keyhandler);
 void mode_exit(void);
-void gamemode_enter(const gamemode_t *mode);
+void gamemode_enter(const gamemode_t *);
 void gamemode_draw(void);
-void gamemode_key(const int key);
+void gamemode_key(const int);
 int gamemode_valid(void);
 const char* mode_get_name(void);
 

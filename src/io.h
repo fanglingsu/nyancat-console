@@ -5,6 +5,6 @@
 
 #define STDIN 0
 
-int io_wait_for_key(gametime_t time);
+int io_wait_for_key(gametime_t);
 
 #endif /* end of include guard: IO_H */

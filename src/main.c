@@ -13,7 +13,7 @@ static void init_modes(void);
 static void print_help_message(void);
 static void print_licence_message(void);
 static void set_signals(void);
-static void signal_handler(int sig);
+static void signal_handler(const int);
 static void loop(void);
 static void prepare_for_exit(void);
 
@@ -160,7 +160,7 @@ static void set_signals(void)
  *
  * Signal handler called if signal is emmitted.
  */
-static void signal_handler(int sig)
+static void signal_handler(const int sig)
 {
     prepare_for_exit();
     exit(EXIT_FAILURE);

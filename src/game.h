@@ -3,6 +3,6 @@
 
 #include "clock.h"
 
-void game_scroll_handler(gametime_t time, void *data);
+void game_scroll_handler(gametime_t, void *);
 
 #endif /* end of include guard: GAME_H */

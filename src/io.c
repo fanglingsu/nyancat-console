@@ -2,7 +2,7 @@
 #include "io.h"
 #include "config.h"
 
-static int io_select(struct timeval *timeout);
+static int io_select(struct timeval *);
 
 /**
  * @time: time when to return if no key is pressed before.

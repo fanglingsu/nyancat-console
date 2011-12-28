@@ -55,6 +55,6 @@ gamemode_t *mode_game;
 gamemode_t *mode_pause;
 gamemode_t *mode_scores;
 
-void error_exit(const char *format, ...);
+void error_exit(const char *, ...);
 
 #endif /* end of include guard: MAIN_H */
