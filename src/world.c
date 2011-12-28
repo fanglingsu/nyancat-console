@@ -4,22 +4,23 @@
 #include "main.h"
 #include "random.h"
 
-struct object {
+typedef struct {
     enum object_type type;
     int y;
     int x;
     int size;
-};
+} object_t;
 
-static struct object elements[MAX_PLATFORMS];
+static object_t elements[MAX_PLATFORMS];
 
-static struct object world_create_random_platform(const int xstart, const int xrange);
+static object_t world_create_random_platform(const int xstart, const int xrange);
 
 /**
  * Generates platform of nyans world.
  */
 void world_init(void)
 {
+    extern object_t elements[];
     extern nyancat_t nc;
     nc.ui.screen.x = 0;
     nc.ui.screen.y = WORLDHEIGHT / 2;
@@ -44,6 +45,7 @@ void world_move_screen_right(const int steps)
  */
 void world_move_screen_to(const int y, const int x)
 {
+    extern object_t elements[];
     extern nyancat_t nc;
 
     nc.ui.screen.y = y;
@@ -69,6 +71,7 @@ void world_move_screen_to(const int y, const int x)
  */
 void world_print(void)
 {
+    extern object_t elements[];
     extern nyancat_t nc;
 
     werase(nc.ui.world);
@@ -85,6 +88,8 @@ void world_print(void)
  */
 int world_has_element_at(enum object_type type, const int y, const int x)
 {
+    extern object_t elements[];
+
     switch (type) {
         case ObjectPlatform:
             for (int i = 0; i < MAX_PLATFORMS; ++i) {
@@ -107,10 +112,10 @@ int world_has_element_at(enum object_type type, const int y, const int x)
  * Builds a random places platform struct. Platforms are placed in the x range
  * between xstart and the next range chars.
  */
-static struct object
+static object_t
 world_create_random_platform(const int xstart, const int xrange)
 {
-    struct object obj;
+    object_t obj;
 
     obj.x = random_range_step(xstart, xstart + xrange, 4);
     /* padding top 4 and padding bottom 2 */

@@ -10,7 +10,7 @@ void *xmalloc(size_t size)
 {
     void *ret = malloc(size);
     if (NULL == ret) {
-        error_exit("Could not allocate %lu bytes of memory", (unsigned long)size);        
+        error_exit("Could not allocate %lu bytes of memory", (unsigned long)size);
     }
     return ret;
 }
