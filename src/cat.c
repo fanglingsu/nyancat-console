@@ -33,6 +33,11 @@ typedef struct movement {
     struct movement *next;
 } movement_t;
 
+typedef struct {
+    int offset;
+    char str[8];
+} feets_t;
+
 static cat_t cat;
 
 static movement_t move_fall[] = {
@@ -54,6 +59,30 @@ static movement_t move_jump[] = {
     {TICK(2.5), -1, CatStateJumpUp, &move_jump[1]},
     {TICK(3.5), -1, CatStateJumpUp, &move_jump[2]},
     {TICK(4.7),    0, CatStateGlide,   move_fall}
+};
+
+static const struct cat_image {
+    char *body[3];
+    feets_t feets[4];
+} cat_images[] = {
+    /* normal mode */
+    {
+        {",-----,", "|%3d/\\/\\", "~|___(%c.%c)"},
+        {
+            {0, "U U U U"},
+            {0, "UU  UU"},
+            {1, "U   U"},
+            {1, "UU  UU"}
+        }
+    },
+    /* fast fall */
+    {
+        {"O----O,", "|%3d|\\/\\", "~|___(%c_%c)"},
+        {
+            {0, "U   U"},
+            {1, "U   U"}
+        }
+    }
 };
 
 static void cat_move_vertical(const int);
@@ -168,15 +197,7 @@ void cat_print(void)
     const int yoffset = cat.posY - nc.ui.screen.y;
     const int xoffset = cat.posX - nc.ui.screen.x;
     char eye;
-    const struct feets {
-        int offset;
-        char str[8];
-    } feets[] = {
-        {0, "U U U U"},
-        {0, "UU  UU"},
-        {1, "U   U"},
-        {1, "UU  UU"},
-    };
+    struct cat_image img = (CatStateFallFast == cat.state) ? cat_images[1] : cat_images[0];
 
     if (cat.hasground) {
         eye = 'o';
@@ -187,13 +208,13 @@ void cat_print(void)
     }
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
-    mvwprintw(nc.ui.world, yoffset,     xoffset,      ",-----,");
-    mvwprintw(nc.ui.world, yoffset + 1, xoffset,      "|%3d/\\/\\", cat_get_height() * 100 / WORLDHEIGHT);
-    mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, "~|___(%c.%c)", eye, eye);
+    mvwprintw(nc.ui.world, yoffset,     xoffset,     img.body[0]);
+    mvwprintw(nc.ui.world, yoffset + 1, xoffset,     img.body[1], cat_get_height() * 100 / WORLDHEIGHT);
+    mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, img.body[2], eye, eye);
 
-    if (frame < LENGTH(feets)) {
-        mvwprintw(nc.ui.world, yoffset + 3, xoffset + feets[frame].offset, feets[frame].str);
-        if (frame == LENGTH(feets) - 1) {
+    if (frame < LENGTH(img.feets)) {
+        mvwprintw(nc.ui.world, yoffset + 3, xoffset + img.feets[frame].offset, img.feets[frame].str);
+        if (frame == LENGTH(img.feets) - 1) {
             frame = 0;
         } else {
             ++frame;
