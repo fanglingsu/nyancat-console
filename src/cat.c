@@ -4,20 +4,53 @@
 #include "util.h"
 
 enum catmode {
-    CatModeRun,
-    CatModeJump
+    CatModeNormal
+};
+
+enum catstate {
+    CatStateWalk,
+    CatStateJumpInit,
+    CatStateJumpUp,
+    CatStateGlide,
+    CatStateGlideDown,
+    CatStateFall,
+    CatStateFallFast
 };
 
 static struct cat {
     int posY;
     int posX;
     enum catmode mode;
-    int modeframes;     /* number of frames in a certain mode */
-    int actioncount;    /* number of times a action was called this
-                         * is used to not allow to jump twice without
-                         * hitting the ground before */
+    enum catstate state;
+    int jumpcount;
     int hasground;      /* indicates if nyan has ground under her feets */
 } cat;
+
+typedef struct movement {
+    gametime_t delta;
+    int y;
+    enum catstate state;
+    struct movement *next;
+} movement_t;
+
+static movement_t move_fall[] = {
+    {TICK(3.5),  1, CatStateGlideDown, &move_fall[1]},
+    {TICK(2.5),  1, CatStateGlideDown, &move_fall[2]},
+    {TICK(2),    1, CatStateFall,      &move_fall[3]},
+    {TICK(2),    1, CatStateFall,      &move_fall[4]},
+    {TICK(2),    1, CatStateFall,      &move_fall[5]},
+    {TICK(2),    1, CatStateFall,      &move_fall[6]},
+    {TICK(1),    1, CatStateFallFast,  &move_fall[6]}
+};
+static movement_t move_walk[] = {
+    {TICK(1),    0, CatStateWalk, &move_walk[1]},
+    {TICK(1),    0, CatStateGlide, move_fall}
+};
+static movement_t move_jump[] = {
+    {TICK(2.5), -1, CatStateJumpUp, &move_jump[1]},
+    {TICK(3.5), -1, CatStateJumpUp, &move_jump[2]},
+    {TICK(5),    0, CatStateGlide,   move_fall}
+};
 
 static void cat_move_vertical(const int y);
 
@@ -31,9 +64,9 @@ cat_init(void)
 
     cat.posX = CAT_XOFFSET;
     cat.posY = WORLDHEIGHT / 2 - CATHIGHT;
-    cat.mode = CatModeRun;
-    cat.modeframes = 0;
-    cat.actioncount = 0;
+    cat.mode = CatModeNormal;
+    cat.state = CatStateWalk;
+    cat.jumpcount = 0;
     cat.hasground = 0;
 }
 
@@ -44,27 +77,12 @@ void
 cat_jump_up(gametime_t time)
 {
     extern struct cat cat;
-    static const int max_jumps = 2;
 
-    /* remove previous run events */
-    if (cat.mode == CatModeRun) {
-        queue_remove_event(cat_run_handler);
+    /* jumping from fast fall is not allowed */
+    if (cat.jumpcount <= 1 && CatStateFallFast != cat.state) {
+        cat.jumpcount++;
+        cat.state = CatStateJumpInit;
     }
-    /* remove previous jump events */
-    queue_remove_event(cat_jump_handler);
-
-    cat.actioncount++;
-    cat.modeframes = 0;
-    /* already jumped twice */
-    if (max_jumps < cat.actioncount) {
-        /* init run mode */
-        cat.mode = CatModeRun;
-        cat.modeframes = 0;
-        cat.actioncount = 0;
-        cat_run_handler(time, NULL);
-        return;
-    }
-    cat_jump_handler(time, NULL);
 }
 
 /**
@@ -89,6 +107,9 @@ cat_get_height(void)
     return WORLDHEIGHT - cat.posY;
 }
 
+/**
+ * Moves the cat to the right by given step size.
+ */
 void
 cat_move_right(const int steps)
 {
@@ -108,49 +129,35 @@ cat_move_right(const int steps)
     }
 }
 
-void
-cat_run_handler(gametime_t time, void *data)
-{
-    extern struct cat cat;
-
-    if (cat.mode == CatModeRun) {
-        if (cat.hasground) {
-            cat.modeframes = 0;
-            cat.actioncount = 0;
-        } else {
-            /* move down if neighert first feet or last feet is upon a platform */
-            cat_move_vertical(1);
-            cat.modeframes++;
-        }
-    }
-    /* faster recall after more frames to simulate ground acceleration */
-    if (cat.modeframes > 15) {
-        queue_add_event(time + TICK(1), cat_run_handler, NULL);
-    } else if (cat.modeframes > 5) {
-        queue_add_event(time + TICK(2), cat_run_handler, NULL);
-    } else {
-        queue_add_event(time + TICK(3.5), cat_run_handler, NULL);
-    }
-}
-
 /**
- * Eventcallback to perform a nice jump.
+ * Handler function to move the cat according to their state.
  */
 void
-cat_jump_handler(gametime_t time, void *data)
+cat_move_handler(gametime_t time, void *data)
 {
     extern struct cat cat;
-    if (cat.modeframes > 2) {
-        /* enter run mode */
-        cat.mode = CatModeRun;
-        queue_add_event(time + TICK(2), cat_run_handler, NULL);
-    } else if (cat.modeframes >= 2) {
-        queue_add_event(time + TICK(3.5), cat_jump_handler, NULL);
-    } else {
-        cat_move_vertical(-1);
-        queue_add_event(time + TICK(3.5), cat_jump_handler, NULL);
+    movement_t *move = data;
+
+    /* use movment data according to state if called first time */
+    if (NULL == move) {
+        if (CatStateJumpInit == cat.state) {
+            move = move_jump;
+        } else if (cat.hasground) {
+            move = move_walk;
+        } else {
+            move = move_fall;
+        }
     }
-    cat.modeframes++;
+    if (CatStateJumpInit == cat.state) {
+        move = move_jump;
+    } else if (cat.hasground) {
+        move = move_walk;
+        cat.jumpcount = 0;
+    }
+
+    cat.state = move->state;
+    cat_move_vertical(move->y);
+    queue_add_event(time + move->delta, cat_move_handler, move->next);
 }
 
 /**
