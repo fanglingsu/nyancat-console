@@ -13,6 +13,9 @@ typedef struct {
 
 static object_t elements[MAX_PLATFORMS];
 
+/* used for vertical hysteresis in screen movement in world_move_screen_to() */
+static int screen_hysteresis_diff;
+
 static object_t world_create_random_platform(const int, const int);
 
 /**
@@ -24,6 +27,10 @@ void world_init(void)
     extern nyancat_t nc;
     nc.ui.screen.x = 0;
     nc.ui.screen.y = WORLDHEIGHT / 2;
+
+    /* value doesn't matter but value > SCREENHYSTERESIS + 1 will cause to
+     * move screen the first time without hysteresis */
+    screen_hysteresis_diff = SCREENHYSTERESIS + 2;
 
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         elements[i] = world_create_random_platform(0, SCREENWIDTH);
@@ -48,7 +55,18 @@ void world_move_screen_to(const int y, const int x)
     extern object_t elements[];
     extern nyancat_t nc;
 
-    nc.ui.screen.y = y;
+    /* vertical hysteresis */
+    if (screen_hysteresis_diff > SCREENHYSTERESIS) {
+        if (screen_hysteresis_diff <= SCREENHYSTERESIS + 1) {
+            nc.ui.screen.y += 1;
+        } else {
+            nc.ui.screen.y = y;
+        }
+    } else if (screen_hysteresis_diff < SCREENHYSTERESIS * -1) {
+        nc.ui.screen.y -= 1;
+    }
+    screen_hysteresis_diff = y - nc.ui.screen.y;
+
     nc.ui.screen.x = x;
     if (nc.ui.screen.y < 0) {
         nc.ui.screen.y = 0;

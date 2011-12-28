@@ -13,6 +13,7 @@
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
+#define SCREENHYSTERESIS 3  /* steps thst can nyan move vertical befor the screen is moved to */
 #define CAT_XOFFSET  8      /* distance of cat from left border */
 #define MAX_PLATFORMS 25    /* plattforms placed on to screen widths */
 
