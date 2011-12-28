@@ -135,8 +135,8 @@ static object_t world_create_random_platform(const int xstart, const int xrange)
     object_t obj;
 
     obj.x = random_range_step(xstart, xstart + xrange, 4);
-    /* padding top 4 and padding bottom 2 */
-    obj.y = random_range(4, WORLDHEIGHT - 2);
+    /* padding top CATHEIGHT+1 and padding bottom 2 */
+    obj.y = random_range_step(CATHEIGHT + 1, WORLDHEIGHT - 2, random_range(2, 3));
     /* make platforms size between [12..24] */
     obj.size = random_range_step(12, 24, 4);
 
