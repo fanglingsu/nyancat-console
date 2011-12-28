@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
+#include <getopt.h>
 #include "main.h"
 #include "random.h"
 #include "config.h"
@@ -9,14 +10,29 @@
 
 static void init_windows(void);
 static void init_modes(void);
+static void print_help_message(void);
 static void print_licence_message(void);
 static void set_signals(void);
 static void signal_handler(int sig);
 static void loop(void);
 static void prepare_for_exit(void);
 
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
+    int c;
+
+    while ((c = getopt(argc, argv, "hv")) != -1) {
+        switch (c) {
+            case 'h':
+                print_help_message();
+                prepare_for_exit();
+                return EXIT_FAILURE;
+            case 'v':
+                print_licence_message();
+                prepare_for_exit();
+                return EXIT_FAILURE;
+        }
+    }
     random_init();
     set_signals();
     init_windows();
@@ -95,6 +111,17 @@ static void init_modes(void)
 }
 
 /**
+ * Prints the help information.
+ */
+static void print_help_message(void)
+{
+    puts("Usage: " REAL_NAME " [OPTION...]\n");
+    puts("  -h      give this help list");
+    puts("  -v      print programm version and licence\n");
+    puts("Report bugs at https://github.com/fanglingsu/nyancat-console.");
+}
+
+/**
  * Prints the licence message to stdout.
  */
 static void print_licence_message(void)
@@ -136,7 +163,6 @@ static void set_signals(void)
 static void signal_handler(int sig)
 {
     prepare_for_exit();
-    print_licence_message();
     exit(EXIT_FAILURE);
 }
 
