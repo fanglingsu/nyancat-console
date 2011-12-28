@@ -17,11 +17,17 @@ If you use 'indent' to reindent your code, following option would fit our style.
 
     indent -i4 -nfca -nprs -npcs -npsl -bli0 -nut -br -brs -ce -cli4 -ncs *.c
 
-Please mark global variables within function as extern.
+Sourcefile Organisation
+-----------------------
+- includes of system headers
+- includes of local headers
+- type and constant definitions
+- global variables
+- static variables
+- global functions
+- static functions
 
-For now we prefer to write none static function in the first part of file, the
-static function into the second part. For a better overview it's recomended to
-write all function prototypes for functions.
+Please mark global variables within function as extern.
 
 Try to keep the code within function simple and easy to read. If it's required
 to do something fancy fir better performance, the code could be made better to
