@@ -152,6 +152,7 @@ static object_t world_create_random_platform(const int xstart, const int xrange)
 {
     object_t obj;
 
+    obj.type = ObjectPlatform;
     obj.x = random_range_step(xstart, xstart + xrange, 4);
     /* padding top CATHEIGHT+1 and padding bottom 2 */
     obj.y = random_range_step(CATHEIGHT + 1, WORLDHEIGHT - 2, random_range(2, 3));
