@@ -5,8 +5,8 @@ SRCDIR = src
 
 FLAGS += -pedantic
 FLAGS += -Wall
-FLAGS += -Wno-long-long
 FLAGS += -Wmissing-declarations
+FLAGS += -Wmissing-parameter-type
 FLAGS += -Wstrict-prototypes
 FLAGS += -pipe
 FLAGS += -O3
