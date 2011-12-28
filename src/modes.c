@@ -1,6 +1,7 @@
 /**
  * This file contains callback functions used in the modes.
  */
+#include "main.h"
 #include "status.h"
 #include "modes.h"
 #include "config.h"
@@ -103,8 +104,6 @@ void game_key_handler(gametime_t time, const int key)
  */
 void pause_enter(void)
 {
-    status_set_mode(mode_get_name());
-    status_set_runtime(clock_get_relative());
     status_print();
 }
 

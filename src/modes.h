@@ -1,6 +1,8 @@
 #ifndef MODES_H
 #define MODES_H
 
+#include "clock.h"
+
 void intro_draw(void);
 void intro_key_handler(gametime_t time, const int key);
 

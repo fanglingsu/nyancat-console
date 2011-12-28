@@ -15,9 +15,6 @@ void game_scroll_handler(gametime_t time, void *data)
     world_move_screen_right(1);
     gamemode_draw();
 
-    /* collect status vars */
-    status_set_mode(mode_get_name());
-    status_set_runtime(clock_get_relative());
     status_print();
 
     /* readd to the queue */

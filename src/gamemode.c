@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "gamemode.h"
 #include "status.h"
+#include "queue.h"
 #include "util.h"
 
 /* hide implementation of struct */
@@ -28,10 +29,8 @@ static int exit_flag = 0;
  *
  * Creates a mode with given callbacks.
  */
-gamemode_t * mode_create(const char *name, callback enter, callback leave, callback draw,
-            keyhandler key)
+gamemode_t * mode_create(const char *name, callback enter, callback leave, callback draw, keyhandler key)
 {
-
     gamemode_t *mode = (gamemode_t *)xmalloc(sizeof(gamemode_t));
 
     mode->name  = name;
@@ -61,9 +60,6 @@ void gamemode_enter(const gamemode_t * mode)
         current->leave();
     }
     current = mode;
-    /* collect data for status bar but draw callback decide if to write to
-     * window or not */
-    status_set_mode(mode->name);
     if (current->enter) {
         queue_free();
         current->enter();

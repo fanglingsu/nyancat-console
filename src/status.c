@@ -1,4 +1,7 @@
+#include "main.h"
 #include "status.h"
+#include "gamemode.h"
+#include "clock.h"
 
 enum item {
     StatusRuntime,
@@ -6,45 +9,18 @@ enum item {
     StatusDebug
 };
 
-static struct status {
-    const char *mode;
-    gametime_t runtime;
-} status = {NULL, 0.0};
-
 static void printstatusf(const char *format, ...);
-
-/**
- * @mode: current mode name
- *
- * Set the game mode name to the status.
- */
-void status_set_mode(const char *mode)
-{
-    extern struct status status;
-
-    status.mode = mode;
-}
-
-/**
- * @runtime: duration of running game in seconds.
- *
- * Set the runtime in seconds to the status.
- */
-void status_set_runtime(const gametime_t runtime)
-{
-    extern struct status status;
-
-    status.runtime = runtime;
-}
 
 /**
  * Print out contens of the status to the status window.
  */
 void status_print(void)
 {
-    extern struct status status;
-
-    printstatusf("%s: %.2lfs", status.mode, status.runtime);
+    printstatusf(
+        "%s: %.2lfs",
+        mode_get_name(),
+        clock_get_relative()
+    );
 }
 
 /**
