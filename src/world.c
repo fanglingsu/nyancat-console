@@ -112,8 +112,7 @@ int world_has_element_at(enum object_type type, const int y, const int x)
  * Builds a random places platform struct. Platforms are placed in the x range
  * between xstart and the next range chars.
  */
-static object_t
-world_create_random_platform(const int xstart, const int xrange)
+static object_t world_create_random_platform(const int xstart, const int xrange)
 {
     object_t obj;
 
