@@ -194,7 +194,6 @@ static void loop(void)
         if (key_ready > 0) {
             ch = getch();
             gamemode_key(ch);
-            gamemode_draw();
         } else {
             /* TODO find a better way for prevening hight cpu usage here. But
              * for now insert a sleep for the minimum ticks used in game */
