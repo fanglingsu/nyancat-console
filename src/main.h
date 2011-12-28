@@ -30,8 +30,6 @@ gamemode_t *mode_intro;
 gamemode_t *mode_game;
 gamemode_t *mode_pause;
 gamemode_t *mode_scores;
-/* not a real mode, shoudl always be NULL @see gamemode_valid() */
-gamemode_t *mode_over;
 
 enum color {
     ColorWhite,
