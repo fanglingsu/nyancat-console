@@ -171,7 +171,7 @@ cat_print(void)
     static int frame = 0;
     const int yoffset = cat.posY - nc.ui.screen.y;
     const int xoffset = cat.posX - nc.ui.screen.x;
-    const char eye = cat.hasground ? 'o' : '+';
+    char eye;
     const struct feets {
         int offset;
         char str[8];
@@ -181,6 +181,14 @@ cat_print(void)
         {1, "U   U"},
         {1, "UU  UU"},
     };
+
+    if (cat.hasground) {
+        eye = 'o';
+    } else if (CatStateFallFast == cat.state) {
+        eye = '+';
+    } else {
+        eye = '0';
+    }
 
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
     mvwprintw(nc.ui.world, yoffset,     xoffset,      ",-----,");
