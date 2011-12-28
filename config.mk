@@ -7,7 +7,6 @@ FLAGS += -Wall
 FLAGS += -Wno-long-long
 FLAGS += -Wmissing-declarations
 FLAGS += -Wstrict-prototypes
-FLAGS += -ansi
 FLAGS += -pipe
 FLAGS += -O3
 FLAGS += -std=c99
