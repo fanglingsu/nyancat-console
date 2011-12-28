@@ -1,4 +1,5 @@
 REAL_NAME = nyancat-console
+CC = gcc
 
 SRCDIR = src
 
@@ -22,6 +23,7 @@ DFLAGS += -g
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 DOBJ = $(patsubst %.c, %.do, $(wildcard *.c))
+HEADERS = $(wildcard *.h)
 SOURCE = $(wildcard $(SRCDIR)/*.c)
 
 TARGET = $(REAL_NAME)

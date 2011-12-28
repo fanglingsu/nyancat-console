@@ -6,16 +6,13 @@ $(TARGET): $(OBJ)
 	@echo "$(CC) $@"
 	@$(CC) $(FLAGS) $(OBJ) -o $(TARGET) $(LIBS)
 
--include $(OBJ:.o=.d)
--include $(DOBJ:.do=.dd)
-
-%.o: %.c %.h
+%.o: %.c $(HEADERS)
 	@echo "${CC} $<"
 	@$(CC) $(FLAGS) -c -o $@ $<
 
 debug: $(DTARGET)
 
-%.do: %.c %.h
+%.do: %.c $(HEADERS)
 	@echo "${CC} $<"
 	@$(CC) $(DFLAGS) -c -o $@ $<
 
@@ -25,11 +22,7 @@ $(DTARGET): $(DOBJ)
 
 clean:
 	@echo Cleaning
-	@$(RM) *.o  
-	@$(RM) *.do  
-	@$(RM) $(TARGET)
-	@$(RM) $(DTARGET)
-	@$(RM) *.d
+	@$(RM) $(TARGET) $(DTARGET) $(OBJ) $(DOBJ)
 
 .PHONY: clean all
 
