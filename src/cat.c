@@ -36,11 +36,13 @@ typedef struct movement {
 static movement_t move_fall[] = {
     {TICK(3.5),  1, CatStateGlideDown, &move_fall[1]},
     {TICK(2.5),  1, CatStateGlideDown, &move_fall[2]},
-    {TICK(2),    1, CatStateFall,      &move_fall[3]},
-    {TICK(2),    1, CatStateFall,      &move_fall[4]},
-    {TICK(2),    1, CatStateFall,      &move_fall[5]},
-    {TICK(2),    1, CatStateFall,      &move_fall[6]},
-    {TICK(1),    1, CatStateFallFast,  &move_fall[6]}
+    {TICK(2.5),  1, CatStateFall,      &move_fall[3]},
+    {TICK(2.5),  1, CatStateFall,      &move_fall[4]},
+    {TICK(2.5),  1, CatStateFall,      &move_fall[5]},
+    {TICK(2.1),  1, CatStateFall,      &move_fall[6]},
+    {TICK(2.1),  1, CatStateFall,      &move_fall[7]},
+    {TICK(2.1),  1, CatStateFall,      &move_fall[8]},
+    {TICK(1),    1, CatStateFallFast,  &move_fall[8]}
 };
 static movement_t move_walk[] = {
     {TICK(1),    0, CatStateWalk, &move_walk[1]},
@@ -49,7 +51,7 @@ static movement_t move_walk[] = {
 static movement_t move_jump[] = {
     {TICK(2.5), -1, CatStateJumpUp, &move_jump[1]},
     {TICK(3.5), -1, CatStateJumpUp, &move_jump[2]},
-    {TICK(5),    0, CatStateGlide,   move_fall}
+    {TICK(4.7),    0, CatStateGlide,   move_fall}
 };
 
 static void cat_move_vertical(const int y);
