@@ -22,7 +22,8 @@
 #include "clock.h"
 
 enum object_type {
-    ObjectPlatform
+    ObjectPlatform,
+    ObjectMilk
 };
 
 void world_init(void);

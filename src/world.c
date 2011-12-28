@@ -30,11 +30,13 @@ typedef struct {
 } object_t;
 
 static object_t elements[MAX_PLATFORMS];
+static object_t objects[MAX_MILK];
 
 /* used for vertical hysteresis in screen movement in world_move_screen_to() */
 static int screen_hysteresis_diff;
 
 static object_t world_create_random_platform(const int, const int);
+static object_t world_create_random_object(enum object_type, const int, const int);
 
 /**
  * Generates platform of nyans world.
@@ -50,8 +52,14 @@ void world_init(void)
      * move screen the first time without hysteresis */
     screen_hysteresis_diff = SCREENHYSTERESIS + 2;
 
+    /* place platforms */
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         elements[i] = world_create_random_platform(0, SCREENWIDTH);
+    }
+
+    /* place milk */
+    for (int i = 0; i < MAX_MILK; ++i) {
+        objects[i] = world_create_random_object(ObjectMilk, 0, SCREENWIDTH);
     }
 }
 
@@ -100,6 +108,12 @@ void world_move_screen_to(const int y, const int x)
             continue;
         }
     }
+    for (int i = 0; i < MAX_MILK; ++i) {
+        int x = objects[i].x - nc.ui.screen.x + objects[i].width;
+        if (x < 0) {
+            objects[i] = world_create_random_object(ObjectMilk, nc.ui.screen.x + SCREENWIDTH, SCREENWIDTH / 2);
+        }
+    }
 }
 
 /**
@@ -111,6 +125,9 @@ void world_print(void)
     extern nyancat_t nc;
 
     werase(nc.ui.world);
+    for (int i = 0; i < MAX_MILK; ++i) {
+        mvwaddch(nc.ui.world, objects[i].y - nc.ui.screen.y, objects[i].x - nc.ui.screen.x, 'I');
+    }
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         for (int k = 0; k < elements[i].width; ++k) {
             mvwaddch(nc.ui.world, elements[i].y - nc.ui.screen.y, elements[i].x - nc.ui.screen.x + k, '#');
@@ -139,6 +156,9 @@ int world_has_element_at(enum object_type type, const int y, const int x)
                 }
             }
             break;
+
+        default:
+            break;
     }
 
     return 0;
@@ -158,6 +178,21 @@ static object_t world_create_random_platform(const int xstart, const int xrange)
     obj.y = random_range_step(CATHEIGHT + 1, WORLDHEIGHT - 2, random_range(2, 3));
     /* make platforms width between [12..24] */
     obj.width = random_range_step(12, 24, 4);
+
+    return obj;
+}
+
+/**
+ * Builds milk bottles at random position.
+ */
+static object_t world_create_random_object(enum object_type type, const int xstart, const int xrange)
+{
+    object_t obj;
+
+    obj.type = type;
+    obj.x = random_range_step(xstart, xstart + xrange, 3);
+    obj.y = random_range_step(CATHEIGHT, WORLDHEIGHT - 3, 3);
+    obj.width = 1;
 
     return obj;
 }

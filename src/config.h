@@ -31,19 +31,14 @@
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
-#define SCREENHYSTERESIS 3  /* steps thst can nyan move vertical befor the screen is moved to */
+#define SCREENHYSTERESIS 3  /* steps that can nyan move vertical befor the screen is moved to */
 #define CAT_XOFFSET  8      /* distance of cat from left border */
 #define MAX_PLATFORMS 25    /* plattforms placed on to screen widths */
+#define MAX_MILK 20         /* number of milf bottles in area of SCREENWIDTH * WORLDHEIGHT */
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  48
 
-/*
- ,-----,
- |:::/\/\
-~|___(o.o)
-  UU  UU
-*/
 #define CATHEIGHT  4
 #define CATWIDTH 10
 
