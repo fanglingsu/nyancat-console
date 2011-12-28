@@ -66,7 +66,7 @@ void cat_init(void)
     extern cat_t cat;
 
     cat.posX = CAT_XOFFSET;
-    cat.posY = WORLDHEIGHT / 2 - CATHIGHT;
+    cat.posY = WORLDHEIGHT / 2 - CATHEIGHT;
     cat.mode = CatModeNormal;
     cat.state = CatStateWalk;
     cat.jumpcount = 0;
@@ -115,11 +115,11 @@ void cat_move_right(const int steps)
     extern cat_t cat;
     cat.posX += steps;
 
-    world_move_screen_to(cat.posY - SCREENHEIGHT / 2 + CATHIGHT / 2, cat.posX - CAT_XOFFSET);
+    world_move_screen_to(cat.posY - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.posX - CAT_XOFFSET);
 
     /* check if nyan has ground under her feets */
-    if (world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX + CATWIDTH - 2)
-        || world_has_element_at(ObjectPlatform, cat.posY + CATHIGHT, cat.posX)
+    if (world_has_element_at(ObjectPlatform, cat.posY + CATHEIGHT, cat.posX + CATWIDTH - 2)
+        || world_has_element_at(ObjectPlatform, cat.posY + CATHEIGHT, cat.posX)
     ) {
         cat.hasground = 1;
     } else {

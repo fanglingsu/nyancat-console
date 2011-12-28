@@ -26,7 +26,7 @@
 ~|___(o.o)
   UU  UU
 */
-#define CATHIGHT  4
+#define CATHEIGHT  4
 #define CATWIDTH 10
 
 #endif /* end of include guard: CONFIG_H */
