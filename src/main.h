@@ -25,12 +25,6 @@
 #   define debug(...)
 #endif
 
-/* game modes */
-gamemode_t *mode_intro;
-gamemode_t *mode_game;
-gamemode_t *mode_pause;
-gamemode_t *mode_scores;
-
 enum color {
     ColorWhite,
     ColorMagenta,
@@ -42,7 +36,7 @@ typedef struct {
     int y;
 } coordinate_t;
 
-struct nyancat {
+typedef struct {
     struct {
         WINDOW *world;
         WINDOW *status;
@@ -51,7 +45,15 @@ struct nyancat {
 #endif
         coordinate_t screen;
     } ui;
-} nc;
+} nyancat_t;
+
+nyancat_t nc;
+
+/* game modes */
+gamemode_t *mode_intro;
+gamemode_t *mode_game;
+gamemode_t *mode_pause;
+gamemode_t *mode_scores;
 
 void error_exit(const char *format, ...);
 

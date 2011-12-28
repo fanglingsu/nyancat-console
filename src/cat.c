@@ -161,7 +161,7 @@ void cat_move_handler(gametime_t time, void *data)
  */
 void cat_print(void)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
     extern struct cat cat;
     static int frame = 0;
     const int yoffset = cat.posY - nc.ui.screen.y;

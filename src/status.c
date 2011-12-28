@@ -30,7 +30,7 @@ void status_print(void)
  */
 static void printstatusf(const char *format, ...)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
     va_list ap;
 
     werase(nc.ui.status);

@@ -16,7 +16,7 @@ static int game_initialized = 0;
  */
 void intro_draw(void)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
 
     werase(nc.ui.world);
     waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
@@ -129,7 +129,7 @@ void pause_key_handler(gametime_t time, const int key)
  */
 void scores_draw(void)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
 
     werase(nc.ui.world);
     wattron(nc.ui.world, COLOR_PAIR(ColorRed));

@@ -20,7 +20,7 @@ static struct object world_create_random_platform(const int xstart, const int xr
  */
 void world_init(void)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
     nc.ui.screen.x = 0;
     nc.ui.screen.y = WORLDHEIGHT / 2;
 
@@ -34,7 +34,7 @@ void world_init(void)
  */
 void world_move_screen_right(const int steps)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
 
     world_move_screen_to(nc.ui.screen.y, nc.ui.screen.x + steps);
 }
@@ -44,7 +44,7 @@ void world_move_screen_right(const int steps)
  */
 void world_move_screen_to(const int y, const int x)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
 
     nc.ui.screen.y = y;
     nc.ui.screen.x = x;
@@ -69,7 +69,7 @@ void world_move_screen_to(const int y, const int x)
  */
 void world_print(void)
 {
-    extern struct nyancat nc;
+    extern nyancat_t nc;
 
     werase(nc.ui.world);
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
