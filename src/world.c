@@ -18,8 +18,7 @@ static struct object world_create_random_platform(const int xstart, const int xr
 /**
  * Generates platform of nyans world.
  */
-void
-world_init(void)
+void world_init(void)
 {
     extern struct nyancat nc;
     nc.ui.screen.x = 0;
@@ -33,8 +32,7 @@ world_init(void)
 /**
  * Moves the visible screen given step to the right.
  */
-void
-world_move_screen_right(const int steps)
+void world_move_screen_right(const int steps)
 {
     extern struct nyancat nc;
 
@@ -44,8 +42,7 @@ world_move_screen_right(const int steps)
 /**
  * Moves the upper left corner of visible screen to given coordinates.
  */
-void
-world_move_screen_to(const int y, const int x)
+void world_move_screen_to(const int y, const int x)
 {
     extern struct nyancat nc;
 
@@ -70,8 +67,7 @@ world_move_screen_to(const int y, const int x)
 /**
  * Prints the world.
  */
-void
-world_print(void)
+void world_print(void)
 {
     extern struct nyancat nc;
 
@@ -87,8 +83,7 @@ world_print(void)
 /**
  * Inidcates if under givem coordinates is an platform element.
  */
-int
-world_has_element_at(enum object_type type, const int y, const int x)
+int world_has_element_at(enum object_type type, const int y, const int x)
 {
     switch (type) {
         case ObjectPlatform:
@@ -97,7 +92,8 @@ world_has_element_at(enum object_type type, const int y, const int x)
                     continue;
                 }
                 /* e.x <= x < e.x + e.size */
-                if (elements[i].x <= x && x < (elements[i].x + elements[i].size)) {
+                if (elements[i].x <= x
+                    && x < (elements[i].x + elements[i].size)) {
                     return 1;
                 }
             }
@@ -119,7 +115,7 @@ world_create_random_platform(const int xstart, const int xrange)
     obj.x = random_range_step(xstart, xstart + xrange, 4);
     /* padding top 4 and padding bottom 2 */
     obj.y = random_range(4, WORLDHEIGHT - 2);
-    /* make platforms size between [12..24]*/
+    /* make platforms size between [12..24] */
     obj.size = random_range_step(12, 24, 4);
 
     return obj;

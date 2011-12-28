@@ -15,8 +15,7 @@ static void signal_handler(int sig);
 static void loop(void);
 static void prepare_for_exit(void);
 
-int
-main(int argc, const char *argv[])
+int main(int argc, const char *argv[])
 {
     random_init();
     set_signals();
@@ -34,8 +33,7 @@ main(int argc, const char *argv[])
  *
  * Signal a fatal error and quit immediately.
  */
-void
-error_exit(const char *format, ...)
+void error_exit(const char *format, ...)
 {
     va_list ap;
 
@@ -53,8 +51,7 @@ error_exit(const char *format, ...)
 /**
  * Initialize the used windows
  */
-static void
-init_windows(void)
+static void init_windows(void)
 {
     extern struct nyancat nc;
 
@@ -87,8 +84,7 @@ init_windows(void)
 /**
  * Initializes the game modes.
  */
-static void
-init_modes(void)
+static void init_modes(void)
 {
     extern gamemode_t *mode_intro, *mode_game, *mode_pause, *mode_scores;
 
@@ -101,8 +97,7 @@ init_modes(void)
 /**
  * Prints the licence message to stdout.
  */
-static void
-print_licence_message(void)
+static void print_licence_message(void)
 {
     puts(REAL_NAME " " VERSION);
     puts("Copyright 2011 Daniel Carl\n");
@@ -115,8 +110,7 @@ print_licence_message(void)
 /**
  * Sets up signal handlers we need.
  */
-static void
-set_signals(void)
+static void set_signals(void)
 {
     struct sigaction sa;
 
@@ -139,8 +133,7 @@ set_signals(void)
  *
  * Signal handler called if signal is emmitted.
  */
-static void
-signal_handler(int sig)
+static void signal_handler(int sig)
 {
     prepare_for_exit();
     print_licence_message();
@@ -150,8 +143,7 @@ signal_handler(int sig)
 /**
  * Main game loop.
  */
-static void
-loop(void)
+static void loop(void)
 {
     extern struct nyancat nc;
     gametime_t time;
@@ -190,8 +182,7 @@ loop(void)
 /**
  * Cleanup the environment.
  */
-static void
-prepare_for_exit(void)
+static void prepare_for_exit(void)
 {
     extern struct nyancat nc;
 

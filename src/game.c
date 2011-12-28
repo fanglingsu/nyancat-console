@@ -9,8 +9,7 @@
 /**
  * Moves cat and world every tick.
  */
-void
-game_scroll_handler(gametime_t time, void *data)
+void game_scroll_handler(gametime_t time, void *data)
 {
     cat_move_right(1);
     world_move_screen_right(1);

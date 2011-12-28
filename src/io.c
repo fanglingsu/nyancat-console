@@ -11,8 +11,7 @@ static int io_select(struct timeval *timeout);
  * first. Returns 0 if the fuction returned cause of the timeout. Otherwise
  * this function returned because of a pressed key.
  */
-int
-io_wait_for_key(gametime_t time)
+int io_wait_for_key(gametime_t time)
 {
     if (0 == time) {
         return io_select(NULL);
@@ -37,8 +36,7 @@ io_wait_for_key(gametime_t time)
  * Check if input is available on stdin or the timeout reached.
  * If timeout reached return 0 else input available.
  */
-static int
-io_select(struct timeval *timeout)
+static int io_select(struct timeval *timeout)
 {
     int n;
     fd_set input;

@@ -28,8 +28,7 @@ static int exit_flag = 0;
  *
  * Creates a mode with given callbacks.
  */
-gamemode_t *
-mode_create(const char *name, callback enter, callback leave, callback draw,
+gamemode_t * mode_create(const char *name, callback enter, callback leave, callback draw,
             keyhandler key)
 {
 
@@ -48,8 +47,7 @@ mode_create(const char *name, callback enter, callback leave, callback draw,
  * Set the exit mode flag to show in gamemode_valid that no more mode is
  * avaialable.
  */
-void
-mode_exit(void)
+void mode_exit(void)
 {
     exit_flag = 1;
 }
@@ -57,8 +55,7 @@ mode_exit(void)
 /**
  * Switch into given mode. Call leave for previous mode and enter on new mode.
  */
-void
-gamemode_enter(const gamemode_t * mode)
+void gamemode_enter(const gamemode_t * mode)
 {
     if (current && current->leave) {
         current->leave();
@@ -76,8 +73,7 @@ gamemode_enter(const gamemode_t * mode)
 /**
  * Calls the drawing callback for current mode.
  */
-void
-gamemode_draw(void)
+void gamemode_draw(void)
 {
     if (current && current->draw) {
         current->draw();
@@ -89,8 +85,7 @@ gamemode_draw(void)
  *
  * Handles key presses on current modes keyhandler callback.
  */
-void
-gamemode_key(const int key)
+void gamemode_key(const int key)
 {
     if (current && current->key) {
         current->key(clock_get_relative(), key);
@@ -102,8 +97,7 @@ gamemode_key(const int key)
  *
  * If no mode is set return 0 else 1.
  */
-int
-gamemode_valid(void)
+int gamemode_valid(void)
 {
     return !exit_flag;
 }
@@ -111,8 +105,7 @@ gamemode_valid(void)
 /**
  * Retrieves the name of given mode.
  */
-const char *
-mode_get_name(void)
+const char * mode_get_name(void)
 {
     if (current && current->name) {
         return current->name;

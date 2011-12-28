@@ -18,8 +18,7 @@ static void printstatusf(const char *format, ...);
  *
  * Set the game mode name to the status.
  */
-void
-status_set_mode(const char *mode)
+void status_set_mode(const char *mode)
 {
     extern struct status status;
 
@@ -31,8 +30,7 @@ status_set_mode(const char *mode)
  *
  * Set the runtime in seconds to the status.
  */
-void
-status_set_runtime(const gametime_t runtime)
+void status_set_runtime(const gametime_t runtime)
 {
     extern struct status status;
 
@@ -42,16 +40,11 @@ status_set_runtime(const gametime_t runtime)
 /**
  * Print out contens of the status to the status window.
  */
-void
-status_print(void)
+void status_print(void)
 {
     extern struct status status;
 
-    printstatusf(
-        "%s: %.2lfs",
-        status.mode,
-        status.runtime
-    );
+    printstatusf("%s: %.2lfs", status.mode, status.runtime);
 }
 
 /**
@@ -59,8 +52,7 @@ status_print(void)
  *
  * Prints out message to status line.
  */
-static void
-printstatusf(const char *format, ...)
+static void printstatusf(const char *format, ...)
 {
     extern struct nyancat nc;
     va_list ap;

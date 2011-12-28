@@ -4,8 +4,7 @@ Coding style
 The Code is idented by four spaces. For better readability you should put
 braces of function blocks in their own line like this.
 
-void
-do_something(const int counter)
+void do_something(const int counter)
 {
     if (counter > 5) {
         fprintf(stdout, "Counter higher than 5");
@@ -16,7 +15,7 @@ do_something(const int counter)
 
 If you use 'indent' to reindent your code, following option would fit our style.
 
-    indent -i4 -nfca -nprs -npcs -bli0 -nut -br -brs -ce -cli4 -ncs *.c
+    indent -i4 -nfca -nprs -npcs -npsl -bli0 -nut -br -brs -ce -cli4 -ncs *.c
 
 Please mark global variables within function as extern.
 

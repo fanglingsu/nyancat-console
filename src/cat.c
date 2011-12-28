@@ -59,8 +59,7 @@ static void cat_move_vertical(const int y);
 /**
  * Initializes the cat with their default properties.
  */
-void
-cat_init(void)
+void cat_init(void)
 {
     extern struct cat cat;
 
@@ -75,8 +74,7 @@ cat_init(void)
 /**
  * Move the cat up.
  */
-void
-cat_jump_up(gametime_t time)
+void cat_jump_up(gametime_t time)
 {
     extern struct cat cat;
 
@@ -90,8 +88,7 @@ cat_jump_up(gametime_t time)
 /**
  * Move the cat down.
  */
-void
-cat_jump_down(void)
+void cat_jump_down(void)
 {
     /* Not implemented yet. Jump down will make sense if the fly mode will be
      * implemented that allows nyan to fly up and down nearly without any
@@ -101,8 +98,7 @@ cat_jump_down(void)
 /**
  * Retreives the height of the cat in the world.
  */
-int
-cat_get_height(void)
+int cat_get_height(void)
 {
     extern struct cat cat;
 
@@ -112,8 +108,7 @@ cat_get_height(void)
 /**
  * Moves the cat to the right by given step size.
  */
-void
-cat_move_right(const int steps)
+void cat_move_right(const int steps)
 {
     extern struct cat cat;
 
@@ -134,8 +129,7 @@ cat_move_right(const int steps)
 /**
  * Handler function to move the cat according to their state.
  */
-void
-cat_move_handler(gametime_t time, void *data)
+void cat_move_handler(gametime_t time, void *data)
 {
     extern struct cat cat;
     movement_t *move = data;
@@ -165,8 +159,7 @@ cat_move_handler(gametime_t time, void *data)
 /**
  * Print nyan to the world window after all movements where done.
  */
-void
-cat_print(void)
+void cat_print(void)
 {
     extern struct nyancat nc;
     extern struct cat cat;
@@ -213,8 +206,7 @@ cat_print(void)
  * Moves the cat vertical by given offset. If given y offset is negative, the
  * cat is moved upwards.
  */
-static void
-cat_move_vertical(const int y)
+static void cat_move_vertical(const int y)
 {
     extern struct cat cat;
 

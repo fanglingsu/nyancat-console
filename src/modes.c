@@ -13,8 +13,7 @@ static int game_initialized = 0;
 /**
  * Print the introduction message on the screen.
  */
-void
-intro_draw(void)
+void intro_draw(void)
 {
     extern struct nyancat nc;
 
@@ -30,8 +29,7 @@ intro_draw(void)
  *
  * Handles key presses from user.
  */
-void
-intro_key_handler(gametime_t time, const int key)
+void intro_key_handler(gametime_t time, const int key)
 {
     if (10 == key) {
         gamemode_enter(mode_game);
@@ -42,8 +40,7 @@ intro_key_handler(gametime_t time, const int key)
  * Enter game mode. If first time called the required game objects are
  * initialized.
  */
-void
-game_enter(void)
+void game_enter(void)
 {
     clock_thaw();
     /* prevent from reinitialisation after pause mode */
@@ -58,8 +55,7 @@ game_enter(void)
     queue_add_event(clock_get_relative(), cat_move_handler, NULL);
 }
 
-void
-game_leave(void)
+void game_leave(void)
 {
     clock_freeze();
 }
@@ -67,8 +63,7 @@ game_leave(void)
 /**
  * Draw the next frame of the game.
  */
-void
-game_draw(void)
+void game_draw(void)
 {
     world_print();
     cat_print();
@@ -77,8 +72,7 @@ game_draw(void)
 /**
  * Handle keypresses for game mode.
  */
-void
-game_key_handler(gametime_t time, const int key)
+void game_key_handler(gametime_t time, const int key)
 {
     switch (key) {
         case 'k':
@@ -107,8 +101,7 @@ game_key_handler(gametime_t time, const int key)
 /**
  * Freeze the clock if paus mode is entered.
  */
-void
-pause_enter(void)
+void pause_enter(void)
 {
     status_set_mode(mode_get_name());
     status_set_runtime(clock_get_relative());
@@ -120,8 +113,7 @@ pause_enter(void)
  *
  * Handles the keypresses within the pause mode.
  */
-void
-pause_key_handler(gametime_t time, const int key)
+void pause_key_handler(gametime_t time, const int key)
 {
     switch (key) {
         case 'p':
@@ -136,8 +128,7 @@ pause_key_handler(gametime_t time, const int key)
 /**
  * Drow the scores page on the end of the game.
  */
-void
-scores_draw(void)
+void scores_draw(void)
 {
     extern struct nyancat nc;
 
@@ -159,8 +150,7 @@ scores_draw(void)
  *
  * Handles key presses from user.
  */
-void
-scores_key_handler(gametime_t time, const int key)
+void scores_key_handler(gametime_t time, const int key)
 {
     if ('r' == key) {
         /* uninitialize to previous game */

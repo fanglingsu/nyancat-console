@@ -6,8 +6,7 @@
  * Try to allocate memory, if fails this function does not return NULL.
  * Instead the game is gracefull aborted.
  */
-void *
-xmalloc(size_t size)
+void *xmalloc(size_t size)
 {
     void *ret = malloc(size);
     if (NULL == ret) {
