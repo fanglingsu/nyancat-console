@@ -3,7 +3,6 @@
 
 typedef double gametime_t;
 
-
 void clock_init(void);
 void clock_freeze(void);
 void clock_thaw(void);

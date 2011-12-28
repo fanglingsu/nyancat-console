@@ -17,14 +17,14 @@ enum catstate {
     CatStateFallFast
 };
 
-static struct cat {
+typedef struct {
     int posY;
     int posX;
     enum catmode mode;
     enum catstate state;
     int jumpcount;
     int hasground;      /* indicates if nyan has ground under her feets */
-} cat;
+} cat_t;
 
 typedef struct movement {
     gametime_t delta;
@@ -32,6 +32,8 @@ typedef struct movement {
     enum catstate state;
     struct movement *next;
 } movement_t;
+
+static cat_t cat;
 
 static movement_t move_fall[] = {
     {TICK(3.5),  1, CatStateGlideDown, &move_fall[1]},
@@ -61,7 +63,7 @@ static void cat_move_vertical(const int y);
  */
 void cat_init(void)
 {
-    extern struct cat cat;
+    extern cat_t cat;
 
     cat.posX = CAT_XOFFSET;
     cat.posY = WORLDHEIGHT / 2 - CATHIGHT;
@@ -76,7 +78,7 @@ void cat_init(void)
  */
 void cat_jump_up(gametime_t time)
 {
-    extern struct cat cat;
+    extern cat_t cat;
 
     /* jumping from fast fall is not allowed */
     if (cat.jumpcount <= 1 && CatStateFallFast != cat.state) {
@@ -100,7 +102,7 @@ void cat_jump_down(void)
  */
 int cat_get_height(void)
 {
-    extern struct cat cat;
+    extern cat_t cat;
 
     return WORLDHEIGHT - cat.posY;
 }
@@ -110,7 +112,7 @@ int cat_get_height(void)
  */
 void cat_move_right(const int steps)
 {
-    extern struct cat cat;
+    extern cat_t cat;
 
     cat.posX += steps;
 
@@ -131,7 +133,7 @@ void cat_move_right(const int steps)
  */
 void cat_move_handler(gametime_t time, void *data)
 {
-    extern struct cat cat;
+    extern cat_t cat;
     movement_t *move = data;
 
     /* use movment data according to state if called first time */
@@ -162,7 +164,7 @@ void cat_move_handler(gametime_t time, void *data)
 void cat_print(void)
 {
     extern nyancat_t nc;
-    extern struct cat cat;
+    extern cat_t cat;
     static int frame = 0;
     const int yoffset = cat.posY - nc.ui.screen.y;
     const int xoffset = cat.posX - nc.ui.screen.x;
@@ -208,7 +210,7 @@ void cat_print(void)
  */
 static void cat_move_vertical(const int y)
 {
-    extern struct cat cat;
+    extern cat_t cat;
 
     cat.posY += y;
 

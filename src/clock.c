@@ -10,7 +10,6 @@ gametime_t frozen_time;
 
 static double clock_get_base(void);
 
-
 /**
  * Initializes the clock by setting base_time to now.
  */
