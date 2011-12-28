@@ -26,7 +26,7 @@ typedef struct {
     enum object_type type;
     int y;
     int x;
-    int size;
+    int width;
 } object_t;
 
 static object_t elements[MAX_PLATFORMS];
@@ -92,7 +92,7 @@ void world_move_screen_to(const int y, const int x)
         nc.ui.screen.y = WORLDHEIGHT - SCREENHEIGHT;
     }
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        int x = elements[i].x - nc.ui.screen.x + elements[i].size;
+        int x = elements[i].x - nc.ui.screen.x + elements[i].width;
         /* create new platform for i that is out of scope but in the first
          * half of the new imginary screen */
         if (x < 0) {
@@ -112,7 +112,7 @@ void world_print(void)
 
     werase(nc.ui.world);
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        for (int k = 0; k < elements[i].size; ++k) {
+        for (int k = 0; k < elements[i].width; ++k) {
             mvwaddch(nc.ui.world, elements[i].y - nc.ui.screen.y, elements[i].x - nc.ui.screen.x + k, '#');
         }
     }
@@ -132,9 +132,9 @@ int world_has_element_at(enum object_type type, const int y, const int x)
                 if (elements[i].y != y) {
                     continue;
                 }
-                /* e.x <= x < e.x + e.size */
+                /* e.x <= x < e.x + e.width */
                 if (elements[i].x <= x
-                    && x < (elements[i].x + elements[i].size)) {
+                    && x < (elements[i].x + elements[i].width)) {
                     return 1;
                 }
             }
@@ -156,8 +156,8 @@ static object_t world_create_random_platform(const int xstart, const int xrange)
     obj.x = random_range_step(xstart, xstart + xrange, 4);
     /* padding top CATHEIGHT+1 and padding bottom 2 */
     obj.y = random_range_step(CATHEIGHT + 1, WORLDHEIGHT - 2, random_range(2, 3));
-    /* make platforms size between [12..24] */
-    obj.size = random_range_step(12, 24, 4);
+    /* make platforms width between [12..24] */
+    obj.width = random_range_step(12, 24, 4);
 
     return obj;
 }
