@@ -5,7 +5,7 @@
 #include "util.h"
 
 /* hide implementation of struct */
-struct _mode {
+struct gamemode {
     const char *name;
     void (*enter) (void);
     void (*leave) (void);

@@ -3,7 +3,7 @@
 
 #include "clock.h"
 
-typedef struct _mode gamemode_t;
+typedef struct gamemode gamemode_t;
 typedef void (*callback) (void);
 typedef void (*keyhandler) (gametime_t, const int);
 
