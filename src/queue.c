@@ -3,14 +3,14 @@
 #include "queue.h"
 #include "util.h"
 
-struct event {
+typedef struct event {
     struct event *next;
     gametime_t time;
     eventhandler_fn callback;
     void *data;
-};
+} event_t;
 
-static struct event *queue = NULL;
+static event_t *queue = NULL;
 
 /**
  * @time: time whene to start the event.
@@ -21,9 +21,10 @@ static struct event *queue = NULL;
  */
 void queue_add_event(gametime_t time, eventhandler_fn callback, void *data)
 {
-    struct event **eqp, *eq;
+    extern event_t *queue;
+    event_t **eqp, *eq;
 
-    eq = (struct event *)xmalloc(sizeof(struct event));
+    eq = (event_t *)xmalloc(sizeof(event_t));
     eqp = &queue;
     while (*eqp && (*eqp)->time <= time) {
         eqp = &((*eqp)->next);
@@ -44,7 +45,8 @@ void queue_add_event(gametime_t time, eventhandler_fn callback, void *data)
  */
 void queue_remove_event(eventhandler_fn callback)
 {
-    struct event **eqp;
+    extern event_t *queue;
+    event_t **eqp;
 
     eqp = &queue;
     while (*eqp) {
@@ -65,8 +67,10 @@ void queue_remove_event(eventhandler_fn callback)
  */
 void queue_run_until(gametime_t time)
 {
+    extern event_t *queue;
+
     while (queue && queue->time <= clock_get_relative()) {
-        struct event *eq = queue;
+        event_t *eq = queue;
         queue = queue->next;
 
         eq->callback(eq->time, eq->data);
@@ -79,6 +83,8 @@ void queue_run_until(gametime_t time)
  */
 gametime_t queue_get_first_time(void)
 {
+    extern event_t *queue;
+
     if (NULL == queue) {
         return 0;
     }
@@ -90,14 +96,16 @@ gametime_t queue_get_first_time(void)
  */
 void queue_free(void)
 {
+    extern event_t *queue;
+
     if (NULL == queue) {
         return;
     }
 
-    struct event *eq = queue;
+    event_t *eq = queue;
     queue = NULL;
     while (eq) {
-        struct event *old = eq;
+        event_t *old = eq;
         eq = old->next;
         free(old);
     }
