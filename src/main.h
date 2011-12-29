@@ -51,8 +51,8 @@ enum color {
 };
 
 typedef struct {
-    int x;
     int y;
+    int x;
 } coordinate_t;
 
 typedef struct {
