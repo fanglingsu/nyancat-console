@@ -108,6 +108,24 @@ static const struct cat_image {
     }
 };
 
+/* hash sign mark sensitive zones
+ *  ,-----#
+ *  |   /\/#
+ * ~|___(o###
+ *  UU  UU#
+ *
+ * holds the offsets that should be applied to cats current position
+ */
+static const coordinate_t zones[] = {
+    {CATHEIGHT - 1, CATWIDTH - 4},
+    {CATHEIGHT - 2, CATWIDTH - 2},
+    {CATHEIGHT - 2, CATWIDTH - 3},
+    {CATHEIGHT - 2, CATWIDTH - 4},
+    {CATHEIGHT - 3, CATWIDTH - 3},
+    {CATHEIGHT - 4, CATWIDTH - 4},
+};
+
+static void cat_collect_objects(void);
 static void cat_move_vertical(const int);
 
 /**
@@ -178,10 +196,8 @@ void cat_move_right(const int steps)
         cat.hasground = 0;
     }
 
-    /* ckeck if a object was hit */
-    if (world_has_object_at(ObjectMilk, cat.posY + CATHEIGHT - 1, cat.posX + CATWIDTH, 1)) {
-        game_increment_score(1);
-    }
+    /* collection objects */
+    cat_collect_objects();
 }
 
 /**
@@ -246,8 +262,26 @@ void cat_print(void)
             ++frame;
         }
     }
+
     wnoutrefresh(nc.ui.world);
     wattroff(nc.ui.world, COLOR_PAIR(ColorMagenta));
+}
+
+/**
+ * Check if nyan is over an object in the world and removes it and collect
+ * points for it.
+ */
+static void cat_collect_objects(void)
+{
+    for (int i = 0; i < LENGTH(zones); ++i) {
+        if (world_has_object_at(ObjectMilk, cat.posY + zones[i].y, cat.posX + zones[i].x, 1)) {
+            game_increment_score(1);
+            /* in current object placing there should alwasy only one object
+             * that could be collected - so return after first object picked
+             * up */
+            return;
+        }
+    }
 }
 
 /**
