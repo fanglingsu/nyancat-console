@@ -19,27 +19,36 @@
 #include "main.h"
 #include "world.h"
 #include "cat.h"
-#include "gamemode.h"
-#include "queue.h"
 #include "status.h"
 #include "game.h"
 
-static unsigned int score_multiplicator = 1;
-static unsigned int score = 0;
+static unsigned int score_multiplicator;
+static unsigned int score;
+
+static void game_scroll_handler(gametime_t, void *);
 
 /**
- * Moves cat and world every tick.
+ * Initializes the game.
  */
-void game_scroll_handler(gametime_t time, void *data)
+void game_init(void)
 {
-    cat_move_right(1);
-    world_move_screen_right(1);
-    gamemode_draw();
+    score_multiplicator = 1;
+    score = 0;
 
-    status_print();
+    /* initialize the game objects */
+    clock_init();
+    world_init();
+    cat_init();
+}
 
-    /* readd to the queue */
-    queue_add_event(time + TICK(1), game_scroll_handler, NULL);
+/**
+ * Starts the game by adding required scrollhandlers to the event queue.
+ */
+void game_start(void)
+{
+    /* register games scroll handler that moves the cat and screen */
+    game_scroll_handler(clock_get_relative(), NULL);
+    queue_add_event(clock_get_relative(), cat_move_handler, NULL);
 }
 
 /**
@@ -80,4 +89,19 @@ void game_unset_score(void)
 unsigned int game_get_score(void)
 {
     return score;
+}
+
+/**
+ * Moves cat and world every tick.
+ */
+static void game_scroll_handler(gametime_t time, void *data)
+{
+    cat_move_right(1);
+    world_move_screen_right(1);
+    gamemode_draw();
+
+    status_print();
+
+    /* readd to the queue */
+    queue_add_event(time + TICK(1), game_scroll_handler, NULL);
 }

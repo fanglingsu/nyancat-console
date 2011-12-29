@@ -23,7 +23,6 @@
 #include "main.h"
 #include "status.h"
 #include "modes.h"
-#include "config.h"
 #include "world.h"
 #include "cat.h"
 #include "game.h"
@@ -63,16 +62,13 @@ void intro_key_handler(gametime_t time, const int key)
 void game_enter(void)
 {
     clock_thaw();
+
     /* prevent from reinitialisation after pause mode */
     if (!game_initialized) {
-        clock_init();
-        world_init();
-        cat_init();
+        game_init();
         game_initialized = 1;
     }
-    /* register games scroll handler that moves the cat and screen */
-    game_scroll_handler(clock_get_relative(), NULL);
-    queue_add_event(clock_get_relative(), cat_move_handler, NULL);
+    game_start();
 }
 
 void game_leave(void)
