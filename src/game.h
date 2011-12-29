@@ -25,6 +25,7 @@ void game_init(void);
 void game_start(void);
 void game_increment_multiplicator(const unsigned int);
 void game_unset_multiplicator(void);
+unsigned int game_get_multiplicator(void);
 void game_increment_score(const unsigned int);
 void game_unset_score(void);
 unsigned int game_get_score(void);

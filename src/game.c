@@ -68,11 +68,19 @@ void game_unset_multiplicator(void)
 }
 
 /**
+ * Retreive the current used score multiplicator.
+ */
+unsigned int game_get_multiplicator(void)
+{
+    return score_multiplicator;
+}
+
+/**
  * Increments the scores by given steps multiplied with current multiplicator.
  */
 void game_increment_score(const unsigned int steps)
 {
-    score += score_multiplicator * steps;    
+    score += score_multiplicator * steps;
 }
 
 /**

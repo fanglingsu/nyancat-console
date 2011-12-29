@@ -20,6 +20,7 @@
 #include "status.h"
 #include "gamemode.h"
 #include "clock.h"
+#include "game.h"
 
 enum item {
     StatusRuntime,
@@ -35,9 +36,11 @@ static void printstatusf(const char *, ...);
 void status_print(void)
 {
     printstatusf(
-        "%s: %.2lfs",
+        "%s: % 4.2lfs - %09u x%03u",
         mode_get_name(),
-        clock_get_relative()
+        clock_get_relative(),
+        game_get_score(),
+        game_get_multiplicator()
     );
 }
 
