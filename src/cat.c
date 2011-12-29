@@ -20,6 +20,7 @@
 #include "cat.h"
 #include "world.h"
 #include "util.h"
+#include "game.h"
 
 enum catmode {
     CatModeNormal
@@ -175,6 +176,12 @@ void cat_move_right(const int steps)
         cat.hasground = 1;
     } else {
         cat.hasground = 0;
+    }
+
+    /* ckeck if a object was hit */
+    if (world_has_element_at(ObjectMilk, cat.posY + CATHEIGHT - 1, cat.posX + CATWIDTH)) {
+        game_increment_score(1);
+        world_remove_object(ObjectMilk, cat.posY + CATHEIGHT - 1, cat.posX + CATWIDTH);
     }
 }
 

@@ -167,9 +167,11 @@ static void world_print_object(const enum object_type type, const int y, const i
 
 /**
  * Inidcates if under givem coordinates is an platform element.
+ * Coordinates refer to the world.
  */
 int world_has_element_at(const enum object_type type, const int y, const int x)
 {
+    extern nyancat_t nc;
     extern object_t platforms[];
 
     switch (type) {
@@ -187,10 +189,26 @@ int world_has_element_at(const enum object_type type, const int y, const int x)
             break;
 
         default:
+            return (type == objects[x - nc.ui.screen.x][y]) ? 1 : 0;
             break;
     }
 
     return 0;
+}
+
+/**
+ * Removes given object type at also given position. Position are world
+ * coordinates.
+ */
+void world_remove_object(const enum object_type type, const int y, const int x)
+{
+    extern nyancat_t nc;
+
+    /* objects horizontal position is the distance from left screen border */
+    const int worldX = x - nc.ui.screen.x;
+    if (type == objects[worldX][y]) {
+        objects[worldX][y] = ObjectNone;
+    }
 }
 
 /**
