@@ -26,7 +26,7 @@
 
 #define SECOND 1000000
 #define SPEED 1.0
-#define TICK(x) ((x)*0.06/(SPEED))
+#define TICK(x) ((x)*0.05/(SPEED))
 
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
