@@ -100,6 +100,7 @@ static void init_windows(void)
     /* define used color pairs */
     init_pair(ColorMagenta, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(ColorRed, COLOR_RED, COLOR_BLACK);
+    init_pair(ColorYellow, COLOR_YELLOW, COLOR_BLACK);
 
     cbreak();       /* line buffering disabled, pass on everty thing to me */
     noecho();       /* don't print typed chars */
