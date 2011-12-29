@@ -38,6 +38,7 @@ static enum object_type objects[SCREENWIDTH][WORLDHEIGHT];
 static int screen_hysteresis_diff;
 
 static object_t world_create_random_platform(const int, const int);
+static void world_print_object(const enum object_type, const int, const int, const int);
 static void world_objects_place(const int);
 static void world_objects_move_left(const int);
 
@@ -119,25 +120,51 @@ void world_print(void)
     extern nyancat_t nc;
 
     werase(nc.ui.world);
+    /* print objects */
     for (int x = 0; x < SCREENWIDTH; ++x) {
         for (int y = nc.ui.screen.y; y < nc.ui.screen.y + SCREENHEIGHT; ++y) {
-            if (ObjectMilk == objects[x][y]) {
-                mvwaddch(nc.ui.world, y - nc.ui.screen.y, x, 'X');
-            }
+            world_print_object(objects[x][y], y - nc.ui.screen.y, x, 1);
         }
     }
+    /* print platforms */
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        for (int k = 0; k < elements[i].width; ++k) {
-            mvwaddch(nc.ui.world, elements[i].y - nc.ui.screen.y, elements[i].x - nc.ui.screen.x + k, '#');
-        }
+        world_print_object(
+            ObjectPlatform,
+            elements[i].y - nc.ui.screen.y,
+            elements[i].x - nc.ui.screen.x,
+            elements[i].width
+        );
     }
     wnoutrefresh(nc.ui.world);
 }
 
 /**
+ * Prints the given object type to also given coordinates. The coordinates
+ * are mesured from the screen.
+ */
+static void world_print_object(const enum object_type type, const int y, const int x, const int width)
+{
+    switch (type) {
+        case ObjectPlatform:
+            for (int l = 0; l < width; ++l) {
+                mvwaddch(nc.ui.world, y, x + l, '#');
+            }
+            break;
+
+        case ObjectMilk:
+            mvwaddch(nc.ui.world, y - 1, x, ':');
+            mvwaddch(nc.ui.world, y,     x, 'M');
+            break;
+
+        case ObjectNone:
+            break;
+    }
+}
+
+/**
  * Inidcates if under givem coordinates is an platform element.
  */
-int world_has_element_at(enum object_type type, const int y, const int x)
+int world_has_element_at(const enum object_type type, const int y, const int x)
 {
     extern object_t elements[];
 
@@ -192,11 +219,11 @@ static void world_objects_place(const int xstart)
 
     for (int x = xstart; x < SCREENWIDTH; ++x) {
         /* initialize current row row with 0 */
-        memset(objects[x], 0, sizeof(enum object_type) * WORLDHEIGHT);
+        memset(objects[x], ObjectNone, sizeof(enum object_type) * WORLDHEIGHT);
 
         /* use modulo because x += 3 doesn't work if only the last column
          * should be generated after the matrix was moved */
-        if (0 == (count % 3)) {
+        if (0 == (count % 4)) {
             objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = ObjectMilk;
         }
         count++;
