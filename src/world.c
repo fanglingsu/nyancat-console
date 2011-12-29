@@ -120,6 +120,7 @@ void world_print(void)
     extern nyancat_t nc;
 
     werase(nc.ui.world);
+    wattron(nc.ui.world, A_BOLD);
     /* print objects */
     for (int x = 0; x < SCREENWIDTH; ++x) {
         for (int y = nc.ui.screen.y; y < nc.ui.screen.y + SCREENHEIGHT; ++y) {
@@ -135,6 +136,7 @@ void world_print(void)
             platforms[i].width
         );
     }
+    wattroff(nc.ui.world, A_BOLD);
     wnoutrefresh(nc.ui.world);
 }
 
@@ -146,25 +148,23 @@ static void world_print_object(const enum object_type type, const int y, const i
 {
     switch (type) {
         case ObjectPlatform:
-            wattron(nc.ui.world, A_BOLD);
             for (int l = 0; l < width; ++l) {
                 mvwaddch(nc.ui.world, y, x + l, '^');
             }
-            wattroff(nc.ui.world, A_BOLD);
             break;
 
         case ObjectMilk:
-            wattron(nc.ui.world, COLOR_PAIR(ColorYellow) | A_BOLD);
+            wattron(nc.ui.world, COLOR_PAIR(ColorYellow));
             mvwaddch(nc.ui.world, y - 1, x, ':');
             mvwaddch(nc.ui.world, y,     x, 'M');
-            wattroff(nc.ui.world, COLOR_PAIR(ColorYellow) | A_BOLD);
+            wattroff(nc.ui.world, COLOR_PAIR(ColorYellow));
             break;
 
         case ObjectCandy:
-            wattron(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
+            wattron(nc.ui.world, COLOR_PAIR(ColorRed));
             mvwaddch(nc.ui.world, y - 1, x, 'I');
             mvwaddch(nc.ui.world, y,     x, 'I');
-            wattroff(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
+            wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
             break;
 
         case ObjectNone:
