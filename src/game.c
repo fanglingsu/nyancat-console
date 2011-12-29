@@ -24,6 +24,9 @@
 #include "status.h"
 #include "game.h"
 
+static unsigned int score_multiplicator = 1;
+static unsigned int score = 0;
+
 /**
  * Moves cat and world every tick.
  */
@@ -37,4 +40,44 @@ void game_scroll_handler(gametime_t time, void *data)
 
     /* readd to the queue */
     queue_add_event(time + TICK(1), game_scroll_handler, NULL);
+}
+
+/**
+ * Increaments the score multiplicator by given steps.
+ */
+void game_increment_multiplicator(const unsigned int steps)
+{
+    score_multiplicator += steps;
+}
+
+/**
+ * Unset the scrore multiplicator to it's default value.
+ */
+void game_unset_multiplicator(void)
+{
+    score_multiplicator = 1;
+}
+
+/**
+ * Increments the scores by given steps multiplied with current multiplicator.
+ */
+void game_increment_score(const unsigned int steps)
+{
+    score += score_multiplicator * steps;    
+}
+
+/**
+ * Unsets all scores to zero.
+ */
+void game_unset_score(void)
+{
+    score = 0;
+}
+
+/**
+ * Retrieves the scores.
+ */
+unsigned int game_get_score(void)
+{
+    return score;
 }

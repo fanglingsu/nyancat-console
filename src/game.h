@@ -22,5 +22,10 @@
 #include "clock.h"
 
 void game_scroll_handler(gametime_t, void *);
+void game_increment_multiplicator(const unsigned int);
+void game_unset_multiplicator(void);
+void game_increment_score(const unsigned int);
+void game_unset_score(void);
+unsigned int game_get_score(void);
 
 #endif /* end of include guard: GAME_H */
