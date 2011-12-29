@@ -34,7 +34,6 @@
 #define SCREENHYSTERESIS 3  /* steps that can nyan move vertical befor the screen is moved to */
 #define CAT_XOFFSET  8      /* distance of cat from left border */
 #define MAX_PLATFORMS 25    /* plattforms placed on to screen widths */
-#define MAX_MILK 20         /* number of milf bottles in area of SCREENWIDTH * WORLDHEIGHT */
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  48

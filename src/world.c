@@ -22,6 +22,8 @@
 #include "main.h"
 #include "random.h"
 
+#include <string.h>
+
 typedef struct {
     enum object_type type;
     int y;
@@ -30,13 +32,14 @@ typedef struct {
 } object_t;
 
 static object_t elements[MAX_PLATFORMS];
-static object_t objects[MAX_MILK];
+static enum object_type objects[SCREENWIDTH][WORLDHEIGHT];
 
 /* used for vertical hysteresis in screen movement in world_move_screen_to() */
 static int screen_hysteresis_diff;
 
 static object_t world_create_random_platform(const int, const int);
-static object_t world_create_random_object(enum object_type, const int, const int);
+static void world_objects_place(const int);
+static void world_objects_move_left(const int);
 
 /**
  * Generates platform of nyans world.
@@ -56,11 +59,7 @@ void world_init(void)
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         elements[i] = world_create_random_platform(0, SCREENWIDTH);
     }
-
-    /* place milk */
-    for (int i = 0; i < MAX_MILK; ++i) {
-        objects[i] = world_create_random_object(ObjectMilk, 0, SCREENWIDTH);
-    }
+    world_objects_place(0);
 }
 
 /**
@@ -71,6 +70,7 @@ void world_move_screen_right(const int steps)
     extern nyancat_t nc;
 
     world_move_screen_to(nc.ui.screen.y, nc.ui.screen.x + steps);
+    world_objects_move_left(steps);
 }
 
 /**
@@ -108,12 +108,6 @@ void world_move_screen_to(const int y, const int x)
             continue;
         }
     }
-    for (int i = 0; i < MAX_MILK; ++i) {
-        int x = objects[i].x - nc.ui.screen.x + objects[i].width;
-        if (x < 0) {
-            objects[i] = world_create_random_object(ObjectMilk, nc.ui.screen.x + SCREENWIDTH, SCREENWIDTH / 2);
-        }
-    }
 }
 
 /**
@@ -125,8 +119,12 @@ void world_print(void)
     extern nyancat_t nc;
 
     werase(nc.ui.world);
-    for (int i = 0; i < MAX_MILK; ++i) {
-        mvwaddch(nc.ui.world, objects[i].y - nc.ui.screen.y, objects[i].x - nc.ui.screen.x, 'I');
+    for (int x = 0; x < SCREENWIDTH; ++x) {
+        for (int y = nc.ui.screen.y; y < nc.ui.screen.y + SCREENHEIGHT; ++y) {
+            if (ObjectMilk == objects[x][y]) {
+                mvwaddch(nc.ui.world, y - nc.ui.screen.y, x, 'X');
+            }
+        }
     }
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         for (int k = 0; k < elements[i].width; ++k) {
@@ -183,16 +181,41 @@ static object_t world_create_random_platform(const int xstart, const int xrange)
 }
 
 /**
- * Builds milk bottles at random position.
+ * Places random objects into the matrix of objects. Objects are placed from
+ * givem xstart offest from the screens left border to the right border of
+ * screen. To fill the hole screen (and the unvisible parts aboth and under
+ * the screen) use xstart = 0.
  */
-static object_t world_create_random_object(enum object_type type, const int xstart, const int xrange)
+static void world_objects_place(const int xstart)
 {
-    object_t obj;
+    static unsigned int count = 0;
 
-    obj.type = type;
-    obj.x = random_range_step(xstart, xstart + xrange, 3);
-    obj.y = random_range_step(CATHEIGHT, WORLDHEIGHT - 3, 3);
-    obj.width = 1;
+    for (int x = xstart; x < SCREENWIDTH; ++x) {
+        /* initialize current row row with 0 */
+        memset(objects[x], 0, sizeof(enum object_type) * WORLDHEIGHT);
 
-    return obj;
+        /* use modulo because x += 3 doesn't work if only the last column
+         * should be generated after the matrix was moved */
+        if (0 == (count % 3)) {
+            objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = ObjectMilk;
+        }
+        count++;
+    }
+}
+
+/**
+ * Move the whole matrix with the objects given steps to the left.
+ */
+void world_objects_move_left(const int steps)
+{
+    const size_t matrix_size = sizeof(enum object_type) * SCREENWIDTH * WORLDHEIGHT;
+
+    /* move the matrix of objects to the left */
+    memmove(
+        objects,
+        objects + steps,
+        matrix_size - sizeof(objects[0]) * steps
+    );
+    /* place objects in the rightmost columns */
+    world_objects_place(SCREENWIDTH - steps);
 }
