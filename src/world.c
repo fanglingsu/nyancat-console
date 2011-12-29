@@ -203,15 +203,25 @@ enum object_type world_get_object_at(const int y, const int x, const int remove)
 {
     extern nyancat_t nc;
     enum object_type found;
+    static const int obj_height = 2;
 
     /* objects horizontal position is the distance from left screen border */
     const int worldX = x - nc.ui.screen.x;
 
-    found = objects[worldX][y];
-    if (remove) {
-        objects[worldX][y] = ObjectNone;
+    /* objects are only a point in matrix but hase a height in real so look
+     * for the coordinates in matrix and if not found have a look at the point
+     * aboth */
+    for (int i = 0; i < obj_height; ++i) {
+        found = objects[worldX][y + i];
+        if (ObjectNone != found) {
+            /* have found the object */
+            if (remove) {
+                objects[worldX][y + i] = ObjectNone;
+            }
+            return found;
+        }
     }
-    return found;
+    return ObjectNone;
 }
 
 /**
