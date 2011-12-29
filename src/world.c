@@ -155,15 +155,15 @@ static void world_print_object(const enum object_type type, const int y, const i
 
         case ObjectMilk:
             wattron(nc.ui.world, COLOR_PAIR(ColorYellow));
-            mvwaddch(nc.ui.world, y - 1, x, ':');
-            mvwaddch(nc.ui.world, y,     x, 'M');
+            mvwaddch(nc.ui.world, y,     x, ':');
+            mvwaddch(nc.ui.world, y + 1, x, 'M');
             wattroff(nc.ui.world, COLOR_PAIR(ColorYellow));
             break;
 
         case ObjectCandy:
             wattron(nc.ui.world, COLOR_PAIR(ColorRed));
-            mvwaddch(nc.ui.world, y - 1, x, 'I');
             mvwaddch(nc.ui.world, y,     x, 'I');
+            mvwaddch(nc.ui.world, y + 1, x, 'I');
             wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
             break;
 
@@ -195,7 +195,7 @@ int world_has_platform_at(const int y, const int x)
 }
 
 /**
- * Retreives the object at given position in the world.
+ * Retrieves the object at given position in the world.
  *
  * If @remove is true, the found object will be removed from the matrix.
  */
@@ -210,13 +210,13 @@ enum object_type world_get_object_at(const int y, const int x, const int remove)
 
     /* objects are only a point in matrix but hase a height in real so look
      * for the coordinates in matrix and if not found have a look at the point
-     * aboth */
+     * under it */
     for (int i = 0; i < obj_height; ++i) {
-        found = objects[worldX][y + i];
+        found = objects[worldX][y - i];
         if (ObjectNone != found) {
             /* have found the object */
             if (remove) {
-                objects[worldX][y + i] = ObjectNone;
+                objects[worldX][y - i] = ObjectNone;
             }
             return found;
         }
@@ -260,7 +260,7 @@ static void world_objects_place(const int xstart)
          * should be generated after the matrix was moved */
         if (0 == (count % 4)) {
             /* use 2/3 candy and 1/3 milk */
-            objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = (count % 3) ? ObjectCandy : ObjectMilk;
+            objects[x][random_range_step(0, WORLDHEIGHT - 2, 3)] = (count % 3) ? ObjectCandy : ObjectMilk;
         }
         count++;
     }
