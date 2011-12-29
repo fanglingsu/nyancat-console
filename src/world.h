@@ -24,7 +24,8 @@
 enum object_type {
     ObjectNone,     /* no real object - here as placeholder */
     ObjectPlatform,
-    ObjectMilk
+    ObjectMilk,
+    ObjectCandy
 };
 
 void world_init(void);
@@ -32,6 +33,6 @@ void world_move_screen_right(const int);
 void world_move_screen_to(const int, const int);
 void world_print(void);
 int world_has_platform_at(const int, const int);
-int world_has_object_at(const enum object_type, const int, const int, const int);
+enum object_type world_get_object_at(const int, const int, const int);
 
 #endif /* end of include guard: WORLD_H */

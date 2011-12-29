@@ -273,13 +273,24 @@ void cat_print(void)
  */
 static void cat_collect_objects(void)
 {
+    enum object_type object;
+
     for (int i = 0; i < LENGTH(zones); ++i) {
-        if (world_has_object_at(ObjectMilk, cat.posY + zones[i].y, cat.posX + zones[i].x, 1)) {
-            game_increment_score(1);
-            /* in current object placing there should alwasy only one object
-             * that could be collected - so return after first object picked
-             * up */
-            return;
+        object = world_get_object_at(cat.posY + zones[i].y, cat.posX + zones[i].x, 1);
+        /* in current object placing there should always only one object that
+         * could be collected - so return after first object picked up */
+        switch (object) {
+            case ObjectMilk:
+                game_increment_multiplicator(1);
+                return;
+
+            case ObjectCandy:
+                game_increment_score(1);
+                return;
+
+            case ObjectNone:    /* fall through */
+            case ObjectPlatform:
+                break;
         }
     }
 }

@@ -160,6 +160,13 @@ static void world_print_object(const enum object_type type, const int y, const i
             wattroff(nc.ui.world, COLOR_PAIR(ColorYellow) | A_BOLD);
             break;
 
+        case ObjectCandy:
+            wattron(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
+            mvwaddch(nc.ui.world, y - 1, x, 'I');
+            mvwaddch(nc.ui.world, y,     x, 'I');
+            wattroff(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
+            break;
+
         case ObjectNone:
             break;
     }
@@ -188,24 +195,23 @@ int world_has_platform_at(const int y, const int x)
 }
 
 /**
- * Inidcates if given objects type is found at given position. The position
- * refers to the coordinates of th world.
+ * Retreives the object at given position in the world.
  *
- * If removed is 1, the found object will be removed from the matrix.
+ * If @remove is true, the found object will be removed from the matrix.
  */
-int world_has_object_at(const enum object_type type, const int y, const int x, const int remove)
+enum object_type world_get_object_at(const int y, const int x, const int remove)
 {
     extern nyancat_t nc;
+    enum object_type found;
 
     /* objects horizontal position is the distance from left screen border */
     const int worldX = x - nc.ui.screen.x;
-    if (type == objects[worldX][y]) {
-        if (1 == remove) {
-            objects[worldX][y] = ObjectNone;
-        }
-        return 1;
+
+    found = objects[worldX][y];
+    if (remove) {
+        objects[worldX][y] = ObjectNone;
     }
-    return 0;
+    return found;
 }
 
 /**
@@ -243,7 +249,7 @@ static void world_objects_place(const int xstart)
         /* use modulo because x += 3 doesn't work if only the last column
          * should be generated after the matrix was moved */
         if (0 == (count % 4)) {
-            objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = ObjectMilk;
+            objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = random_range(ObjectMilk, ObjectCandy);
         }
         count++;
     }
