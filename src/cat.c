@@ -82,7 +82,7 @@ static movement_t move_jump[] = {
 
 /* holds a pointer to curret movement used - this is for example to resume the
  * game after pause */
-static movement_t *current = move_walk;
+static movement_t *current = NULL;
 
 static const struct cat_image {
     char *body[3];
@@ -141,6 +141,9 @@ void cat_init(void)
     cat.state = CatStateWalk;
     cat.jumpcount = 0;
     cat.hasground = 0;
+
+    /* set start movement mode */
+    current = move_walk;
 }
 
 /**
