@@ -170,8 +170,8 @@ void cat_move_right(const int steps)
     world_move_screen_to(cat.posY - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.posX - CAT_XOFFSET);
 
     /* check if nyan has ground under her feets */
-    if (world_has_element_at(ObjectPlatform, cat.posY + CATHEIGHT, cat.posX + CATWIDTH - 2)
-        || world_has_element_at(ObjectPlatform, cat.posY + CATHEIGHT, cat.posX)
+    if (world_has_platform_at(cat.posY + CATHEIGHT, cat.posX + CATWIDTH - 2)
+        || world_has_platform_at(cat.posY + CATHEIGHT, cat.posX)
     ) {
         cat.hasground = 1;
     } else {
@@ -179,9 +179,8 @@ void cat_move_right(const int steps)
     }
 
     /* ckeck if a object was hit */
-    if (world_has_element_at(ObjectMilk, cat.posY + CATHEIGHT - 1, cat.posX + CATWIDTH)) {
+    if (world_has_object_at(ObjectMilk, cat.posY + CATHEIGHT - 1, cat.posX + CATWIDTH, 1)) {
         game_increment_score(1);
-        world_remove_object(ObjectMilk, cat.posY + CATHEIGHT - 1, cat.posX + CATWIDTH);
     }
 }
 

@@ -169,46 +169,43 @@ static void world_print_object(const enum object_type type, const int y, const i
  * Inidcates if under givem coordinates is an platform element.
  * Coordinates refer to the world.
  */
-int world_has_element_at(const enum object_type type, const int y, const int x)
+int world_has_platform_at(const int y, const int x)
 {
-    extern nyancat_t nc;
     extern object_t platforms[];
 
-    switch (type) {
-        case ObjectPlatform:
-            for (int i = 0; i < MAX_PLATFORMS; ++i) {
-                if (platforms[i].y != y) {
-                    continue;
-                }
-                /* e.x <= x < e.x + e.width */
-                if (platforms[i].x <= x
-                    && x < (platforms[i].x + platforms[i].width)) {
-                    return 1;
-                }
-            }
-            break;
-
-        default:
-            return (type == objects[x - nc.ui.screen.x][y]) ? 1 : 0;
-            break;
+    for (int i = 0; i < MAX_PLATFORMS; ++i) {
+        if (platforms[i].y != y) {
+            continue;
+        }
+        /* e.x <= x < e.x + e.width */
+        if (platforms[i].x <= x
+            && x < (platforms[i].x + platforms[i].width)) {
+            return 1;
+        }
     }
 
     return 0;
 }
 
 /**
- * Removes given object type at also given position. Position are world
- * coordinates.
+ * Inidcates if given objects type is found at given position. The position
+ * refers to the coordinates of th world.
+ *
+ * If removed is 1, the found object will be removed from the matrix.
  */
-void world_remove_object(const enum object_type type, const int y, const int x)
+int world_has_object_at(const enum object_type type, const int y, const int x, const int remove)
 {
     extern nyancat_t nc;
 
     /* objects horizontal position is the distance from left screen border */
     const int worldX = x - nc.ui.screen.x;
     if (type == objects[worldX][y]) {
-        objects[worldX][y] = ObjectNone;
+        if (1 == remove) {
+            objects[worldX][y] = ObjectNone;
+        }
+        return 1;
     }
+    return 0;
 }
 
 /**
