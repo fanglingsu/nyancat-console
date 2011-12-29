@@ -31,7 +31,7 @@ typedef struct {
     int width;
 } object_t;
 
-static object_t elements[MAX_PLATFORMS];
+static object_t platforms[MAX_PLATFORMS];
 static enum object_type objects[SCREENWIDTH][WORLDHEIGHT];
 
 /* used for vertical hysteresis in screen movement in world_move_screen_to() */
@@ -47,7 +47,7 @@ static void world_objects_move_left(const int);
  */
 void world_init(void)
 {
-    extern object_t elements[];
+    extern object_t platforms[];
     extern nyancat_t nc;
     nc.ui.screen.x = 0;
     nc.ui.screen.y = WORLDHEIGHT / 2;
@@ -58,7 +58,7 @@ void world_init(void)
 
     /* place platforms */
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        elements[i] = world_create_random_platform(0, SCREENWIDTH);
+        platforms[i] = world_create_random_platform(0, SCREENWIDTH);
     }
     world_objects_place(0);
 }
@@ -79,7 +79,7 @@ void world_move_screen_right(const int steps)
  */
 void world_move_screen_to(const int y, const int x)
 {
-    extern object_t elements[];
+    extern object_t platforms[];
     extern nyancat_t nc;
 
     /* vertical hysteresis */
@@ -101,11 +101,11 @@ void world_move_screen_to(const int y, const int x)
         nc.ui.screen.y = WORLDHEIGHT - SCREENHEIGHT;
     }
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        int x = elements[i].x - nc.ui.screen.x + elements[i].width;
+        int x = platforms[i].x - nc.ui.screen.x + platforms[i].width;
         /* create new platform for i that is out of scope but in the first
          * half of the new imginary screen */
         if (x < 0) {
-            elements[i] = world_create_random_platform(nc.ui.screen.x + SCREENWIDTH, SCREENWIDTH / 2);
+            platforms[i] = world_create_random_platform(nc.ui.screen.x + SCREENWIDTH, SCREENWIDTH / 2);
             continue;
         }
     }
@@ -116,7 +116,7 @@ void world_move_screen_to(const int y, const int x)
  */
 void world_print(void)
 {
-    extern object_t elements[];
+    extern object_t platforms[];
     extern nyancat_t nc;
 
     werase(nc.ui.world);
@@ -130,9 +130,9 @@ void world_print(void)
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         world_print_object(
             ObjectPlatform,
-            elements[i].y - nc.ui.screen.y,
-            elements[i].x - nc.ui.screen.x,
-            elements[i].width
+            platforms[i].y - nc.ui.screen.y,
+            platforms[i].x - nc.ui.screen.x,
+            platforms[i].width
         );
     }
     wnoutrefresh(nc.ui.world);
@@ -166,17 +166,17 @@ static void world_print_object(const enum object_type type, const int y, const i
  */
 int world_has_element_at(const enum object_type type, const int y, const int x)
 {
-    extern object_t elements[];
+    extern object_t platforms[];
 
     switch (type) {
         case ObjectPlatform:
             for (int i = 0; i < MAX_PLATFORMS; ++i) {
-                if (elements[i].y != y) {
+                if (platforms[i].y != y) {
                     continue;
                 }
                 /* e.x <= x < e.x + e.width */
-                if (elements[i].x <= x
-                    && x < (elements[i].x + elements[i].width)) {
+                if (platforms[i].x <= x
+                    && x < (platforms[i].x + platforms[i].width)) {
                     return 1;
                 }
             }
