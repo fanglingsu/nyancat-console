@@ -249,7 +249,8 @@ static void world_objects_place(const int xstart)
         /* use modulo because x += 3 doesn't work if only the last column
          * should be generated after the matrix was moved */
         if (0 == (count % 4)) {
-            objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = random_range(ObjectMilk, ObjectCandy);
+            /* use 2/3 candy and 1/3 milk */
+            objects[x][random_range_step(0, WORLDHEIGHT - 1, 3)] = (count % 3) ? ObjectCandy : ObjectMilk;
         }
         count++;
     }
