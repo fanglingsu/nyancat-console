@@ -16,16 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
+#include <stdlib.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <string.h>
 #include "main.h"
 #include "world.h"
 #include "cat.h"
 #include "status.h"
 #include "game.h"
+#include "util.h"
 
-static unsigned int score_multiplicator;
-static unsigned int score;
+static score_t score_multiplicator;
+static score_t score;
+static score_t highscore;
 
 static void game_scroll_handler(gametime_t, void *);
+static void game_save_hightscore(void);
+static void game_load_highscore(void);
+static char *game_get_highscore_file(void);
 
 /**
  * Initializes the game.
@@ -34,6 +43,7 @@ void game_init(void)
 {
     score_multiplicator = 1;
     score = 0;
+    highscore = 0;
 
     /* initialize the game objects */
     clock_init();
@@ -49,6 +59,17 @@ void game_start(void)
     /* register games scroll handler that moves the cat and screen */
     game_scroll_handler(clock_get_relative(), NULL);
     queue_add_event(clock_get_relative(), cat_move_handler, NULL);
+}
+
+/**
+ * Persists the highscores into file.
+ */
+void game_save_scores(void)
+{
+    if (score > highscore) {
+        highscore = score;
+        game_save_hightscore();
+    }
 }
 
 /**
@@ -70,7 +91,7 @@ void game_unset_multiplicator(void)
 /**
  * Retreive the current used score multiplicator.
  */
-unsigned int game_get_multiplicator(void)
+score_t game_get_multiplicator(void)
 {
     return score_multiplicator;
 }
@@ -94,9 +115,19 @@ void game_unset_score(void)
 /**
  * Retrieves the scores.
  */
-unsigned int game_get_score(void)
+score_t game_get_score(void)
 {
     return score;
+}
+
+/**
+ * Retreives the highscores.
+ */
+score_t game_get_highscore(void)
+{
+    game_load_highscore();
+
+    return highscore;
 }
 
 /**
@@ -112,4 +143,77 @@ static void game_scroll_handler(gametime_t time, void *data)
 
     /* readd to the queue */
     queue_add_event(time + TICK(1), game_scroll_handler, NULL);
+}
+
+/**
+ * Saves the highscores to a file.
+ */
+static void game_save_hightscore(void)
+{
+    char *file = game_get_highscore_file();
+    char *num;
+
+    if (!file) {
+        return;
+    }
+
+    FILE *fp = fopen(file, "w");
+    free(file);
+    if (!fp) {
+        return;
+    }
+
+    /* converts the integer to string with 10 digits + \0 */
+    num = xmalloc(sizeof(score_t) * 11);
+    sprintf(num, "%d", highscore);
+
+    fputs(num, fp);
+    fclose(fp);
+}
+
+/**
+ * Loads the highscores from file.
+ */
+static void game_load_highscore(void)
+{
+    char *num;
+    char *file = game_get_highscore_file();
+
+    if (!file) {
+        return;
+    }
+
+    FILE *fp = fopen(file, "r");
+    free(file);
+    if (!fp) {
+        return;
+    }
+
+    /* allocate memory for the read number 10 digits + \0 */
+    num = xmalloc(sizeof(score_t) * 11);
+    num = fgets(num, 11, fp);
+    if (NULL == num) {
+        highscore = 0;
+    } else {
+        highscore = atoi(num);
+    }
+    fclose(fp);
+}
+
+/**
+ * Retrieves the path to the highscore file.
+ *
+ * Don't forget to free the memory.
+ */
+static char *game_get_highscore_file(void)
+{
+    struct passwd *pw = getpwuid(getuid());
+    const char *home = pw->pw_dir;
+    const char *file = ".nyancat-console";
+
+    char *filepath = xmalloc(strlen(home) + strlen(file) + 2);
+
+    sprintf(filepath, "%s/%s", home, file);
+
+    return filepath;
 }

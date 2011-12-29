@@ -20,7 +20,7 @@
 #define CONFIG_H
 
 #define REAL_NAME "nyancat-console"
-#define VERSION "0.0.3"
+#define VERSION "0.0.4"
 
 #define DEBUG 1
 

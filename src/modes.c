@@ -152,7 +152,8 @@ void scores_draw(void)
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
     mvwprintw(nc.ui.world, 7, 2, "Time (in seconds):        % 9.2lf", clock_get_relative());
     mvwprintw(nc.ui.world, 8, 2, "Scores:                   % 9u", game_get_score());
-    mvwprintw(nc.ui.world, 11, 2, "Press 'r' run again or 'q' to quit.");
+    mvwprintw(nc.ui.world, 9, 2, "High-Scores:              % 9u", game_get_highscore());
+    mvwprintw(nc.ui.world, 12, 2, "Press 'r' run again or 'q' to quit.");
     wnoutrefresh(nc.ui.world);
 
     /* remove content from status window */
@@ -168,10 +169,12 @@ void scores_draw(void)
 void scores_key_handler(gametime_t time, const int key)
 {
     if ('r' == key) {
+        game_save_scores();
         /* uninitialize to previous game */
         game_initialized = 0;
         gamemode_enter(mode_game);
     } else if ('q' == key) {
+        game_save_scores();
         mode_exit();
     }
 }
