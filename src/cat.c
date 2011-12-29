@@ -76,8 +76,12 @@ static movement_t move_walk[] = {
 static movement_t move_jump[] = {
     {TICK(2.5), -1, CatStateJumpUp, &move_jump[1]},
     {TICK(3.5), -1, CatStateJumpUp, &move_jump[2]},
-    {TICK(4.7),    0, CatStateGlide,   move_fall}
+    {TICK(4.7),  0, CatStateGlide,   move_fall}
 };
+
+/* holds a pointer to curret movement used - this is for example to resume the
+ * game after pause */
+static movement_t *current = move_walk;
 
 static const struct cat_image {
     char *body[3];
@@ -182,15 +186,10 @@ void cat_move_handler(gametime_t time, void *data)
     extern cat_t cat;
     movement_t *move = data;
 
-    /* use movment data according to state if called first time */
+    /* if none movement is given, use current that is also the last before
+     * pause */
     if (NULL == move) {
-        if (CatStateJumpInit == cat.state) {
-            move = move_jump;
-        } else if (cat.hasground) {
-            move = move_walk;
-        } else {
-            move = move_fall;
-        }
+        move = current;
     }
     if (CatStateJumpInit == cat.state) {
         move = move_jump;
@@ -202,6 +201,9 @@ void cat_move_handler(gametime_t time, void *data)
     cat.state = move->state;
     cat_move_vertical(move->y);
     queue_add_event(time + move->delta, cat_move_handler, move->next);
+
+    /* save the next movement already as current */
+    current = move->next;
 }
 
 /**
