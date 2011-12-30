@@ -150,10 +150,10 @@ void scores_draw(void)
     wattron(nc.ui.world, COLOR_PAIR(ColorRed));
     mvwprintw(nc.ui.world, 5, 2, "GAME OVER!");
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 7, 2, "Time (in seconds):        % 9.2lf", clock_get_relative());
-    mvwprintw(nc.ui.world, 8, 2, "Scores:                   % 9u", game_get_score());
-    mvwprintw(nc.ui.world, 9, 2, "High-Scores:              % 9u", game_get_highscore());
-    mvwprintw(nc.ui.world, 12, 2, "Press 'r' run again or 'q' to quit.");
+    mvwprintw(nc.ui.world, 7, 2, "Time (in seconds):           % 9.2lf", clock_get_relative());
+    mvwprintw(nc.ui.world, 8, 2, "Scores:                      % 9u", game_get_score());
+    mvwprintw(nc.ui.world, 9, 2, "High-Scores:                 % 9u", game_get_highscore());
+    mvwprintw(nc.ui.world, 12, 2, "Press 'r' to run again or 'q' to quit.");
     wnoutrefresh(nc.ui.world);
 
     /* remove content from status window */
