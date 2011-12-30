@@ -127,6 +127,7 @@ static const coordinate_t zones[] = {
     {CATHEIGHT - 4, CATWIDTH - 4},
 };
 
+static void cat_multiplicator_reset_handler(gametime_t, void *);
 static void cat_collect_objects(void);
 static void cat_move_vertical(const int);
 
@@ -273,6 +274,14 @@ void cat_print(void)
 }
 
 /**
+ * Event callback handler that resets the score multiplicator.
+ */
+static void cat_multiplicator_reset_handler(gametime_t time, void *data)
+{
+    game_unset_multiplicator();
+}
+
+/**
  * Check if nyan is over an object in the world and removes it and collect
  * points for it.
  */
@@ -286,6 +295,15 @@ static void cat_collect_objects(void)
          * could be collected - so return after first object picked up */
         switch (object) {
             case ObjectMilk:
+                /* remove old multiplicator reset events */
+                queue_remove_event(cat_multiplicator_reset_handler);
+
+                /* add new event */
+                queue_add_event(
+                    clock_get_relative() + MULTIPLIER_TIMEOUT,
+                    cat_multiplicator_reset_handler,
+                    NULL
+                );
                 game_increment_multiplicator(1);
                 return;
 

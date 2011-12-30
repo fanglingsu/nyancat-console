@@ -28,12 +28,22 @@
 #define SPEED 1.0
 #define TICK(x) ((x)*0.05/(SPEED))
 
+/* time in seconds after that the multiplicator will be resetet if no further
+ * milk is collected */
+#define MULTIPLIER_TIMEOUT 10
+
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80
-#define SCREENHYSTERESIS 3  /* steps that can nyan move vertical befor the screen is moved to */
-#define CAT_XOFFSET  8      /* distance of cat from left border */
-#define MAX_PLATFORMS 50    /* plattforms placed on to screen widths */
+
+/* steps that can nyan move vertical befor the screen is moved to */
+#define SCREENHYSTERESIS 3
+
+/* distance of cat from left border */
+#define CAT_XOFFSET  8
+
+/* plattforms placed on to screen widths */
+#define MAX_PLATFORMS 50
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  96
