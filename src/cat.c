@@ -309,7 +309,7 @@ static void cat_print_modename(void)
 {
     extern cat_t cat;
 
-    mvwprintw(nc.ui.world, 0, 0, mode_names[cat.mode]);
+    mvwprintw(nc.ui.world, 0, 0, "[%s]", mode_names[cat.mode]);
 }
 
 /**
