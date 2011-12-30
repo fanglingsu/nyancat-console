@@ -265,7 +265,7 @@ static void world_objects_place(const int xstart)
         if (0 == (count % 3)) {
             /* place more object for larger worlds */
             for (short i = 0; i < WORLDHEIGHT / 40; ++i) {
-                objects[x][random_range_step(0, WORLDHEIGHT - 2, 3)] = (count % 2) ? ObjectCandy : ObjectMilk;
+                objects[x][random_range_step(0, WORLDHEIGHT - 2, 3)] = (count % 4) ? ObjectCandy : ObjectMilk;
             }
         }
         count++;
