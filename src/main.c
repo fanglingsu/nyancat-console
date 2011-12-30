@@ -222,6 +222,8 @@ static void loop(void)
         }
         if (key_ready > 0) {
             ch = getch();
+            /* no redraw call explicite because this should be done bey the
+             * key handlers called functions */
             gamemode_key(ch);
         } else {
             /* TODO find a better way for prevening hight cpu usage here. But

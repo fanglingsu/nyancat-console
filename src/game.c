@@ -46,7 +46,6 @@ void game_init(void)
     highscore = 0;
 
     /* initialize the game objects */
-    clock_init();
     world_init();
     cat_init();
 }

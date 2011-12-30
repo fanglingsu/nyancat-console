@@ -52,6 +52,12 @@ void intro_key_handler(gametime_t time, const int key)
 {
     if (10 == key) {
         gamemode_enter(mode_game);
+    } else if ('q' == key) {
+        /* init clock to show a real time in scores mode */
+        clock_init();
+        gamemode_enter(mode_scores);
+    } else {
+        gamemode_draw();
     }
 }
 
@@ -65,6 +71,7 @@ void game_enter(void)
 
     /* prevent from reinitialisation after pause mode */
     if (!game_initialized) {
+        clock_init();
         game_init();
         game_initialized = 1;
     }
