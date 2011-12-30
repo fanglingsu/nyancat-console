@@ -26,7 +26,8 @@ enum object_type {
     ObjectNone,     /* no real object - here as placeholder */
     ObjectPlatform,
     ObjectMilk,
-    ObjectCandy
+    ObjectCandy,
+    ObjectRandom
 };
 
 extern coordinate_t screen;

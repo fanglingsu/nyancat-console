@@ -167,6 +167,13 @@ static void world_print_object(const enum object_type type, const int y, const i
             wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
             break;
 
+        case ObjectRandom:
+            wattron(nc.ui.world, COLOR_PAIR(ColorBlue) | A_REVERSE);
+            mvwaddch(nc.ui.world, y,     x, '?');
+            mvwaddch(nc.ui.world, y + 1, x, 'R');
+            wattroff(nc.ui.world, COLOR_PAIR(ColorBlue) | A_REVERSE);
+            break;
+
         case ObjectNone:
             break;
     }
@@ -269,6 +276,11 @@ static void world_objects_place(const int xstart)
             }
         }
         count++;
+    }
+
+    /* place rare objects */
+    if (0 == (count % 100)) {
+        objects[SCREENWIDTH - 1][random_range(0, WORLDHEIGHT - 2)] = ObjectRandom;
     }
 }
 

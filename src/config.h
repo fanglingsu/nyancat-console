@@ -30,11 +30,18 @@
 
 /* if defined it gives extra points for every frame nyan keeps in fast fall
  * mode */
-#define FEATURE_SCORE_STUNT
+#define FEATURE_SCORE_STUNT 1
+
+/* enable the cat mode reverse where nyan jumps preformed in opposit direction
+ * and nyan falls to the top */
+#define FEATURE_MODE_REVERSE 1
 
 /* time in seconds after that the multiplicator will be resetet if no further
  * milk is collected */
 #define MULTIPLIER_TIMEOUT 10
+
+/* time in seconde after that special cat modes will fade */
+#define SPECIALMODE_TIMEOUT 20
 
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24

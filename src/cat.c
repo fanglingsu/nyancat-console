@@ -23,7 +23,8 @@
 #include "game.h"
 
 enum catmode {
-    CatModeNormal
+    CatModeNormal,
+    CatModeReverse,
 };
 
 enum catstate {
@@ -130,6 +131,7 @@ static const coordinate_t zones[] = {
 };
 
 static void cat_multiplicator_reset_handler(gametime_t, void *);
+static void cat_enter_normalmode_handler(gametime_t, void *);
 static void cat_collect_objects(void);
 static void cat_move_vertical(const int);
 
@@ -191,13 +193,21 @@ int cat_get_height(void)
 void cat_move_right(const int steps)
 {
     extern cat_t cat;
+    int ypos_feets;
     cat.x += steps;
 
     world_move_screen_to(cat.y - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.x - CAT_XOFFSET);
 
+    ypos_feets = cat.y + CATHEIGHT;
+
+    /* hang on platform instead of standing if reversemode is on */
+    if (FEATURE_MODE_REVERSE && CatModeReverse == cat.mode) {
+        ypos_feets -= 1;
+    }
+
     /* check if nyan has ground under her feets */
-    if (world_has_platform_at(cat.y + CATHEIGHT, cat.x + CATWIDTH - 2)
-        || world_has_platform_at(cat.y + CATHEIGHT, cat.x)
+    if (world_has_platform_at(ypos_feets, cat.x + CATWIDTH - 2)
+        || world_has_platform_at(ypos_feets, cat.x)
     ) {
         cat.hasground = 1;
     } else {
@@ -207,12 +217,10 @@ void cat_move_right(const int steps)
     /* collection objects */
     cat_collect_objects();
 
-#ifdef FEATURE_SCORE_STUNT
     /* add extra scores for crazy fall down */
-    if (CatStateFallFast == cat.state) {
+    if (FEATURE_SCORE_STUNT && CatStateFallFast == cat.state) {
         game_increment_score(1);
     }
-#endif
 }
 
 /**
@@ -236,7 +244,11 @@ void cat_move_handler(gametime_t time, void *data)
     }
 
     cat.state = move->state;
-    cat_move_vertical(move->y);
+    if (FEATURE_MODE_REVERSE && CatModeReverse == cat.mode) {
+        cat_move_vertical(-1 *move->y);
+    } else {
+        cat_move_vertical(move->y);
+    }
     queue_add_event(time + move->delta, cat_move_handler, move->next);
 
     /* save the next movement already as current */
@@ -291,6 +303,16 @@ static void cat_multiplicator_reset_handler(gametime_t time, void *data)
 }
 
 /**
+ * Event callback handler that switches cat back to nromal mode.
+ */
+static void cat_enter_normalmode_handler(gametime_t time, void *data)
+{
+    extern cat_t cat;
+
+    cat.mode = CatModeNormal;
+}
+
+/**
  * Check if nyan is over an object in the world and removes it and collect
  * points for it.
  */
@@ -320,6 +342,22 @@ static void cat_collect_objects(void)
                 game_increment_score(1);
                 return;
 
+            case ObjectRandom:
+                /* remove old events */
+                queue_remove_event(cat_enter_normalmode_handler);
+
+                /* add new event */
+                queue_add_event(
+                    clock_get_relative() + SPECIALMODE_TIMEOUT,
+                    cat_enter_normalmode_handler,
+                    NULL
+                );
+                if (FEATURE_MODE_REVERSE) {
+                    /* TODO it's not random because we have only this yet */
+                    cat.mode = CatModeReverse;
+                }
+                return;
+
             case ObjectNone:    /* fall through */
             case ObjectPlatform:
                 break;
@@ -339,6 +377,9 @@ static void cat_move_vertical(const int y)
 
     if (cat.y < 0) {
         cat.y = 0;
+        if (FEATURE_MODE_REVERSE && CatModeReverse == cat.mode) {
+            gamemode_enter(mode_scores);
+        }
     } else if (cat.y >= WORLDHEIGHT) {
         cat.y = WORLDHEIGHT;
         /* cat is out of view - game over */

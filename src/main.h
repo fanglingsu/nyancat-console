@@ -48,6 +48,7 @@ enum color {
     ColorMagenta,
     ColorRed,
     ColorYellow,
+    ColorBlue,
 };
 
 typedef struct {
