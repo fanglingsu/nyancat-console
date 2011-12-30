@@ -130,6 +130,12 @@ static const coordinate_t zones[] = {
     {CATHEIGHT - 4, CATWIDTH - 4},
 };
 
+static const char *mode_names[] = {
+    "Normal",   /* CatModeNormal */
+    "Reverse"   /* CatModeReverse */
+};
+
+static void cat_print_modename(void);
 static void cat_multiplicator_reset_handler(gametime_t, void *);
 static void cat_enter_normalmode_handler(gametime_t, void *);
 static void cat_collect_objects(void);
@@ -290,8 +296,20 @@ void cat_print(void)
         }
     }
 
+    cat_print_modename();
+
     wnoutrefresh(nc.ui.world);
     wattroff(nc.ui.world, COLOR_PAIR(ColorMagenta));
+}
+
+/**
+ * Print the name of current mode to the upper left or world.
+ */
+static void cat_print_modename(void)
+{
+    extern cat_t cat;
+
+    mvwprintw(nc.ui.world, 0, 0, mode_names[cat.mode]);
 }
 
 /**
