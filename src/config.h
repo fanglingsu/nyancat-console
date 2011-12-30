@@ -33,12 +33,12 @@
 #define SCREENWIDTH  80
 #define SCREENHYSTERESIS 3  /* steps that can nyan move vertical befor the screen is moved to */
 #define CAT_XOFFSET  8      /* distance of cat from left border */
-#define MAX_PLATFORMS 25    /* plattforms placed on to screen widths */
+#define MAX_PLATFORMS 50    /* plattforms placed on to screen widths */
 
 /* height of the world for nyan should be >= SCREENHEIGHT */
-#define WORLDHEIGHT  48
+#define WORLDHEIGHT  96
 
-#define CATHEIGHT  4
+#define CATHEIGHT 4
 #define CATWIDTH 10
 
 #endif /* end of include guard: CONFIG_H */
