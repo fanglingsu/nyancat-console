@@ -66,7 +66,7 @@ void game_start(void)
  */
 void game_save_scores(void)
 {
-    if (score > highscore) {
+    if (score >= highscore) {
         highscore = score;
         game_save_hightscore();
     }
@@ -126,6 +126,10 @@ score_t game_get_score(void)
 score_t game_get_highscore(void)
 {
     game_load_highscore();
+
+    if (score > highscore) {
+        highscore = score;
+    }
 
     return highscore;
 }
