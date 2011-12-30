@@ -37,8 +37,8 @@ enum catstate {
 };
 
 typedef struct {
-    int posY;
-    int posX;
+    int y;
+    int x;
     enum catmode mode;
     enum catstate state;
     int jumpcount;
@@ -140,8 +140,8 @@ void cat_init(void)
 {
     extern cat_t cat;
 
-    cat.posX = CAT_XOFFSET;
-    cat.posY = WORLDHEIGHT / 2 - CATHEIGHT;
+    cat.x = CAT_XOFFSET;
+    cat.y = WORLDHEIGHT / 2 - CATHEIGHT;
     cat.mode = CatModeNormal;
     cat.state = CatStateWalk;
     cat.jumpcount = 0;
@@ -182,7 +182,7 @@ int cat_get_height(void)
 {
     extern cat_t cat;
 
-    return WORLDHEIGHT - cat.posY;
+    return WORLDHEIGHT - cat.y;
 }
 
 /**
@@ -191,13 +191,13 @@ int cat_get_height(void)
 void cat_move_right(const int steps)
 {
     extern cat_t cat;
-    cat.posX += steps;
+    cat.x += steps;
 
-    world_move_screen_to(cat.posY - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.posX - CAT_XOFFSET);
+    world_move_screen_to(cat.y - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.x - CAT_XOFFSET);
 
     /* check if nyan has ground under her feets */
-    if (world_has_platform_at(cat.posY + CATHEIGHT, cat.posX + CATWIDTH - 2)
-        || world_has_platform_at(cat.posY + CATHEIGHT, cat.posX)
+    if (world_has_platform_at(cat.y + CATHEIGHT, cat.x + CATWIDTH - 2)
+        || world_has_platform_at(cat.y + CATHEIGHT, cat.x)
     ) {
         cat.hasground = 1;
     } else {
@@ -251,8 +251,8 @@ void cat_print(void)
     extern nyancat_t nc;
     extern cat_t cat;
     static int frame = 0;
-    const int yoffset = cat.posY - screen.y;
-    const int xoffset = cat.posX - screen.x;
+    const int yoffset = cat.y - screen.y;
+    const int xoffset = cat.x - screen.x;
     char eye;
     struct cat_image img = (CatStateFallFast == cat.state) ? cat_images[1] : cat_images[0];
 
@@ -299,7 +299,7 @@ static void cat_collect_objects(void)
     enum object_type object;
 
     for (int i = 0; i < LENGTH(zones); ++i) {
-        object = world_get_object_at(cat.posY + zones[i].y, cat.posX + zones[i].x, 1);
+        object = world_get_object_at(cat.y + zones[i].y, cat.x + zones[i].x, 1);
         /* in current object placing there should always only one object that
          * could be collected - so return after first object picked up */
         switch (object) {
@@ -335,12 +335,12 @@ static void cat_move_vertical(const int y)
 {
     extern cat_t cat;
 
-    cat.posY += y;
+    cat.y += y;
 
-    if (cat.posY < 0) {
-        cat.posY = 0;
-    } else if (cat.posY >= WORLDHEIGHT) {
-        cat.posY = WORLDHEIGHT;
+    if (cat.y < 0) {
+        cat.y = 0;
+    } else if (cat.y >= WORLDHEIGHT) {
+        cat.y = WORLDHEIGHT;
         /* cat is out of view - game over */
         gamemode_enter(mode_scores);
     }
