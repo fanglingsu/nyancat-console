@@ -17,12 +17,12 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 #include <stdlib.h>
+#include <string.h>
 #include "world.h"
 #include "config.h"
+#include "cat.h"
 #include "main.h"
 #include "random.h"
-
-#include <string.h>
 
 typedef struct {
     enum object_type type;

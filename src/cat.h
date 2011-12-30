@@ -21,6 +21,9 @@
 
 #include "clock.h"
 
+#define CATHEIGHT 4
+#define CATWIDTH 10
+
 void cat_init(void);
 void cat_jump_up(gametime_t);
 void cat_jump_down(void);

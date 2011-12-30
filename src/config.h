@@ -38,7 +38,4 @@
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  96
 
-#define CATHEIGHT 4
-#define CATWIDTH 10
-
 #endif /* end of include guard: CONFIG_H */
