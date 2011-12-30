@@ -31,6 +31,9 @@ typedef struct {
     int width;
 } object_t;
 
+/* holds the coordinates of the upper left corner of visible screen in the world */
+coordinate_t screen;
+
 static object_t platforms[MAX_PLATFORMS];
 static enum object_type objects[SCREENWIDTH][WORLDHEIGHT];
 
@@ -48,9 +51,9 @@ static void world_objects_move_left(const int);
 void world_init(void)
 {
     extern object_t platforms[];
-    extern nyancat_t nc;
-    nc.ui.screen.x = 0;
-    nc.ui.screen.y = WORLDHEIGHT / 2;
+
+    screen.x = 0;
+    screen.y = WORLDHEIGHT / 2;
 
     /* value doesn't matter but value > SCREENHYSTERESIS + 1 will cause to
      * move screen the first time without hysteresis */
@@ -68,9 +71,7 @@ void world_init(void)
  */
 void world_move_screen_right(const int steps)
 {
-    extern nyancat_t nc;
-
-    world_move_screen_to(nc.ui.screen.y, nc.ui.screen.x + steps);
+    world_move_screen_to(screen.y, screen.x + steps);
     world_objects_move_left(steps);
 }
 
@@ -80,32 +81,31 @@ void world_move_screen_right(const int steps)
 void world_move_screen_to(const int y, const int x)
 {
     extern object_t platforms[];
-    extern nyancat_t nc;
 
     /* vertical hysteresis */
     if (screen_hysteresis_diff > SCREENHYSTERESIS) {
         if (screen_hysteresis_diff <= SCREENHYSTERESIS + 1) {
-            nc.ui.screen.y += 1;
+            screen.y += 1;
         } else {
-            nc.ui.screen.y = y;
+            screen.y = y;
         }
     } else if (screen_hysteresis_diff < SCREENHYSTERESIS * -1) {
-        nc.ui.screen.y -= 1;
+        screen.y -= 1;
     }
-    screen_hysteresis_diff = y - nc.ui.screen.y;
+    screen_hysteresis_diff = y - screen.y;
 
-    nc.ui.screen.x = x;
-    if (nc.ui.screen.y < 0) {
-        nc.ui.screen.y = 0;
-    } else if (nc.ui.screen.y > WORLDHEIGHT - SCREENHEIGHT) {
-        nc.ui.screen.y = WORLDHEIGHT - SCREENHEIGHT;
+    screen.x = x;
+    if (screen.y < 0) {
+        screen.y = 0;
+    } else if (screen.y > WORLDHEIGHT - SCREENHEIGHT) {
+        screen.y = WORLDHEIGHT - SCREENHEIGHT;
     }
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
-        int x = platforms[i].x - nc.ui.screen.x + platforms[i].width;
+        int x = platforms[i].x - screen.x + platforms[i].width;
         /* create new platform for i that is out of scope but in the first
          * half of the new imginary screen */
         if (x < 0) {
-            platforms[i] = world_create_random_platform(nc.ui.screen.x + SCREENWIDTH, SCREENWIDTH / 2);
+            platforms[i] = world_create_random_platform(screen.x + SCREENWIDTH, SCREENWIDTH / 2);
             continue;
         }
     }
@@ -123,16 +123,16 @@ void world_print(void)
     wattron(nc.ui.world, A_BOLD);
     /* print objects */
     for (int x = 0; x < SCREENWIDTH; ++x) {
-        for (int y = nc.ui.screen.y; y < nc.ui.screen.y + SCREENHEIGHT; ++y) {
-            world_print_object(objects[x][y], y - nc.ui.screen.y, x, 1);
+        for (int y = screen.y; y < screen.y + SCREENHEIGHT; ++y) {
+            world_print_object(objects[x][y], y - screen.y, x, 1);
         }
     }
     /* print platforms */
     for (int i = 0; i < MAX_PLATFORMS; ++i) {
         world_print_object(
             ObjectPlatform,
-            platforms[i].y - nc.ui.screen.y,
-            platforms[i].x - nc.ui.screen.x,
+            platforms[i].y - screen.y,
+            platforms[i].x - screen.x,
             platforms[i].width
         );
     }
@@ -206,7 +206,7 @@ enum object_type world_get_object_at(const int y, const int x, const int remove)
     static const int obj_height = 2;
 
     /* objects horizontal position is the distance from left screen border */
-    const int worldX = x - nc.ui.screen.x;
+    const int worldX = x - screen.x;
 
     /* objects are only a point in matrix but hase a height in real so look
      * for the coordinates in matrix and if not found have a look at the point

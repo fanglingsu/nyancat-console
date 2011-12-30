@@ -62,7 +62,6 @@ typedef struct {
 #if DEBUG
         WINDOW *debug;
 #endif
-        coordinate_t screen;
     } ui;
 } nyancat_t;
 

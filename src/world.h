@@ -20,6 +20,7 @@
 #define WORLD_H
 
 #include "clock.h"
+#include "main.h"
 
 enum object_type {
     ObjectNone,     /* no real object - here as placeholder */
@@ -27,6 +28,8 @@ enum object_type {
     ObjectMilk,
     ObjectCandy
 };
+
+extern coordinate_t screen;
 
 void world_init(void);
 void world_move_screen_right(const int);

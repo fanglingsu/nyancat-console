@@ -57,6 +57,8 @@ typedef struct {
     char str[8];
 } feets_t;
 
+extern coordinate_t screen;
+
 static cat_t cat;
 
 static movement_t move_fall[] = {
@@ -249,8 +251,8 @@ void cat_print(void)
     extern nyancat_t nc;
     extern cat_t cat;
     static int frame = 0;
-    const int yoffset = cat.posY - nc.ui.screen.y;
-    const int xoffset = cat.posX - nc.ui.screen.x;
+    const int yoffset = cat.posY - screen.y;
+    const int xoffset = cat.posX - screen.x;
     char eye;
     struct cat_image img = (CatStateFallFast == cat.state) ? cat_images[1] : cat_images[0];
 
