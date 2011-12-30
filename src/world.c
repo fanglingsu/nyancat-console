@@ -252,15 +252,21 @@ static void world_objects_place(const int xstart)
 {
     static unsigned int count = 0;
 
-    for (int x = xstart; x < SCREENWIDTH; ++x) {
+    for (short x = xstart; x < SCREENWIDTH; ++x) {
         /* initialize current row row with 0 */
         memset(objects[x], ObjectNone, sizeof(enum object_type) * WORLDHEIGHT);
 
+        /* TODO this needs rethinking entirely, because it's not configurable
+         * and it's hard to adapt the object ratio according to changed
+         * WORLDHEIGHT or SCREENWIDTH values. */
+
         /* use modulo because x += 3 doesn't work if only the last column
          * should be generated after the matrix was moved */
-        if (0 == (count % 4)) {
-            /* use 2/3 candy and 1/3 milk */
-            objects[x][random_range_step(0, WORLDHEIGHT - 2, 3)] = (count % 3) ? ObjectCandy : ObjectMilk;
+        if (0 == (count % 3)) {
+            /* place more object for larger worlds */
+            for (short i = 0; i < WORLDHEIGHT / 40; ++i) {
+                objects[x][random_range_step(0, WORLDHEIGHT - 2, 3)] = (count % 2) ? ObjectCandy : ObjectMilk;
+            }
         }
         count++;
     }
