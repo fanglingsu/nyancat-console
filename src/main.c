@@ -124,7 +124,7 @@ static void init_modes(void)
     extern gamemode_t *mode_intro, *mode_game, *mode_pause, *mode_scores;
 
     mode_intro = mode_create("Intro", NULL, NULL, intro_draw, intro_key_handler);
-    mode_scores = mode_create("Scores", scores_draw, NULL, scores_draw, scores_key_handler);
+    mode_scores = mode_create("Scores", scores_enter, NULL, scores_draw, scores_key_handler);
     mode_game = mode_create("Game", game_enter, game_leave, game_draw, game_key_handler);
     mode_pause = mode_create("Pause", pause_enter, NULL, pause_draw, pause_key_handler);
 }

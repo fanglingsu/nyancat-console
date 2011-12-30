@@ -33,6 +33,7 @@ void pause_enter(void);
 void pause_draw(void);
 void pause_key_handler(gametime_t, const int);
 
+void scores_enter(void);
 void scores_draw(void);
 void scores_key_handler(gametime_t, const int);
 

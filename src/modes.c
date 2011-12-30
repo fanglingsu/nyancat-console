@@ -146,6 +146,14 @@ void pause_key_handler(gametime_t time, const int key)
 }
 
 /**
+ * Enters the score mode.
+ */
+void scores_enter(void)
+{
+    scores_draw();
+}
+
+/**
  * Drow the scores page on the end of the game.
  */
 void scores_draw(void)
