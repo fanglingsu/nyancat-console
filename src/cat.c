@@ -204,6 +204,13 @@ void cat_move_right(const int steps)
 
     /* collection objects */
     cat_collect_objects();
+
+#ifdef FEATURE_SCORE_STUNT
+    /* add extra scores for crazy fall down */
+    if (CatStateFallFast == cat.state) {
+        game_increment_score(1);
+    }
+#endif
 }
 
 /**

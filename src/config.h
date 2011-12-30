@@ -22,11 +22,15 @@
 #define REAL_NAME "nyancat-console"
 #define VERSION "0.0.4"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define SECOND 1000000
 #define SPEED 1.0
 #define TICK(x) ((x)*0.05/(SPEED))
+
+/* if defined it gives extra points for every frame nyan keeps in fast fall
+ * mode */
+#define FEATURE_SCORE_STUNT
 
 /* time in seconds after that the multiplicator will be resetet if no further
  * milk is collected */
