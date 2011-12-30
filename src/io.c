@@ -17,6 +17,8 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 #include <sys/types.h>
+#include <unistd.h>
+#include <errno.h>
 #include "io.h"
 #include "config.h"
 
@@ -63,7 +65,10 @@ static int io_select(struct timeval *timeout)
     FD_ZERO(&input);
     FD_SET(STDIN, &input);
 
-    n = select(FD_SETSIZE, &input, NULL, NULL, timeout);
+    /*n = select(FD_SETSIZE, &input, NULL, NULL, timeout);*/
+
+    /* repeat it as long as temporary error code EINTR occours */
+    n = TEMP_FAILURE_RETRY(select(FD_SETSIZE, &input, NULL, NULL, timeout));
 
     /* see if there was an error */
     if (n < 0) {

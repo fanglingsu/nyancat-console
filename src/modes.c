@@ -119,6 +119,12 @@ void game_key_handler(gametime_t time, const int key)
  */
 void pause_enter(void)
 {
+    pause_draw();
+}
+
+void pause_draw(void)
+{
+    game_draw();
     status_print();
 }
 
