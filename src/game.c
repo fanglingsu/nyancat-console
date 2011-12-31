@@ -18,7 +18,6 @@
  */
 #include <stdlib.h>
 #include <unistd.h>
-#include <pwd.h>
 #include <string.h>
 #include "main.h"
 #include "world.h"
@@ -212,8 +211,7 @@ static void game_load_highscore(void)
  */
 static char *game_get_highscore_file(void)
 {
-    struct passwd *pw = getpwuid(getuid());
-    const char *home = pw->pw_dir;
+    const char *home = getenv("HOME");
     const char *file = ".nyancat-console";
 
     char *filepath = xmalloc(strlen(home) + strlen(file) + 2);
