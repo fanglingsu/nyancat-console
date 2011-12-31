@@ -287,7 +287,7 @@ void cat_move_right(void)
 
     /* shake vertically move -1 - +1 on x */
     if (CatModeCrack == cat.mode.mode) {
-        cat.x += random_range(-1 , 1);
+        world_x += random_range(-1 , 1);
     }
     world_move_screen_to(world_y, world_x);
 
