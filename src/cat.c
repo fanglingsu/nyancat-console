@@ -26,6 +26,7 @@ enum catmode {
     CatModeNormal,
     CatModeReverse,
     CatModeFly,
+    CatModeBubble,
 };
 
 typedef struct {
@@ -37,7 +38,8 @@ typedef struct {
 static const catmode_t catmodes[] = {
     {CatModeNormal,  "Normal"},
     {CatModeReverse, "Reverse"},
-    {CatModeFly,     "Fly"}
+    {CatModeFly,     "Fly"},
+    {CatModeBubble,  "Bubble"}
 };
 
 enum catstate {
@@ -83,15 +85,15 @@ extern coordinate_t screen;
 static cat_t cat;
 
 static movement_t move_fall[] = {
-    {TICK(3.5),  1, CatStateGlideDown, &move_fall[1]},
-    {TICK(2.5),  1, CatStateGlideDown, &move_fall[2]},
-    {TICK(2.5),  1, CatStateFall,      &move_fall[3]},
-    {TICK(2.5),  1, CatStateFall,      &move_fall[4]},
-    {TICK(2.5),  1, CatStateFall,      &move_fall[5]},
-    {TICK(2.1),  1, CatStateFall,      &move_fall[6]},
-    {TICK(2.1),  1, CatStateFall,      &move_fall[7]},
-    {TICK(2.1),  1, CatStateFall,      &move_fall[8]},
-    {TICK(1),    1, CatStateFallFast,  &move_fall[8]}
+    {TICK(3.5), 1, CatStateGlideDown, &move_fall[1]},
+    {TICK(2.5), 1, CatStateGlideDown, &move_fall[2]},
+    {TICK(2.5), 1, CatStateFall,      &move_fall[3]},
+    {TICK(2.5), 1, CatStateFall,      &move_fall[4]},
+    {TICK(2.5), 1, CatStateFall,      &move_fall[5]},
+    {TICK(2.1), 1, CatStateFall,      &move_fall[6]},
+    {TICK(2.1), 1, CatStateFall,      &move_fall[7]},
+    {TICK(2.1), 1, CatStateFall,      &move_fall[8]},
+    {TICK(1),   1, CatStateFallFast,  &move_fall[8]}
 };
 static movement_t move_walk[] = {
     {TICK(1),    0, CatStateWalk, &move_walk[1]},
@@ -107,6 +109,25 @@ static movement_t move_fly[] = {
     {TICK(3), -1, CatStateFlyUp,        NULL},
     {TICK(2),  0, CatStateFlyStraight,  NULL},
     {TICK(3),  1, CatStateFlyDown,      NULL}
+};
+static movement_t move_bubblefall[] = {
+    {TICK(2.5), 1, CatStateGlideDown, &move_bubblefall[1]},
+    {TICK(3.5), 1, CatStateGlideDown, &move_bubblefall[2]},
+    {TICK(2.5), 1, CatStateFall,      &move_bubblefall[3]},
+    {TICK(2.5), 1, CatStateFall,      &move_bubblefall[4]},
+    {TICK(2.5), 1, CatStateFall,      &move_bubblefall[5]},
+    {TICK(2.1), 1, CatStateFall,      &move_bubblefall[6]},
+    {TICK(2.1), 1, CatStateFall,      &move_bubblefall[7]},
+    {TICK(2.1), 1, CatStateFall,      &move_bubblefall[7]}
+};
+static movement_t move_bubblejump[] = {
+    {TICK(2.5), -1, CatStateJumpUp,    &move_bubblejump[1]},
+    {TICK(3.5), -1, CatStateJumpUp,    &move_bubblejump[2]},
+    {TICK(4.7),  0, CatStateGlide,     move_bubblefall},
+};
+static movement_t move_bubblewalk[] = {
+    {TICK(1), 0, CatStateWalk, &move_bubblewalk[1]},
+    {TICK(1), 0, CatStateGlide, move_bubblefall}
 };
 
 /* holds a pointer to curret movement used - this is for example to resume the
@@ -204,6 +225,10 @@ void cat_jump_up(gametime_t time)
                 cat.state = CatStateFlyUp;
             }
             break;
+
+        case CatModeBubble:
+            cat.state = CatStateJumpInit;
+            break;
     }
 }
 
@@ -223,6 +248,7 @@ void cat_jump_down(gametime_t time)
 
         case CatModeNormal: /* fall through */
         case CatModeReverse:
+        case CatModeBubble:
             break;
     }
 }
@@ -305,6 +331,15 @@ void cat_move_handler(gametime_t time, void *data)
             } else {
                 /* if none state set begin with straight flight */
                 move = &move_fly[1];
+            }
+            break;
+
+        case CatModeBubble:
+            if (CatStateJumpInit == cat.state) {
+                move = move_bubblejump;
+            } else if (cat.hasground) {
+                move = move_bubblewalk;
+                cat.jumpcount = 0;
             }
             break;
     }
@@ -434,10 +469,21 @@ static void cat_collect_objects(void)
                     cat_enter_normalmode_handler,
                     NULL
                 );
-                cat.mode = ((int)clock_get_relative() % 2)
-                    ? catmodes[CatModeFly]
-                    : catmodes[CatModeReverse];
-                return;
+
+                /* set new temporary cat mode */
+                switch ((int)clock_get_relative() % 3) {
+                    case 0:
+                        cat.mode = catmodes[CatModeFly];
+                        return;
+
+                    case 1:
+                        cat.mode = catmodes[CatModeReverse];
+                        return;
+
+                    case 2:
+                        cat.mode = catmodes[CatModeBubble];
+                        return;
+                }
 
             case ObjectNone:    /* fall through */
             case ObjectPlatform:
