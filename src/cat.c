@@ -295,9 +295,6 @@ void cat_move_handler(gametime_t time, void *data)
                 move = move_walk;
                 cat.jumpcount = 0;
             }
-            if (CatStateFlyStraight == cat.state) {
-                cat.state = CatStateWalk;
-            }
             break;
 
         case CatModeFly:
