@@ -32,10 +32,6 @@
  * mode */
 #define FEATURE_SCORE_STUNT 1
 
-/* enable the cat mode reverse where nyan jumps preformed in opposit direction
- * and nyan falls to the top */
-#define FEATURE_MODE_REVERSE 1
-
 /* time in seconds after that the multiplicator will be resetet if no further
  * milk is collected */
 #define MULTIPLIER_TIMEOUT 10

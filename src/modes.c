@@ -105,7 +105,7 @@ void game_key_handler(gametime_t time, const int key)
 
         case 'j':
         case KEY_DOWN:
-            cat_jump_down();
+            cat_jump_down(time);
             break;
 
         case 'p':
