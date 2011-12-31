@@ -34,6 +34,7 @@ static void set_signals(void);
 static void signal_handler(const int);
 static void loop(void);
 static void prepare_for_exit(void);
+static void free_memory(void);
 
 int main(int argc, char *argv[])
 {
@@ -59,6 +60,7 @@ int main(int argc, char *argv[])
     loop();
 
     prepare_for_exit();
+    free_memory();
     return EXIT_SUCCESS;
 }
 
@@ -73,6 +75,7 @@ void error_exit(const char *format, ...)
 
     /* clean all ncurses windows */
     prepare_for_exit();
+    free_memory();
 
     va_start(ap, format);
     vfprintf(stderr, format, ap);
@@ -193,6 +196,7 @@ static void signal_handler(const int sig)
         return;
     }
 #endif
+    free_memory();
     exit(EXIT_FAILURE);
 }
 
@@ -253,4 +257,17 @@ static void prepare_for_exit(void)
 
     /* flush open streams */
     fflush(NULL);
+}
+
+/**
+ * frees memory allocated for the game and modes.
+ */
+static void free_memory(void)
+{
+    queue_free();
+
+    free(mode_intro);
+    free(mode_scores);
+    free(mode_game);
+    free(mode_pause);
 }

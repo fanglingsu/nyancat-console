@@ -171,6 +171,7 @@ static void game_save_hightscore(void)
     sprintf(num, "%d", highscore);
 
     fputs(num, fp);
+    free(num);
     fclose(fp);
 }
 
@@ -200,6 +201,7 @@ static void game_load_highscore(void)
     } else {
         highscore = atoi(num);
     }
+    free(num);
     fclose(fp);
 }
 
@@ -217,6 +219,5 @@ static char *game_get_highscore_file(void)
     char *filepath = xmalloc(strlen(home) + strlen(file) + 2);
 
     sprintf(filepath, "%s/%s", home, file);
-
     return filepath;
 }
