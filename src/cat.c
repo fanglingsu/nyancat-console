@@ -21,12 +21,14 @@
 #include "world.h"
 #include "util.h"
 #include "game.h"
+#include "random.h"
 
 enum catmode {
     CatModeNormal,
     CatModeReverse,
     CatModeFly,
     CatModeBubble,
+    CatModeGhost,
 };
 
 typedef struct {
@@ -39,7 +41,8 @@ static const catmode_t catmodes[] = {
     {CatModeNormal,  "Normal"},
     {CatModeReverse, "Reverse"},
     {CatModeFly,     "Fly"},
-    {CatModeBubble,  "Bubble"}
+    {CatModeBubble,  "Bubble"},
+    {CatModeGhost,   "Ghost"}
 };
 
 enum catstate {
@@ -211,6 +214,7 @@ void cat_jump_up(gametime_t time)
     switch (cat.mode.mode) {
         case CatModeNormal: /* fall through */
         case CatModeReverse:
+        case CatModeGhost:
             /* jumping from fast fall is not allowed */
             if (cat.jumpcount <= 1 && CatStateFallFast != cat.state) {
                 cat.jumpcount++;
@@ -249,6 +253,7 @@ void cat_jump_down(gametime_t time)
         case CatModeNormal: /* fall through */
         case CatModeReverse:
         case CatModeBubble:
+        case CatModeGhost:
             break;
     }
 }
@@ -315,6 +320,7 @@ void cat_move_handler(gametime_t time, void *data)
     switch (cat.mode.mode) {
         case CatModeNormal: /* fall through */
         case CatModeReverse:
+        case CatModeGhost:
             if (CatStateJumpInit == cat.state) {
                 move = move_jump;
             } else if (cat.hasground) {
@@ -372,25 +378,31 @@ void cat_print(void)
     char eye;
     struct cat_image img = (CatStateFallFast == cat.state) ? cat_images[1] : cat_images[0];
 
-    if (cat.hasground) {
-        eye = 'o';
-    } else if (CatStateFallFast == cat.state) {
-        eye = '+';
-    } else {
-        eye = '0';
-    }
-
     wattron(nc.ui.world, COLOR_PAIR(ColorMagenta));
-    mvwprintw(nc.ui.world, yoffset,     xoffset,     img.body[0]);
-    mvwprintw(nc.ui.world, yoffset + 1, xoffset,     img.body[1], cat_get_height() * 100 / WORLDHEIGHT);
-    mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, img.body[2], eye, eye);
 
-    if (frame < LENGTH(img.feets)) {
-        mvwprintw(nc.ui.world, yoffset + 3, xoffset + img.feets[frame].offset, img.feets[frame].str);
-        if (frame == LENGTH(img.feets) - 1) {
-            frame = 0;
+    /* don't show the cat in ghost mode most of the time */
+    if (CatModeGhost != cat.mode.mode
+        || 0 == random_range(0, GHOST_MODE_FRAMES)
+    ) {
+        if (cat.hasground) {
+            eye = 'o';
+        } else if (CatStateFallFast == cat.state) {
+            eye = '+';
         } else {
-            ++frame;
+            eye = '0';
+        }
+
+        mvwprintw(nc.ui.world, yoffset,     xoffset,     img.body[0]);
+        mvwprintw(nc.ui.world, yoffset + 1, xoffset,     img.body[1], cat_get_height() * 100 / WORLDHEIGHT);
+        mvwprintw(nc.ui.world, yoffset + 2, xoffset - 1, img.body[2], eye, eye);
+
+        if (frame < LENGTH(img.feets)) {
+            mvwprintw(nc.ui.world, yoffset + 3, xoffset + img.feets[frame].offset, img.feets[frame].str);
+            if (frame == LENGTH(img.feets) - 1) {
+                frame = 0;
+            } else {
+                ++frame;
+            }
         }
     }
 
@@ -471,7 +483,7 @@ static void cat_collect_objects(void)
                 );
 
                 /* set new temporary cat mode */
-                switch ((int)clock_get_relative() % 3) {
+                switch (random_range(0, 3)) {
                     case 0:
                         cat.mode = catmodes[CatModeFly];
                         return;
@@ -482,6 +494,10 @@ static void cat_collect_objects(void)
 
                     case 2:
                         cat.mode = catmodes[CatModeBubble];
+                        return;
+
+                    case 3:
+                        cat.mode = catmodes[CatModeGhost];
                         return;
                 }
 

@@ -32,6 +32,10 @@
  * mode */
 #define FEATURE_SCORE_STUNT 1
 
+/* number of frames nyan is invisible in the middle. 5 means from 6 frames
+ * nyan is 5 frames invisible */
+#define GHOST_MODE_FRAMES 5
+
 /* time in seconds after that the multiplicator will be resetet if no further
  * milk is collected */
 #define MULTIPLIER_TIMEOUT 10
