@@ -451,8 +451,10 @@ static void cat_move_vertical(const int y)
 
     cat.y += y;
 
-    if (cat.y < 0) {
-        cat.y = 0;
+    /* allow the cat to jump out of the upper screen until only her feets are
+     * visible */
+    if (cat.y < 1 - CATHEIGHT) {
+        cat.y = 1 - CATHEIGHT;
         if (CatModeReverse == cat.mode) {
             gamemode_enter(mode_scores);
         }
