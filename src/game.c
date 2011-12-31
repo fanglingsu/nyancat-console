@@ -26,6 +26,7 @@
 #include "game.h"
 #include "util.h"
 
+static float tickbase;
 static score_t score_multiplicator;
 static score_t score;
 static score_t highscore;
@@ -40,6 +41,7 @@ static char *game_get_highscore_file(void);
  */
 void game_init(void)
 {
+    tickbase = 1;
     score_multiplicator = 1;
     score = 0;
     highscore = 0;
@@ -57,6 +59,18 @@ void game_start(void)
     /* register games scroll handler that moves the cat and screen */
     game_scroll_handler(clock_get_relative(), NULL);
     queue_add_event(clock_get_relative(), cat_move_handler, NULL);
+}
+
+/**
+ * Set the value given to TICK() for the games base speed.
+ */
+void game_set_tickbase(float base)
+{
+    if (base < 0) {
+        tickbase = base * -1;
+    } else {
+        tickbase = base;
+    }
 }
 
 /**
@@ -144,7 +158,7 @@ static void game_scroll_handler(gametime_t time, void *data)
     status_print();
 
     /* readd to the queue */
-    queue_add_event(time + TICK(1), game_scroll_handler, NULL);
+    queue_add_event(time + TICK(tickbase), game_scroll_handler, NULL);
 }
 
 /**

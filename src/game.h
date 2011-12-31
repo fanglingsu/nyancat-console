@@ -25,6 +25,7 @@ typedef unsigned int score_t;
 
 void game_init(void);
 void game_start(void);
+void game_set_tickbase(float);
 void game_save_scores(void);
 void game_increment_multiplicator(const unsigned int);
 void game_unset_multiplicator(void);

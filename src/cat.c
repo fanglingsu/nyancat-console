@@ -29,6 +29,7 @@ enum catmode {
     CatModeFly,
     CatModeBubble,
     CatModeGhost,
+    CatModeCrack,
 };
 
 typedef struct {
@@ -42,7 +43,8 @@ static const catmode_t catmodes[] = {
     {CatModeReverse, "Reverse"},
     {CatModeFly,     "Fly"},
     {CatModeBubble,  "Bubble"},
-    {CatModeGhost,   "Ghost"}
+    {CatModeGhost,   "Ghost"},
+    {CatModeCrack,   "Crack"}
 };
 
 enum catstate {
@@ -215,6 +217,7 @@ void cat_jump_up(gametime_t time)
         case CatModeNormal: /* fall through */
         case CatModeReverse:
         case CatModeGhost:
+        case CatModeCrack:
             /* jumping from fast fall is not allowed */
             if (cat.jumpcount <= 1 && CatStateFallFast != cat.state) {
                 cat.jumpcount++;
@@ -254,6 +257,7 @@ void cat_jump_down(gametime_t time)
         case CatModeReverse:
         case CatModeBubble:
         case CatModeGhost:
+        case CatModeCrack:
             break;
     }
 }
@@ -275,9 +279,17 @@ void cat_move_right(void)
 {
     extern cat_t cat;
     int ypos_feets;
+    int world_x, world_y;
     cat.x += 1;
 
-    world_move_screen_to(cat.y - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.x - CAT_XOFFSET);
+    world_y = cat.y - SCREENHEIGHT/2 + CATHEIGHT/2;
+    world_x = cat.x - CAT_XOFFSET;
+
+    /* shake vertically move -1 - +1 on x */
+    if (CatModeCrack == cat.mode.mode) {
+        cat.x += random_range(0, 2) - 1;
+    }
+    world_move_screen_to(world_y, world_x);
 
     ypos_feets = cat.y + CATHEIGHT;
 
@@ -321,6 +333,7 @@ void cat_move_handler(gametime_t time, void *data)
         case CatModeNormal: /* fall through */
         case CatModeReverse:
         case CatModeGhost:
+        case CatModeCrack:
             if (CatStateJumpInit == cat.state) {
                 move = move_jump;
             } else if (cat.hasground) {
@@ -384,7 +397,9 @@ void cat_print(void)
     if (CatModeGhost != cat.mode.mode
         || 0 == random_range(0, GHOST_MODE_FRAMES)
     ) {
-        if (cat.hasground) {
+        if (CatModeCrack == cat.mode.mode) {
+            eye = '@';
+        } else if (cat.hasground) {
             eye = 'o';
         } else if (CatStateFallFast == cat.state) {
             eye = '+';
@@ -439,6 +454,7 @@ static void cat_enter_normalmode_handler(gametime_t time, void *data)
     extern cat_t cat;
 
     cat.mode = catmodes[CatModeNormal];
+    game_set_tickbase(1);
 }
 
 /**
@@ -481,23 +497,31 @@ static void cat_collect_objects(void)
                     cat_enter_normalmode_handler,
                     NULL
                 );
-
                 /* set new temporary cat mode */
-                switch (random_range(0, 3)) {
+                switch (random_range(0, 4)) {
                     case 0:
                         cat.mode = catmodes[CatModeFly];
+                        game_set_tickbase(1);
                         return;
 
                     case 1:
                         cat.mode = catmodes[CatModeReverse];
+                        game_set_tickbase(1);
                         return;
 
                     case 2:
                         cat.mode = catmodes[CatModeBubble];
+                        game_set_tickbase(1);
                         return;
 
                     case 3:
                         cat.mode = catmodes[CatModeGhost];
+                        game_set_tickbase(1);
+                        return;
+
+                    case 4:
+                        cat.mode = catmodes[CatModeCrack];
+                        game_set_tickbase(0.75);
                         return;
                 }
 
