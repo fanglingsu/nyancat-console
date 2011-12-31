@@ -33,7 +33,7 @@ enum object_type {
 extern coordinate_t screen;
 
 void world_init(void);
-void world_move_screen_right(const int);
+void world_move_screen_right(void);
 void world_move_screen_to(const int, const int);
 void world_print(void);
 int world_has_platform_at(const int, const int);

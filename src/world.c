@@ -43,7 +43,7 @@ static int screen_hysteresis_diff;
 static object_t world_create_random_platform(const int, const int);
 static void world_print_object(const enum object_type, const int, const int, const int);
 static void world_objects_place(const int);
-static void world_objects_move_left(const int);
+static void world_objects_move_left(void);
 
 /**
  * Generates platform of nyans world.
@@ -67,12 +67,12 @@ void world_init(void)
 }
 
 /**
- * Moves the visible screen given step to the right.
+ * Moves the visible screen one step to the right.
  */
-void world_move_screen_right(const int steps)
+void world_move_screen_right(void)
 {
-    world_move_screen_to(screen.y, screen.x + steps);
-    world_objects_move_left(steps);
+    world_move_screen_to(screen.y, screen.x + 1);
+    world_objects_move_left();
 }
 
 /**
@@ -285,18 +285,18 @@ static void world_objects_place(const int xstart)
 }
 
 /**
- * Move the whole matrix with the objects given steps to the left.
+ * Move the whole matrix with the objects one step to the left.
  */
-void world_objects_move_left(const int steps)
+void world_objects_move_left(void)
 {
     const size_t matrix_size = sizeof(enum object_type) * SCREENWIDTH * WORLDHEIGHT;
 
     /* move the matrix of objects to the left */
     memmove(
         objects,
-        objects + steps,
-        matrix_size - sizeof(objects[0]) * steps
+        objects + 1,
+        matrix_size - sizeof(objects[0])
     );
     /* place objects in the rightmost columns */
-    world_objects_place(SCREENWIDTH - steps);
+    world_objects_place(SCREENWIDTH - 1);
 }

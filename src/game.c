@@ -138,8 +138,8 @@ score_t game_get_highscore(void)
  */
 static void game_scroll_handler(gametime_t time, void *data)
 {
-    cat_move_right(1);
-    world_move_screen_right(1);
+    cat_move_right();
+    world_move_screen_right();
     gamemode_draw();
 
     status_print();

@@ -232,13 +232,13 @@ int cat_get_height(void)
 }
 
 /**
- * Moves the cat to the right by given step size.
+ * Moves the cat one step to the right.
  */
-void cat_move_right(const int steps)
+void cat_move_right(void)
 {
     extern cat_t cat;
     int ypos_feets;
-    cat.x += steps;
+    cat.x += 1;
 
     world_move_screen_to(cat.y - SCREENHEIGHT / 2 + CATHEIGHT / 2, cat.x - CAT_XOFFSET);
 
