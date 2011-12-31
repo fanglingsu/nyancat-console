@@ -37,8 +37,34 @@ void intro_draw(void)
     extern nyancat_t nc;
 
     werase(nc.ui.world);
-    waddstr(nc.ui.world, "Press Enter to start " REAL_NAME "\n\n");
-    waddstr(nc.ui.world, "Use j, k or the cursor keys to move the cat.");
+    wattron(nc.ui.world, A_BOLD);
+    mvwprintw(nc.ui.world, 2, 2, REAL_NAME);
+    wattroff(nc.ui.world, A_BOLD);
+    wattron(nc.ui.world, COLOR_PAIR(ColorYellow) | A_BOLD);
+    mvwprintw(nc.ui.world, 4, 2, ":");
+    mvwprintw(nc.ui.world, 5, 2, "M");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorYellow) | A_BOLD);
+    mvwprintw(nc.ui.world, 4, 9, "Milk Score Multiplicator for %ds", MULTIPLIER_TIMEOUT);
+
+    wattron(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
+    mvwprintw(nc.ui.world, 7, 2, "I");
+    mvwprintw(nc.ui.world, 8, 2, "I");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
+    mvwprintw(nc.ui.world, 7, 9, "Candy - your food to get points");
+
+    wattron(nc.ui.world, COLOR_PAIR(ColorBlue) | A_BOLD | A_REVERSE);
+    mvwprintw(nc.ui.world, 10, 2, "?");
+    mvwprintw(nc.ui.world, 11, 2, "R");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorBlue) | A_BOLD | A_REVERSE);
+    mvwprintw(nc.ui.world, 10, 9, "Random skill changes for %ds - may be positive or not.", SPECIALMODE_TIMEOUT);
+    mvwprintw(nc.ui.world, 11, 9, "Reversemode - gravity forces nyan to the sky, use");
+    mvwprintw(nc.ui.world, 12, 9, "              'k' to jump down");
+    mvwprintw(nc.ui.world, 13, 9, "Flymode     - fly up, staight or down with 'j' or 'k'");
+    mvwprintw(nc.ui.world, 14, 9, "Bubblemode  - jump as often you want");
+    mvwprintw(nc.ui.world, 15, 9, "Ghostmode   - nyan is nearly invisible");
+    mvwprintw(nc.ui.world, 16, 9, "Crackmode   - nyan's faster but the world is flickering");
+
+    mvwprintw(nc.ui.world, 18, 2, "Press return to start the game or leave with 'q'...");
     wnoutrefresh(nc.ui.world);
     doupdate();
 }
