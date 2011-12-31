@@ -28,6 +28,18 @@ enum catmode {
     CatModeFly,
 };
 
+typedef struct {
+    enum catmode mode;
+    char *name;
+} catmode_t;
+
+/* initialize cat modes with names */
+static const catmode_t catmodes[] = {
+    {CatModeNormal,  "Normal"},
+    {CatModeReverse, "Reverse"},
+    {CatModeFly,     "Fly"}
+};
+
 enum catstate {
     CatStateWalk,
 
@@ -48,7 +60,7 @@ enum catstate {
 typedef struct {
     int y;
     int x;
-    enum catmode mode;
+    catmode_t mode;
     enum catstate state;
     int jumpcount;
     int hasground;      /* indicates if nyan has ground under her feets */
@@ -144,12 +156,6 @@ static const coordinate_t zones[] = {
     {CATHEIGHT - 4, CATWIDTH - 4},
 };
 
-static const char *mode_names[] = {
-    "Normal",   /* CatModeNormal */
-    "Reverse",  /* CatModeReverse */
-    "Fly"       /* CatModeFly */
-};
-
 static void cat_print_modename(void);
 static void cat_multiplicator_reset_handler(gametime_t, void *);
 static void cat_enter_normalmode_handler(gametime_t, void *);
@@ -165,7 +171,7 @@ void cat_init(void)
 
     cat.x = CAT_XOFFSET;
     cat.y = WORLDHEIGHT / 2 - CATHEIGHT;
-    cat.mode = CatModeNormal;
+    cat.mode = catmodes[CatModeNormal];
     cat.state = CatStateWalk;
     cat.jumpcount = 0;
     cat.hasground = 0;
@@ -181,7 +187,7 @@ void cat_jump_up(gametime_t time)
 {
     extern cat_t cat;
 
-    switch (cat.mode) {
+    switch (cat.mode.mode) {
         case CatModeNormal: /* fall through */
         case CatModeReverse:
             /* jumping from fast fall is not allowed */
@@ -206,7 +212,7 @@ void cat_jump_up(gametime_t time)
  */
 void cat_jump_down(gametime_t time)
 {
-    switch (cat.mode) {
+    switch (cat.mode.mode) {
         case CatModeFly:
             if (CatStateFlyUp == cat.state) {
                 cat.state = CatStateFlyStraight;
@@ -245,7 +251,7 @@ void cat_move_right(void)
     ypos_feets = cat.y + CATHEIGHT;
 
     /* hang on platform instead of standing if reversemode is on */
-    if (CatModeReverse == cat.mode) {
+    if (CatModeReverse == cat.mode.mode) {
         ypos_feets -= 1;
     }
 
@@ -280,7 +286,7 @@ void cat_move_handler(gametime_t time, void *data)
     if (NULL == move) {
         move = current;
     }
-    switch (cat.mode) {
+    switch (cat.mode.mode) {
         case CatModeNormal: /* fall through */
         case CatModeReverse:
             if (CatStateJumpInit == cat.state) {
@@ -308,7 +314,7 @@ void cat_move_handler(gametime_t time, void *data)
 
     cat.state = move->state;
     /* TODO should we use extra movement data for reverse mode? */
-    if (CatModeReverse == cat.mode) {
+    if (CatModeReverse == cat.mode.mode) {
         cat_move_vertical(-1 *move->y);
     } else {
         cat_move_vertical(move->y);
@@ -370,7 +376,7 @@ static void cat_print_modename(void)
     extern cat_t cat;
 
     /* find a better way to handle modes with their names */
-    mvwprintw(nc.ui.world, 0, 0, "[%s]", mode_names[cat.mode]);
+    mvwprintw(nc.ui.world, 0, 0, "[%s]", cat.mode.name);
 }
 
 /**
@@ -388,7 +394,7 @@ static void cat_enter_normalmode_handler(gametime_t time, void *data)
 {
     extern cat_t cat;
 
-    cat.mode = CatModeNormal;
+    cat.mode = catmodes[CatModeNormal];
 }
 
 /**
@@ -431,7 +437,9 @@ static void cat_collect_objects(void)
                     cat_enter_normalmode_handler,
                     NULL
                 );
-                cat.mode = ((int)clock_get_relative() % 2) ? CatModeFly : CatModeReverse;
+                cat.mode = ((int)clock_get_relative() % 2)
+                    ? catmodes[CatModeFly]
+                    : catmodes[CatModeReverse];
                 return;
 
             case ObjectNone:    /* fall through */
@@ -455,7 +463,7 @@ static void cat_move_vertical(const int y)
      * visible */
     if (cat.y < 1 - CATHEIGHT) {
         cat.y = 1 - CATHEIGHT;
-        if (CatModeReverse == cat.mode) {
+        if (CatModeReverse == cat.mode.mode) {
             gamemode_enter(mode_scores);
         }
     } else if (cat.y >= WORLDHEIGHT) {
