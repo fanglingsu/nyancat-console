@@ -94,6 +94,7 @@ typedef struct {
 
 static event_backup eventbackup_specialmode;
 static event_backup eventbackup_gem;
+static event_backup eventbackup_milk;
 
 extern coordinate_t screen;
 
@@ -227,6 +228,7 @@ void cat_init(void)
 
     eventbackup_specialmode = (event_backup){0, NULL};
     eventbackup_gem = (event_backup){0, NULL};
+    eventbackup_milk = (event_backup){0, NULL};
 }
 
 /**
@@ -253,6 +255,12 @@ void cat_start(void)
         cat_register_event(
             eventbackup_specialmode.time,
             eventbackup_specialmode.callback
+        );
+    }
+    if (eventbackup_milk.time >= time) {
+        cat_register_event(
+            eventbackup_milk.time,
+            eventbackup_milk.callback
         );
     }
 }
@@ -542,6 +550,10 @@ static void cat_collect_objects(void)
                     clock_get_relative() + MULTIPLIER_TIMEOUT,
                     cat_multiplier_reset_handler
                 );
+                /* backup events data */
+                eventbackup_milk.time = clock_get_relative() + MULTIPLIER_TIMEOUT;
+                eventbackup_milk.callback = cat_multiplier_reset_handler;
+
                 game_increment_multiplier(1);
                 return;
 
