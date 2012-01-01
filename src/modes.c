@@ -57,14 +57,19 @@ void intro_draw(void)
     mvwprintw(nc.ui.world, 11, 2, "R");
     wattroff(nc.ui.world, COLOR_PAIR(ColorBlue) | A_BOLD | A_REVERSE);
     mvwprintw(nc.ui.world, 10, 9, "Random skill changes for %ds - may be positive or not.", SPECIALMODE_TIMEOUT);
-    mvwprintw(nc.ui.world, 11, 9, "Reversemode - gravity forces nyan to the sky, use");
-    mvwprintw(nc.ui.world, 12, 9, "              'k' to jump down");
-    mvwprintw(nc.ui.world, 13, 9, "Flymode     - fly up, staight or down with 'j' or 'k'");
-    mvwprintw(nc.ui.world, 14, 9, "Bubblemode  - jump as often you want");
-    mvwprintw(nc.ui.world, 15, 9, "Ghostmode   - nyan is nearly invisible");
-    mvwprintw(nc.ui.world, 16, 9, "Crackmode   - nyan's faster but the world is flickering");
+    mvwprintw(nc.ui.world, 11, 9, "Reversemode - gravity forces nyan to the sky, use 'k' to jump down");
+    mvwprintw(nc.ui.world, 12, 9, "Flymode     - fly up, staight or down with 'j' or 'k'");
+    mvwprintw(nc.ui.world, 13, 9, "Bubblemode  - jump as often you want");
+    mvwprintw(nc.ui.world, 14, 9, "Ghostmode   - nyan is nearly invisible");
+    mvwprintw(nc.ui.world, 15, 9, "Crackmode   - nyan's faster but the world is flickering");
 
-    mvwprintw(nc.ui.world, 18, 2, "Press return to start the game or leave with 'q'...");
+    wattron(nc.ui.world, A_REVERSE);
+    mvwprintw(nc.ui.world, 17, 2, "A");
+    mvwprintw(nc.ui.world, 18, 2, "V");
+    wattroff(nc.ui.world, A_REVERSE);
+    mvwprintw(nc.ui.world, 17, 9, "Diamond - Long Life Milk for %ds", GEMSTONE_TIMEOUT);
+
+    mvwprintw(nc.ui.world, 20, 2, "Press return to start the game or leave with 'q'...");
     wnoutrefresh(nc.ui.world);
     doupdate();
 }

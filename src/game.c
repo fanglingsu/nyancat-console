@@ -30,6 +30,7 @@ static float tickbase;
 static score_t score_multiplicator;
 static score_t score;
 static score_t highscore;
+static unsigned short multiplicator_unset_protect;
 
 static void game_scroll_handler(gametime_t, void *);
 static void game_save_hightscore(void);
@@ -45,6 +46,8 @@ void game_init(void)
     score_multiplicator = 1;
     score = 0;
     highscore = 0;
+
+    multiplicator_unset_protect = FALSE;
 
     /* initialize the game objects */
     world_init();
@@ -97,6 +100,9 @@ void game_increment_multiplicator(const unsigned int steps)
  */
 void game_unset_multiplicator(void)
 {
+    if (multiplicator_unset_protect) {
+        return;
+    }
     score_multiplicator = 1;
 }
 
@@ -106,6 +112,32 @@ void game_unset_multiplicator(void)
 score_t game_get_multiplicator(void)
 {
     return score_multiplicator;
+}
+
+/**
+ * Set the flag to not unset multiplicator on call of
+ * game_unset_multiplicator().
+ */
+void game_set_multiplicator_unset_protect(void)
+{
+    multiplicator_unset_protect = TRUE;
+}
+
+/**
+ * Remove the protection for multiplicator to be unseted by call off
+ * game_unset_multiplicator().
+ */
+void game_remove_multiplicator_unset_protect(void)
+{
+    multiplicator_unset_protect = FALSE;
+}
+
+/**
+ * Inidcates if the multiplicator unset protection is enabled.
+ */
+unsigned short game_has_multiplicator_unset_protect(void)
+{
+    return multiplicator_unset_protect;
 }
 
 /**

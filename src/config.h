@@ -43,6 +43,9 @@
 /* time in seconde after that special cat modes will fade */
 #define SPECIALMODE_TIMEOUT 20
 
+/* time in seconds the gems has effect */
+#define GEMSTONE_TIMEOUT 45
+
 /* dimension for the viewport of the game */
 #define SCREENHEIGHT 24
 #define SCREENWIDTH  80

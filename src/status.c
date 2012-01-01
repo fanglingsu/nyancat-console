@@ -36,11 +36,12 @@ static void printstatusf(const char *, ...);
 void status_print(void)
 {
     printstatusf(
-        "%s: % 4.2lfs - %09u x%03u",
+        "%s: % 4.2lfs - %09u x%03u %s",
         mode_get_name(),
         clock_get_relative(),
         game_get_score(),
-        game_get_multiplicator()
+        game_get_multiplicator(),
+        game_has_multiplicator_unset_protect() ? "Long Life Milk" : ""
     );
 }
 

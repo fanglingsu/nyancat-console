@@ -27,7 +27,8 @@ enum object_type {
     ObjectPlatform,
     ObjectMilk,
     ObjectCandy,
-    ObjectRandom
+    ObjectRandom,
+    ObjectDiamond
 };
 
 extern coordinate_t screen;

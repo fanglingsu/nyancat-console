@@ -184,6 +184,7 @@ static const coordinate_t zones[] = {
 
 static void cat_print_modename(void);
 static void cat_multiplicator_reset_handler(gametime_t, void *);
+static void cat_longlifemilk_reset_handler(gametime_t, void *);
 static void cat_enter_normalmode_handler(gametime_t, void *);
 static void cat_collect_objects(void);
 static void cat_move_vertical(const int);
@@ -447,6 +448,14 @@ static void cat_multiplicator_reset_handler(gametime_t time, void *data)
 }
 
 /**
+ * Event callback handler that resets the long life milk.
+ */
+static void cat_longlifemilk_reset_handler(gametime_t time, void *data)
+{
+    game_remove_multiplicator_unset_protect();
+}
+
+/**
  * Event callback handler that switches cat back to nromal mode.
  */
 static void cat_enter_normalmode_handler(gametime_t time, void *data)
@@ -524,6 +533,16 @@ static void cat_collect_objects(void)
                         game_set_tickbase(0.75);
                         return;
                 }
+
+            case ObjectDiamond:
+                queue_remove_event(cat_longlifemilk_reset_handler);
+                queue_add_event(
+                    clock_get_relative() + GEMSTONE_TIMEOUT,
+                    cat_longlifemilk_reset_handler,
+                    NULL
+                );
+                game_set_multiplicator_unset_protect();
+                return;
 
             case ObjectNone:    /* fall through */
             case ObjectPlatform:
