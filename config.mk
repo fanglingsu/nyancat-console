@@ -15,6 +15,7 @@ FLAGS += -D_GNU_SOURCE
 LIBS = -lncurses
 
 DFLAGS += $(FLAGS)
+DFLAGS += -DDEBUG
 DFLAGS += -ggdb
 DFLAGS += -g
 

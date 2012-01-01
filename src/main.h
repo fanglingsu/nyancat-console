@@ -60,7 +60,7 @@ typedef struct {
     struct {
         WINDOW *world;
         WINDOW *status;
-#if DEBUG
+#ifdef DEBUG
         WINDOW *debug;
 #endif
     } ui;

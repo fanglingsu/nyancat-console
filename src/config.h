@@ -22,8 +22,6 @@
 #define REAL_NAME "nyancat-console"
 #define VERSION "0.0.7"
 
-#define DEBUG 0
-
 #define SECOND 1000000
 #define SPEED 1.0
 #define TICK(x) ((x)*0.05/(SPEED))
