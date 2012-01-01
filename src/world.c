@@ -279,7 +279,7 @@ static void world_objects_place(const int xstart)
     }
 
     /* place rare objects */
-    if (0 == (count % 100)) {
+    if (0 == random_range(0, 100)) {
         objects[SCREENWIDTH - 1][random_range(0, WORLDHEIGHT - 2)] = ObjectRandom;
     }
 }
