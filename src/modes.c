@@ -73,7 +73,7 @@ void intro_draw(void)
     mvwprintw(nc.ui.world, 20, 2, "M");
     mvwprintw(nc.ui.world, 21, 2, "W");
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed) | A_REVERSE);
-    mvwprintw(nc.ui.world, 20, 9, "Rubin       - Extra score multiplier");
+    mvwprintw(nc.ui.world, 20, 9, "Rubin       - Extra score multiplier 2x");
 
     mvwprintw(nc.ui.world, 23, 2, "Press return to start the game or leave with 'q'...");
     wnoutrefresh(nc.ui.world);
