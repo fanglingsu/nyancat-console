@@ -28,6 +28,7 @@
 
 static float tickbase;
 static score_t score_multiplicator;
+static unsigned short score_extra_multiplicator;
 static score_t score;
 static score_t highscore;
 static unsigned short multiplicator_unset_protect;
@@ -44,6 +45,7 @@ void game_init(void)
 {
     tickbase = 1;
     score_multiplicator = 1;
+    score_extra_multiplicator = 1;
     score = 0;
     highscore = 0;
 
@@ -133,6 +135,30 @@ void game_remove_multiplicator_unset_protect(void)
 }
 
 /**
+ * Set an extra multiplicator for the scores.
+ */
+void game_set_extra_multiplicator(unsigned short multiplicator)
+{
+    score_extra_multiplicator = multiplicator;
+}
+
+/**
+ * Unset the extra multiplicator.
+ */
+void game_unset_extra_multiplicator(void)
+{
+    score_extra_multiplicator = 1;
+}
+
+/**
+ * Retrieves the value of the extra multipicator.
+ */
+unsigned short game_get_extra_multiplicator(void)
+{
+    return score_extra_multiplicator;
+}
+
+/**
  * Inidcates if the multiplicator unset protection is enabled.
  */
 unsigned short game_has_multiplicator_unset_protect(void)
@@ -145,7 +171,7 @@ unsigned short game_has_multiplicator_unset_protect(void)
  */
 void game_increment_score(const unsigned int steps)
 {
-    score += score_multiplicator * steps;
+    score += score_multiplicator * score_extra_multiplicator * steps;
 }
 
 /**

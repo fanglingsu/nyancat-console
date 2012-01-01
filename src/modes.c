@@ -50,7 +50,7 @@ void intro_draw(void)
     mvwprintw(nc.ui.world, 7, 2, "I");
     mvwprintw(nc.ui.world, 8, 2, "I");
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
-    mvwprintw(nc.ui.world, 7, 9, "Candy - your food to get points");
+    mvwprintw(nc.ui.world, 7, 9, "Candy       - your food to get points");
 
     wattron(nc.ui.world, COLOR_PAIR(ColorBlue) | A_BOLD | A_REVERSE);
     mvwprintw(nc.ui.world, 10, 2, "?");
@@ -67,9 +67,15 @@ void intro_draw(void)
     mvwprintw(nc.ui.world, 17, 2, "A");
     mvwprintw(nc.ui.world, 18, 2, "V");
     wattroff(nc.ui.world, A_REVERSE);
-    mvwprintw(nc.ui.world, 17, 9, "Diamond - Long Life Milk for %ds", GEMSTONE_TIMEOUT);
+    mvwprintw(nc.ui.world, 17, 9, "Diamond     - Long Life Milk for %ds", GEMSTONE_TIMEOUT);
 
-    mvwprintw(nc.ui.world, 20, 2, "Press return to start the game or leave with 'q'...");
+    wattron(nc.ui.world, COLOR_PAIR(ColorRed) | A_REVERSE);
+    mvwprintw(nc.ui.world, 20, 2, "M");
+    mvwprintw(nc.ui.world, 21, 2, "W");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorRed) | A_REVERSE);
+    mvwprintw(nc.ui.world, 20, 9, "Rubin       - Extra score multiplier");
+
+    mvwprintw(nc.ui.world, 23, 2, "Press return to start the game or leave with 'q'...");
     wnoutrefresh(nc.ui.world);
     doupdate();
 }

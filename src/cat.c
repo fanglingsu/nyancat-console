@@ -456,6 +456,14 @@ static void cat_longlifemilk_reset_handler(gametime_t time, void *data)
 }
 
 /**
+ * Event callback that reset the extra score multiplicator.
+ */
+static void cat_extramultiplicator_reset_handler(gametime_t time, void *data)
+{
+    game_unset_extra_multiplicator();
+}
+
+/**
  * Event callback handler that switches cat back to nromal mode.
  */
 static void cat_enter_normalmode_handler(gametime_t time, void *data)
@@ -541,7 +549,21 @@ static void cat_collect_objects(void)
                     cat_longlifemilk_reset_handler,
                     NULL
                 );
+                /* gems aren't combineable */
+                game_unset_extra_multiplicator();
                 game_set_multiplicator_unset_protect();
+                return;
+
+            case ObjectRubin:
+                queue_remove_event(cat_extramultiplicator_reset_handler);
+                queue_add_event(
+                    clock_get_relative() + GEMSTONE_TIMEOUT,
+                    cat_extramultiplicator_reset_handler,
+                    NULL
+                );
+                /* gems aren't combineable */
+                game_remove_multiplicator_unset_protect();
+                game_set_extra_multiplicator(2);
                 return;
 
             case ObjectNone:    /* fall through */
