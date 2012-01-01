@@ -59,6 +59,10 @@
 /* plattforms placed on to screen widths */
 #define MAX_PLATFORMS 50
 
+/* length restrictions for generated platform elements */
+#define PLATFORM_MIN_WIDTH 12
+#define PLATFORM_MAX_WIDTH 24
+
 /* height of the world for nyan should be >= SCREENHEIGHT */
 #define WORLDHEIGHT  96
 

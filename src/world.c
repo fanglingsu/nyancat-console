@@ -258,7 +258,7 @@ static object_t world_create_random_platform(const int xstart, const int xrange)
     /* padding top CATHEIGHT+2 and padding bottom 2 */
     obj.y = random_range_step(CATHEIGHT + 2, WORLDHEIGHT - 2, random_range(2, 3));
     /* make platforms width between [12..24] */
-    obj.width = random_range_step(12, 24, 4);
+    obj.width = random_range_step(PLATFORM_MIN_WIDTH, PLATFORM_MAX_WIDTH, 4);
 
     return obj;
 }
