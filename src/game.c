@@ -63,7 +63,7 @@ void game_start(void)
 {
     /* register games scroll handler that moves the cat and screen */
     game_scroll_handler(clock_get_relative(), NULL);
-    queue_add_event(clock_get_relative(), cat_move_handler, NULL);
+    cat_start();
 }
 
 /**

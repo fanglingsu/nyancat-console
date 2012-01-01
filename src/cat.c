@@ -85,6 +85,16 @@ typedef struct {
     char str[8];
 } feets_t;
 
+/* used to resque events, so that the event queue could be regenerated after
+ * the queue was free'd by gamemode switching. */
+typedef struct {
+    gametime_t time;
+    eventhandler_fn callback;
+} event_backup;
+
+static event_backup eventbackup_specialmode;
+static event_backup eventbackup_gem;
+
 extern coordinate_t screen;
 
 static cat_t cat;
@@ -193,6 +203,9 @@ static void cat_multiplier_reset_handler(gametime_t, void *);
 static void cat_longlifemilk_reset_handler(gametime_t, void *);
 static void cat_enter_normalmode_handler(gametime_t, void *);
 static void cat_collect_objects(void);
+static void cat_apply_gem(enum object_type);
+static void cat_apply_specialmode(enum object_type);
+static void cat_register_event(gametime_t, eventhandler_fn);
 static void cat_move_vertical(const int);
 
 /**
@@ -211,6 +224,37 @@ void cat_init(void)
 
     /* set start movement mode */
     current = move_walk;
+
+    eventbackup_specialmode = (event_backup){0, NULL};
+    eventbackup_gem = (event_backup){0, NULL};
+}
+
+/**
+ * Registers events that are required to move the cat and look for previous
+ * saved events to be restored.
+ *
+ * This function should be called if the gamemode is entered - started or
+ * after puase.
+ */
+void cat_start(void)
+{
+    gametime_t time = clock_get_relative();
+
+    queue_add_event(time, cat_move_handler, NULL);
+
+    /* restore events from backups */
+    if (eventbackup_gem.time >= time) {
+        cat_register_event(
+            eventbackup_gem.time,
+            eventbackup_gem.callback
+        );
+    }
+    if (eventbackup_specialmode.time >= time) {
+        cat_register_event(
+            eventbackup_specialmode.time,
+            eventbackup_specialmode.callback
+        );
+    }
 }
 
 /**
@@ -494,14 +538,9 @@ static void cat_collect_objects(void)
          * could be collected - so return after first object picked up */
         switch (object) {
             case ObjectMilk:
-                /* remove old multiplier reset events */
-                queue_remove_event(cat_multiplier_reset_handler);
-
-                /* add new event */
-                queue_add_event(
+                cat_register_event(
                     clock_get_relative() + MULTIPLIER_TIMEOUT,
-                    cat_multiplier_reset_handler,
-                    NULL
+                    cat_multiplier_reset_handler
                 );
                 game_increment_multiplier(1);
                 return;
@@ -511,65 +550,12 @@ static void cat_collect_objects(void)
                 return;
 
             case ObjectRandom:
-                /* remove old events */
-                queue_remove_event(cat_enter_normalmode_handler);
+                cat_apply_specialmode(object);
+                break;
 
-                /* add new event */
-                queue_add_event(
-                    clock_get_relative() + SPECIALMODE_TIMEOUT,
-                    cat_enter_normalmode_handler,
-                    NULL
-                );
-                /* set new temporary cat mode */
-                switch (random_range(0, 4)) {
-                    case 0:
-                        cat.mode = catmodes[CatModeFly];
-                        game_set_tickbase(1);
-                        return;
-
-                    case 1:
-                        cat.mode = catmodes[CatModeReverse];
-                        game_set_tickbase(1);
-                        return;
-
-                    case 2:
-                        cat.mode = catmodes[CatModeBubble];
-                        game_set_tickbase(1);
-                        return;
-
-                    case 3:
-                        cat.mode = catmodes[CatModeGhost];
-                        game_set_tickbase(1);
-                        return;
-
-                    case 4:
-                        cat.mode = catmodes[CatModeCrack];
-                        game_set_tickbase(0.75);
-                        return;
-                }
-
-            case ObjectDiamond:
-                queue_remove_event(cat_longlifemilk_reset_handler);
-                queue_add_event(
-                    clock_get_relative() + GEMSTONE_TIMEOUT,
-                    cat_longlifemilk_reset_handler,
-                    NULL
-                );
-                /* gems aren't combineable */
-                game_unset_extra_multiplier();
-                game_set_multiplier_unset_protect();
-                return;
-
+            case ObjectDiamond: /* fall though */
             case ObjectRubin:
-                queue_remove_event(cat_extramultiplier_reset_handler);
-                queue_add_event(
-                    clock_get_relative() + GEMSTONE_TIMEOUT,
-                    cat_extramultiplier_reset_handler,
-                    NULL
-                );
-                /* gems aren't combineable */
-                game_remove_multiplier_unset_protect();
-                game_set_extra_multiplier(2);
+                cat_apply_gem(object);
                 return;
 
             case ObjectNone:    /* fall through */
@@ -577,6 +563,76 @@ static void cat_collect_objects(void)
                 break;
         }
     }
+}
+
+/**
+ * Applies changes according to given collected objecttype of a gem.
+ */
+static void cat_apply_gem(enum object_type object)
+{
+    gametime_t time = clock_get_relative() + GEMSTONE_TIMEOUT;
+
+    eventbackup_gem.time = time;
+
+    if (ObjectDiamond == object) {
+        cat_register_event(time, cat_longlifemilk_reset_handler);
+        /* gems aren't combineable */
+        game_unset_extra_multiplier();
+        game_set_multiplier_unset_protect();
+
+        /* backup event callback */
+        eventbackup_gem.callback = cat_longlifemilk_reset_handler;
+    } else if (ObjectRubin == object) {
+        cat_register_event(time, cat_extramultiplier_reset_handler);
+        /* gems aren't combineable */
+        game_remove_multiplier_unset_protect();
+        game_set_extra_multiplier(2);
+
+        /* backup event callback */
+        eventbackup_gem.callback = cat_extramultiplier_reset_handler;
+    }
+}
+
+/**
+ * Applies changes according to given collected objecttype for special modes
+ * like the bubble or fly mode.
+ */
+static void cat_apply_specialmode(enum object_type object)
+{
+    extern cat_t cat;
+    gametime_t time = clock_get_relative() + GEMSTONE_TIMEOUT;
+
+    cat_register_event(time, cat_enter_normalmode_handler);
+
+    /* backup event callback */
+    eventbackup_specialmode.callback = cat_enter_normalmode_handler;
+    eventbackup_specialmode.time = time;
+
+    /* unset the tickbase */
+    game_set_tickbase(1);
+    switch (random_range(0, 4)) {
+        case 0: cat.mode = catmodes[CatModeFly]; break;
+        case 1: cat.mode = catmodes[CatModeReverse]; break;
+        case 2: cat.mode = catmodes[CatModeBubble]; break;
+        case 3: cat.mode = catmodes[CatModeGhost]; break;
+        case 4:
+            cat.mode = catmodes[CatModeCrack];
+            /* set new tick base */
+            game_set_tickbase(0.75);
+            break;
+    }
+}
+
+/**
+ * Register a cat event in event queue.
+ */
+static void cat_register_event(gametime_t time, eventhandler_fn callback)
+{
+    /* remove old event */
+    queue_remove_event(callback);
+
+    /* add new event */
+    queue_add_event(time, callback, NULL);
 }
 
 /**

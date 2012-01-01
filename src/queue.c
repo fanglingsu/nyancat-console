@@ -97,7 +97,7 @@ void queue_run_until(gametime_t time)
 }
 
 /**
- * Retreives the gametime_t of the firt queue entry.
+ * Retrieves the gametime_t of the firt queue entry.
  */
 gametime_t queue_get_first_time(void)
 {

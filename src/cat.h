@@ -25,6 +25,7 @@
 #define CATWIDTH 10
 
 void cat_init(void);
+void cat_start(void);
 void cat_jump_up(gametime_t);
 void cat_jump_down(gametime_t);
 int cat_get_height(void);
