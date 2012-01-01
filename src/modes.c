@@ -44,7 +44,7 @@ void intro_draw(void)
     mvwprintw(nc.ui.world, 4, 2, ":");
     mvwprintw(nc.ui.world, 5, 2, "M");
     wattroff(nc.ui.world, COLOR_PAIR(ColorYellow) | A_BOLD);
-    mvwprintw(nc.ui.world, 4, 9, "Milk Score Multiplicator for %ds", MULTIPLIER_TIMEOUT);
+    mvwprintw(nc.ui.world, 4, 9, "Milk Score multiplier for %ds", MULTIPLIER_TIMEOUT);
 
     wattron(nc.ui.world, COLOR_PAIR(ColorRed) | A_BOLD);
     mvwprintw(nc.ui.world, 7, 2, "I");

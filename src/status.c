@@ -35,8 +35,8 @@ static void printstatusf(const char *, ...);
  */
 void status_print(void)
 {
-    unsigned short extra_mult = game_get_extra_multiplicator();
-    /* multiplicator is 1 or 2 and the appended x and \0 */
+    unsigned short extra_mult = game_get_extra_multiplier();
+    /* multiplier is 1 or 2 and the appended x and \0 */
     char extra_mult_msg[3];
 
     sprintf(extra_mult_msg, "%dx", extra_mult);
@@ -45,8 +45,8 @@ void status_print(void)
         mode_get_name(),
         clock_get_relative(),
         game_get_score(),
-        game_get_multiplicator(),
-        game_has_multiplicator_unset_protect() ? "Long Life Milk" : "",
+        game_get_multiplier(),
+        game_has_multiplier_unset_protect() ? "Long Life Milk" : "",
         extra_mult > 1 ? extra_mult_msg : ""
     );
 }

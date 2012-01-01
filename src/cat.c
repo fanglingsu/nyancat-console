@@ -183,7 +183,7 @@ static const coordinate_t zones[] = {
 };
 
 static void cat_print_modename(void);
-static void cat_multiplicator_reset_handler(gametime_t, void *);
+static void cat_multiplier_reset_handler(gametime_t, void *);
 static void cat_longlifemilk_reset_handler(gametime_t, void *);
 static void cat_enter_normalmode_handler(gametime_t, void *);
 static void cat_collect_objects(void);
@@ -440,11 +440,11 @@ static void cat_print_modename(void)
 }
 
 /**
- * Event callback handler that resets the score multiplicator.
+ * Event callback handler that resets the score multiplier.
  */
-static void cat_multiplicator_reset_handler(gametime_t time, void *data)
+static void cat_multiplier_reset_handler(gametime_t time, void *data)
 {
-    game_unset_multiplicator();
+    game_unset_multiplier();
 }
 
 /**
@@ -452,15 +452,15 @@ static void cat_multiplicator_reset_handler(gametime_t time, void *data)
  */
 static void cat_longlifemilk_reset_handler(gametime_t time, void *data)
 {
-    game_remove_multiplicator_unset_protect();
+    game_remove_multiplier_unset_protect();
 }
 
 /**
- * Event callback that reset the extra score multiplicator.
+ * Event callback that reset the extra score multiplier.
  */
-static void cat_extramultiplicator_reset_handler(gametime_t time, void *data)
+static void cat_extramultiplier_reset_handler(gametime_t time, void *data)
 {
-    game_unset_extra_multiplicator();
+    game_unset_extra_multiplier();
 }
 
 /**
@@ -488,16 +488,16 @@ static void cat_collect_objects(void)
          * could be collected - so return after first object picked up */
         switch (object) {
             case ObjectMilk:
-                /* remove old multiplicator reset events */
-                queue_remove_event(cat_multiplicator_reset_handler);
+                /* remove old multiplier reset events */
+                queue_remove_event(cat_multiplier_reset_handler);
 
                 /* add new event */
                 queue_add_event(
                     clock_get_relative() + MULTIPLIER_TIMEOUT,
-                    cat_multiplicator_reset_handler,
+                    cat_multiplier_reset_handler,
                     NULL
                 );
-                game_increment_multiplicator(1);
+                game_increment_multiplier(1);
                 return;
 
             case ObjectCandy:
@@ -550,20 +550,20 @@ static void cat_collect_objects(void)
                     NULL
                 );
                 /* gems aren't combineable */
-                game_unset_extra_multiplicator();
-                game_set_multiplicator_unset_protect();
+                game_unset_extra_multiplier();
+                game_set_multiplier_unset_protect();
                 return;
 
             case ObjectRubin:
-                queue_remove_event(cat_extramultiplicator_reset_handler);
+                queue_remove_event(cat_extramultiplier_reset_handler);
                 queue_add_event(
                     clock_get_relative() + GEMSTONE_TIMEOUT,
-                    cat_extramultiplicator_reset_handler,
+                    cat_extramultiplier_reset_handler,
                     NULL
                 );
                 /* gems aren't combineable */
-                game_remove_multiplicator_unset_protect();
-                game_set_extra_multiplicator(2);
+                game_remove_multiplier_unset_protect();
+                game_set_extra_multiplier(2);
                 return;
 
             case ObjectNone:    /* fall through */

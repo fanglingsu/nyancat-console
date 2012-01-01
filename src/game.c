@@ -27,11 +27,11 @@
 #include "util.h"
 
 static float tickbase;
-static score_t score_multiplicator;
-static unsigned short score_extra_multiplicator;
+static score_t score_multiplier;
+static unsigned short score_extra_multiplier;
 static score_t score;
 static score_t highscore;
-static unsigned short multiplicator_unset_protect;
+static unsigned short multiplier_unset_protect;
 
 static void game_scroll_handler(gametime_t, void *);
 static void game_save_hightscore(void);
@@ -44,12 +44,12 @@ static char *game_get_highscore_file(void);
 void game_init(void)
 {
     tickbase = 1;
-    score_multiplicator = 1;
-    score_extra_multiplicator = 1;
+    score_multiplier = 1;
+    score_extra_multiplier = 1;
     score = 0;
     highscore = 0;
 
-    multiplicator_unset_protect = FALSE;
+    multiplier_unset_protect = FALSE;
 
     /* initialize the game objects */
     world_init();
@@ -90,88 +90,88 @@ void game_save_scores(void)
 }
 
 /**
- * Increaments the score multiplicator by given steps.
+ * Increaments the score multiplier by given steps.
  */
-void game_increment_multiplicator(const unsigned int steps)
+void game_increment_multiplier(const unsigned int steps)
 {
-    score_multiplicator += steps;
+    score_multiplier += steps;
 }
 
 /**
- * Unset the scrore multiplicator to it's default value.
+ * Unset the scrore multiplier to it's default value.
  */
-void game_unset_multiplicator(void)
+void game_unset_multiplier(void)
 {
-    if (multiplicator_unset_protect) {
+    if (multiplier_unset_protect) {
         return;
     }
-    score_multiplicator = 1;
+    score_multiplier = 1;
 }
 
 /**
- * Retreive the current used score multiplicator.
+ * Retreive the current used score multiplier.
  */
-score_t game_get_multiplicator(void)
+score_t game_get_multiplier(void)
 {
-    return score_multiplicator;
+    return score_multiplier;
 }
 
 /**
- * Set the flag to not unset multiplicator on call of
- * game_unset_multiplicator().
+ * Set the flag to not unset multiplier on call of
+ * game_unset_multiplier().
  */
-void game_set_multiplicator_unset_protect(void)
+void game_set_multiplier_unset_protect(void)
 {
-    multiplicator_unset_protect = TRUE;
+    multiplier_unset_protect = TRUE;
 }
 
 /**
- * Remove the protection for multiplicator to be unseted by call off
- * game_unset_multiplicator().
+ * Remove the protection for multiplier to be unseted by call off
+ * game_unset_multiplier().
  */
-void game_remove_multiplicator_unset_protect(void)
+void game_remove_multiplier_unset_protect(void)
 {
-    multiplicator_unset_protect = FALSE;
+    multiplier_unset_protect = FALSE;
 }
 
 /**
- * Set an extra multiplicator for the scores.
+ * Set an extra multiplier for the scores.
  */
-void game_set_extra_multiplicator(unsigned short multiplicator)
+void game_set_extra_multiplier(unsigned short multiplier)
 {
-    score_extra_multiplicator = multiplicator;
+    score_extra_multiplier = multiplier;
 }
 
 /**
- * Unset the extra multiplicator.
+ * Unset the extra multiplier.
  */
-void game_unset_extra_multiplicator(void)
+void game_unset_extra_multiplier(void)
 {
-    score_extra_multiplicator = 1;
+    score_extra_multiplier = 1;
 }
 
 /**
  * Retrieves the value of the extra multipicator.
  */
-unsigned short game_get_extra_multiplicator(void)
+unsigned short game_get_extra_multiplier(void)
 {
-    return score_extra_multiplicator;
+    return score_extra_multiplier;
 }
 
 /**
- * Inidcates if the multiplicator unset protection is enabled.
+ * Inidcates if the multiplier unset protection is enabled.
  */
-unsigned short game_has_multiplicator_unset_protect(void)
+unsigned short game_has_multiplier_unset_protect(void)
 {
-    return multiplicator_unset_protect;
+    return multiplier_unset_protect;
 }
 
 /**
- * Increments the scores by given steps multiplied with current multiplicator.
+ * Increments the scores by given steps multiplied with current multiplier.
  */
 void game_increment_score(const unsigned int steps)
 {
-    score += score_multiplicator * score_extra_multiplicator * steps;
+    score += score_multiplier * score_extra_multiplier * steps;
 }
 
 /**

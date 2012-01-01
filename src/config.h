@@ -36,7 +36,7 @@
  * nyan is 5 frames invisible */
 #define GHOST_MODE_FRAMES 5
 
-/* time in seconds after that the multiplicator will be resetet if no further
+/* time in seconds after that the multiplier will be resetet if no further
  * milk is collected */
 #define MULTIPLIER_TIMEOUT 10
 
