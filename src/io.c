@@ -1,7 +1,7 @@
 /**
  * nyancat-console - a clone of the nyancat lost in space flash game.
  *
- * Copyright (C) 2011 Daniel Carl
+ * Copyright (C) 2011-2012 Daniel Carl
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

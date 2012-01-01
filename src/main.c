@@ -1,7 +1,7 @@
 /**
  * nyancat-console - a clone of the nyancat lost in space flash game.
  *
- * Copyright (C) 2011 Daniel Carl
+ * Copyright (C) 2011-2012 Daniel Carl
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -149,7 +149,7 @@ static void print_help_message(void)
  */
 static void print_licence_message(void)
 {
-    puts(REAL_NAME " " VERSION " Copyright 2011 Daniel Carl\n");
+    puts(REAL_NAME " " VERSION " Copyright 2011-2012 Daniel Carl\n");
     puts(REAL_NAME " comes with ABSOLUTELY NO WARRANTY; for details");
     puts("see LICENSE file. This is free software, and you are welcome to");
     puts("redistribute it under the terms of the GNU General Public License.");
