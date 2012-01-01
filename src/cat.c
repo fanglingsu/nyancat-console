@@ -166,20 +166,26 @@ static const struct cat_image {
 };
 
 /* hash sign mark sensitive zones
- *  ,-----#
- *  |   /\/#
- * ~|___(o###
- *  UU  UU#
+ * +--012345678
+ * 0  #--#--#
+ * 1  |   /\/#
+ * 2 ~|___(o.##
+ * 3  #U# ###
  *
  * holds the offsets that should be applied to cats current position
  */
 static const coordinate_t zones[] = {
-    {CATHEIGHT - 1, CATWIDTH - 4},
-    {CATHEIGHT - 2, CATWIDTH - 2},
-    {CATHEIGHT - 2, CATWIDTH - 3},
-    {CATHEIGHT - 2, CATWIDTH - 4},
-    {CATHEIGHT - 3, CATWIDTH - 3},
-    {CATHEIGHT - 4, CATWIDTH - 4},
+    {2, 8},
+    {3, 6},
+    {2, 7},
+    {1, 7},
+    {0, 6},
+    {3, 4},
+    {3, 5},
+    {0, 0},
+    {3, 0},
+    {0, 3},
+    {3, 2}
 };
 
 static void cat_print_modename(void);
