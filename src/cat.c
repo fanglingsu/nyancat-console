@@ -623,12 +623,25 @@ static void cat_apply_specialmode(enum object_type object)
     /* unset the tickbase */
     game_set_tickbase(1);
     switch (random_range(0, 4)) {
-        case 0: cat.mode = catmodes[CatModeFly]; break;
-        case 1: cat.mode = catmodes[CatModeReverse]; break;
-        case 2: cat.mode = catmodes[CatModeBubble]; break;
-        case 3: cat.mode = catmodes[CatModeGhost]; break;
+        case 0:
+            cat.mode = catmodes[CatModeFly];
+            game_add_achievement(AchievementFly);
+            break;
+        case 1:
+            cat.mode = catmodes[CatModeReverse];
+            game_add_achievement(AchievementReverse);
+            break;
+        case 2:
+            cat.mode = catmodes[CatModeBubble];
+            game_add_achievement(AchievementBubble);
+            break;
+        case 3:
+            cat.mode = catmodes[CatModeGhost];
+            game_add_achievement(AchievementGhost);
+            break;
         case 4:
             cat.mode = catmodes[CatModeCrack];
+            game_add_achievement(AchievementCrack);
             /* set new tick base */
             game_set_tickbase(0.75);
             break;

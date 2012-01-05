@@ -43,12 +43,17 @@
 #   define debug(...)
 #endif
 
+#ifndef COLOR_GREY
+#   define COLOR_GREY 8
+#endif
+
 enum color {
     ColorWhite,
     ColorMagenta,
     ColorRed,
     ColorYellow,
     ColorBlue,
+    ColorGrey
 };
 
 typedef struct {

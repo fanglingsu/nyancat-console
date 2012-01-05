@@ -21,6 +21,14 @@
 
 #include "clock.h"
 
+enum achievement {
+    AchievementReverse = 1,
+    AchievementFly     = (1 << 1),
+    AchievementBubble  = (1 << 2),
+    AchievementGhost   = (1 << 3),
+    AchievementCrack   = (1 << 4)
+};
+
 typedef unsigned int score_t;
 
 void game_init(void);
@@ -40,5 +48,7 @@ void game_increment_score(const unsigned int);
 void game_unset_score(void);
 score_t game_get_score(void);
 score_t game_get_highscore(void);
+void game_add_achievement(enum achievement);
+short game_has_achievement(enum achievement);
 
 #endif /* end of include guard: GAME_H */

@@ -32,6 +32,7 @@ static unsigned short score_extra_multiplier;
 static score_t score;
 static score_t highscore;
 static unsigned short multiplier_unset_protect;
+static unsigned short achievements;
 
 static void game_scroll_handler(gametime_t, void *);
 static void game_save_hightscore(void);
@@ -48,6 +49,7 @@ void game_init(void)
     score_extra_multiplier = 1;
     score = 0;
     highscore = 0;
+    achievements = 0;
 
     multiplier_unset_protect = FALSE;
 
@@ -202,6 +204,22 @@ score_t game_get_highscore(void)
     }
 
     return highscore;
+}
+
+/**
+ * Adds given achievement.
+ */
+void game_add_achievement(enum achievement value)
+{
+    achievements |= value;
+}
+
+/**
+ * Inidicates if given achievment was reached.
+ */
+short game_has_achievement(enum achievement value)
+{
+    return (achievements & value) == value ? 1 : 0;
 }
 
 /**

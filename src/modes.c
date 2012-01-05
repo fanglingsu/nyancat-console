@@ -20,6 +20,7 @@
 /**
  * This file contains callback functions used in the modes.
  */
+#include <math.h>
 #include "main.h"
 #include "status.h"
 #include "modes.h"
@@ -203,15 +204,53 @@ void scores_enter(void)
 void scores_draw(void)
 {
     extern nyancat_t nc;
+    short int line = 5;
 
     werase(nc.ui.world);
     wattron(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 5, 2, "GAME OVER!");
+    mvwprintw(nc.ui.world, line++, 2, "GAME OVER!");
+    line++;
     wattroff(nc.ui.world, COLOR_PAIR(ColorRed));
-    mvwprintw(nc.ui.world, 7, 2, "Time (in seconds):           % 9.2lf", clock_get_relative());
-    mvwprintw(nc.ui.world, 8, 2, "Scores:                      % 9u", game_get_score());
-    mvwprintw(nc.ui.world, 9, 2, "High-Scores:                 % 9u", game_get_highscore());
-    mvwprintw(nc.ui.world, 12, 2, "Press 'r' to run again or 'q' to quit.");
+    mvwprintw(nc.ui.world, line++, 2, "Time (in seconds):           % 9.2lf", clock_get_relative());
+    mvwprintw(nc.ui.world, line++, 2, "Scores:                      % 9u", game_get_score());
+    mvwprintw(nc.ui.world, line++, 2, "High-Scores:                 % 9u", game_get_highscore());
+    line++;
+
+    mvwprintw(nc.ui.world, line, 2, "Achievements:");
+    /* set grey if achievement was not reached */
+    if (!game_has_achievement(AchievementBubble)) {
+        wattron(nc.ui.world, COLOR_PAIR(ColorGrey));
+    }
+    mvwprintw(nc.ui.world, line++, 34, "Bubble");
+    /* unset grey color independen if it where set before or not */
+    wattroff(nc.ui.world, COLOR_PAIR(ColorGrey));
+
+    if (!game_has_achievement(AchievementCrack)) {
+        wattron(nc.ui.world, COLOR_PAIR(ColorGrey));
+    }
+    mvwprintw(nc.ui.world, line++, 35, "Crack");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorGrey));
+
+    if (!game_has_achievement(AchievementFly)) {
+        wattron(nc.ui.world, COLOR_PAIR(ColorGrey));
+    }
+    mvwprintw(nc.ui.world, line++, 37, "Fly");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorGrey));
+
+    if (!game_has_achievement(AchievementGhost)) {
+        wattron(nc.ui.world, COLOR_PAIR(ColorGrey));
+    }
+    mvwprintw(nc.ui.world, line++, 35, "Ghost");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorGrey));
+
+    if (!game_has_achievement(AchievementReverse)) {
+        wattron(nc.ui.world, COLOR_PAIR(ColorGrey));
+    }
+    mvwprintw(nc.ui.world, line++, 33, "Reverse");
+    wattroff(nc.ui.world, COLOR_PAIR(ColorGrey));
+    line++;
+    mvwprintw(nc.ui.world, line, 2, "Press 'r' to run again or 'q' to quit.");
+
     wnoutrefresh(nc.ui.world);
 
     /* remove content from status window */
