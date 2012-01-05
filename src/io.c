@@ -68,7 +68,9 @@ static int io_select(struct timeval *timeout)
     /*n = select(FD_SETSIZE, &input, NULL, NULL, timeout);*/
 
     /* repeat it as long as temporary error code EINTR occours */
-    n = TEMP_FAILURE_RETRY(select(FD_SETSIZE, &input, NULL, NULL, timeout));
+    do {
+        n = select(FD_SETSIZE, &input, NULL, NULL, timeout);
+    } while (n == -1 && errno == EINTR);
 
     /* see if there was an error */
     if (n < 0) {
