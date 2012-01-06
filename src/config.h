@@ -20,7 +20,7 @@
 #define CONFIG_H
 
 #define REAL_NAME "nyancat-console"
-#define VERSION "0.0.7"
+#define VERSION "0.0.8"
 
 #define SECOND 1000000
 #define SPEED 1.0
