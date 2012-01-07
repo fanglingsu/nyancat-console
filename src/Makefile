@@ -20,6 +20,12 @@ $(DTARGET): $(DOBJ)
 	@echo "$(CC) $@"
 	@$(CC) $(DFLAGS) $(DOBJ) -o $(DTARGET) $(LIBS)
 
+install: $(TARGET)
+	install $(TARGET) $(BINDIR)
+
+uninstall:
+	rm -f $(BINDIR)$(TARGET)
+
 clean:
 	@echo Cleaning
 	@$(RM) $(TARGET) $(DTARGET) $(OBJ) $(DOBJ)

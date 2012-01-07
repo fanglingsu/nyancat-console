@@ -1,8 +1,9 @@
-REAL_NAME = nyancat-console
+#----------------user/install options----------------
+PREFIX = /usr/local/
+BINDIR = $(PREFIX)bin/
+
+#----------------compile options---------------------
 CC = gcc
-
-SRCDIR = src
-
 FLAGS += -pedantic
 FLAGS += -Wall
 FLAGS += -Wmissing-declarations
@@ -14,11 +15,16 @@ FLAGS += -std=c99
 FLAGS += -D_GNU_SOURCE
 LIBS = -lncurses
 
+#----------------developer options-------------------
 DFLAGS += $(FLAGS)
 DFLAGS += -DDEBUG
 DFLAGS += -ggdb
 DFLAGS += -g
 
+#----------------end of options----------------------
+REAL_NAME = nyancat-console
+
+SRCDIR = src
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 DOBJ = $(patsubst %.c, %.do, $(wildcard *.c))
