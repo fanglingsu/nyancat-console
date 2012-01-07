@@ -27,6 +27,7 @@
 #include "io.h"
 
 static void init_windows(void);
+static void init_colors(void);
 static void init_modes(void);
 static void print_help_message(void);
 static void print_licence_message(void);
@@ -93,20 +94,7 @@ static void init_windows(void)
     extern nyancat_t nc;
 
     initscr();
-    if (has_colors() != FALSE) {
-        start_color();
-    }
-
-    if (can_change_color()) {
-        init_color(COLOR_MAGENTA, 1000, 600, 1000);
-    }
-    /* define used color pairs */
-    init_pair(ColorMagenta, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(ColorRed, COLOR_RED, COLOR_BLACK);
-    init_pair(ColorYellow, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(ColorBlue, COLOR_BLUE, COLOR_BLACK);
-    init_pair(ColorGrey, COLOR_GREY, COLOR_BLACK);
-
+    init_colors();
     cbreak();       /* line buffering disabled, pass on everty thing to me */
     noecho();       /* don't print typed chars */
     curs_set(0);    /* don't show a carret */
@@ -119,6 +107,27 @@ static void init_windows(void)
 #ifdef DEBUG
     nc.ui.debug = newwin(5, SCREENWIDTH, SCREENHEIGHT + 1, 0);
 #endif
+}
+
+/**
+ * Setup the colors used in the game.
+ */
+static void init_colors(void)
+{
+    if (has_colors() != FALSE) {
+        start_color();
+    }
+
+    if (can_change_color()) {
+        init_color(COLOR_MAGENTA, 1000, 600, 1000);
+        init_color(COLOR_GREY, 300, 300, 300);
+    }
+    /* define used color pairs */
+    init_pair(ColorMagenta, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(ColorRed, COLOR_RED, COLOR_BLACK);
+    init_pair(ColorYellow, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(ColorBlue, COLOR_BLUE, COLOR_BLACK);
+    init_pair(ColorGrey, COLOR_GREY, COLOR_BLACK);
 }
 
 /**
