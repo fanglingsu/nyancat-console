@@ -1,6 +1,7 @@
 #----------------user/install options----------------
 PREFIX = /usr/local/
 BINDIR = $(PREFIX)bin/
+MANDIR = $(PREFIX)share/man/
 
 #----------------compile options---------------------
 CC = gcc
@@ -31,7 +32,11 @@ DOBJ = $(patsubst %.c, %.do, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 SOURCE = $(wildcard $(SRCDIR)/*.c)
 
+MAN6 = nyancat-console.6
+
 TARGET = $(REAL_NAME)
 DTARGET=$(TARGET)_debug
+
+FMOD = 0644
 
 MAKE=make --no-print-directory

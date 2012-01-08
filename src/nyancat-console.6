@@ -1,0 +1,32 @@
+.\" Process this file with
+.\" groff -man -Tascii nyancat-console.6
+.TH nyancat\-console 6 "January 2012" "Linux User Manuals"
+.SH NAME
+nyancat\-console \- A nyancat game for the cli and a port of the flash
+game 'nyancat lost in space'
+.SH SYNOPSIS
+nyancat\-console [
+.I
+OPTIONS
+]
+.SH OPTIONS
+.IP -h
+Show the help for nyancat\-console.
+.IP -v
+Shows version and license information.
+.SH KEYS
+The nyancat\-console is fully controlled by keys.
+.IP j
+Jump downwards, only available if nyan is in reverse mode with negative gravity.
+.IP k
+Jump up to reach the next platform and collect items.
+.IP p
+pause the game, or if already pauses go back to game.
+.IP q
+Quit the game.
+.SH FILES
+The high scores are saved in
+.I $HOME/.nyancat-console
+
+.SH AUTHOR
+Written by Daniel Carl.

@@ -20,11 +20,12 @@ $(DTARGET): $(DOBJ)
 	@echo "$(CC) $@"
 	@$(CC) $(DFLAGS) $(DOBJ) -o $(DTARGET) $(LIBS)
 
-install: $(TARGET)
+install: $($(TARGET),$(MAN6))
 	install $(TARGET) $(BINDIR)
+	-[ -e '$(MANDIR)man6' ] || mkdir -p '$(MANDIR)man6' && install -m $(FMOD) $(MAN6) $(MANDIR)man6/
 
 uninstall:
-	rm -f $(BINDIR)$(TARGET)
+	rm -f $(BINDIR)$(TARGET) $(MANDIR)man6/$(MAN6)
 
 clean:
 	@echo Cleaning
